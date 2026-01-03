@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasko_mobile/common/colors/colors_styles.dart';
 
 abstract class BaseScreen extends StatefulWidget {
   const BaseScreen({super.key});
@@ -45,12 +46,23 @@ abstract class BaseScreenState<T extends BaseScreen> extends State<T> {
   void showSnackBar(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.green,
+        content: Text(
+          message,
+          style: TextStyle(
+            color: isError
+                ? kColorStyleErrorLight400
+                : kColorStyleSuccessDark600,
+          ),
+        ),
+        backgroundColor: isError
+            ? kColorStyleErrorDark700
+            : kColorStyleSuccessLight200,
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
           label: 'Fechar',
-          textColor: Colors.white,
+          textColor: isError
+              ? kColorStyleErrorLight400
+              : kColorStyleSuccessDark600,
           onPressed: () {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },
@@ -86,7 +98,7 @@ abstract class BaseScreenState<T extends BaseScreen> extends State<T> {
               right: 0,
               child: Container(
                 padding: const EdgeInsets.all(16),
-                color: Colors.red.shade100,
+                color: kColorStyleErrorLight200,
                 child: Row(
                   children: [
                     const Icon(Icons.error, color: Colors.red),
