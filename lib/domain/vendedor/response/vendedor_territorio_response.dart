@@ -8,22 +8,22 @@ part 'vendedor_territorio_response.g.dart';
 class VendedorTerritorioResponse {
   final int id;
   final String nomeTerritorio;
-  final String descricaoTerritorio;
-  final String nomeRegiao;
-  final String estado;
-  final String coordenadasPoligono;
-  final VendedorSupervisorResponse supervisor;
-  final Auditoria auditoria;
+  final String? descricaoTerritorio;
+  final String? nomeRegiao;
+  final String? estado;
+  final String? coordenadasPoligono;
+  final VendedorSupervisorResponse? supervisor;
+  final Auditoria? auditoria;
 
   VendedorTerritorioResponse({
     required this.id,
     required this.nomeTerritorio,
-    required this.descricaoTerritorio,
-    required this.nomeRegiao,
-    required this.estado,
-    required this.coordenadasPoligono,
-    required this.supervisor,
-    required this.auditoria,
+    this.descricaoTerritorio,
+    this.nomeRegiao,
+    this.estado,
+    this.coordenadasPoligono,
+    this.supervisor,
+    this.auditoria,
   });
 
   factory VendedorTerritorioResponse.fromJson(Map<String, dynamic> json) =>
