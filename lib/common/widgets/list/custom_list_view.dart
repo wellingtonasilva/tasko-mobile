@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
-import 'package:tasko_mobile/common/widgets/custom_list_item.dart';
+import 'package:tasko_mobile/common/widgets/list/custom_list_item.dart';
 
 class CustomListView<T> extends StatelessWidget {
   final List<T> values;

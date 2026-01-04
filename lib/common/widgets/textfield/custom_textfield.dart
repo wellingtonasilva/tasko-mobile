@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
+import 'package:tasko_mobile/common/colors/colors_styles.dart';
+import 'package:tasko_mobile/common/colors/text_styles.dart';
 
-class CustomTexfield extends StatelessWidget {
-  const CustomTexfield({super.key, required this.labelText, this.controller});
-
-  final String labelText;
+class CustomTextfield extends StatelessWidget {
+  final String? labelText;
   final TextEditingController? controller;
+  final bool disabled;
+
+  const CustomTextfield({
+    super.key,
+    this.labelText,
+    this.controller,
+    this.disabled = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +26,18 @@ class CustomTexfield extends StatelessWidget {
         obscureText: false,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: const TextStyle(
-            fontFamily: 'Roboto',
-            color: Color(0xFF57636C),
-            fontSize: 16,
-            letterSpacing: 0.0,
-            fontWeight: FontWeight.w500,
+          labelStyle: kTestStyleMediumText16.copyWith(
+            color: kColorStyleSecondinaryLight300,
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Color(0xFFE0E3E7), width: 2),
             borderRadius: BorderRadius.circular(15),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color(0xFF4B39EF), width: 2),
+            borderSide: const BorderSide(
+              color: kColorStyleSecondinaryLight200,
+              width: 2,
+            ),
             borderRadius: BorderRadius.circular(15),
           ),
           errorBorder: OutlineInputBorder(
@@ -42,14 +49,15 @@ class CustomTexfield extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: disabled
+              ? kColorStyleSecondinaryLight200
+              : kColorStylePrimary0,
           contentPadding: const EdgeInsetsDirectional.fromSTEB(18, 18, 0, 18),
         ),
-        style: const TextStyle(
-          fontFamily: 'Roboto',
-          fontSize: 16,
-          letterSpacing: 0.0,
-          fontWeight: FontWeight.w500,
+        style: kTestStyleMediumText16.copyWith(
+          color: disabled
+              ? kColorStyleSecondinaryLight400
+              : kColorStyleSecondinaryDarkDefault,
         ),
         keyboardType: TextInputType.emailAddress,
       ),
@@ -61,6 +69,6 @@ class CustomTexfield extends StatelessWidget {
 Widget customListItemPreview() {
   return const Padding(
     padding: EdgeInsets.all(16.0),
-    child: CustomTexfield(labelText: 'Email'),
+    child: CustomTextfield(labelText: 'Email'),
   );
 }

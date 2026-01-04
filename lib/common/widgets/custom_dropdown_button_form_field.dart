@@ -1,8 +1,10 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:tasko_mobile/common/colors/colors_styles.dart';
+import 'package:tasko_mobile/common/colors/text_styles.dart';
 
 class CustomDropdownButtonFormField<T> extends StatelessWidget {
-  final String hint;
+  final String? hint;
   final List<T> items;
   final String Function(T) itemLabelBuilder; // Function to extract item label
   final String? Function(T?)? validator;
@@ -12,7 +14,7 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
 
   const CustomDropdownButtonFormField({
     super.key,
-    required this.hint,
+    this.hint,
     required this.items,
     required this.itemLabelBuilder,
     this.validator,
@@ -25,8 +27,9 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField2<T>(
       isExpanded: true,
-
       decoration: InputDecoration(
+        fillColor: kColorStylePrimary0,
+        filled: true,
         contentPadding: const EdgeInsetsDirectional.fromSTEB(5, 20, 16, 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
@@ -37,28 +40,22 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      hint: Text(
-        hint,
-        style: const TextStyle(
-          fontFamily: 'Outfit',
-          color: Color(0xFF606A85),
-          fontSize: 16,
-          letterSpacing: 0.0,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
+      hint: hint != null
+          ? Text(
+              hint!,
+              style: kTestStyleMediumText16.copyWith(
+                color: kColorStyleSecondinaryLight300,
+              ),
+            )
+          : null,
       items: items
           .map(
             (item) => DropdownMenuItem<T>(
               value: item,
               child: Text(
                 itemLabelBuilder(item),
-                style: const TextStyle(
-                  color: Color(0xFF15161E),
-                  fontSize: 16,
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w500,
-                  fontStyle: FontStyle.normal,
+                style: kTestStyleMediumText16.copyWith(
+                  color: kColorStyleSecondinaryDarkDefault,
                 ),
               ),
             ),
@@ -71,8 +68,13 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
       buttonStyleData: const ButtonStyleData(
         padding: EdgeInsets.only(right: 8),
       ),
-      iconStyleData: const IconStyleData(
-        icon: Icon(Icons.arrow_drop_down, color: Colors.black45),
+      iconStyleData: IconStyleData(
+        icon: Image.asset(
+          'assets/images/pos_icon_arrow_down.png',
+          width: 24,
+          height: 24,
+          color: kColorStyleSecondinaryDarkDefault,
+        ),
         iconSize: 24,
       ),
       dropdownStyleData: DropdownStyleData(

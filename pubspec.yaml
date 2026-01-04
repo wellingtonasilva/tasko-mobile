@@ -84,6 +84,7 @@ flutter:
     - assets/images/pos_icon_healty_food.svg
     - assets/images/pos_icon_rice.svg
     - assets/images/pos_icon_star.svg
+    - assets/images/pos_icon_arrow_down.png
 
 
   fonts:
