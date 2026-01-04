@@ -1,25 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'vendedor_supervisor_response.dart';
+part of 'atualizar_vendedor_supervisor_request.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-VendedorSupervisorResponse _$VendedorSupervisorResponseFromJson(
+AtualizarVendedorSupervisorRequest _$AtualizarVendedorSupervisorRequestFromJson(
   Map<String, dynamic> json,
-) => VendedorSupervisorResponse(
+) => AtualizarVendedorSupervisorRequest(
   id: (json['id'] as num).toInt(),
   nomeSupervisor: json['nomeSupervisor'] as String,
-  auditoria: json['auditoria'] == null
-      ? null
-      : Auditoria.fromJson(json['auditoria'] as Map<String, dynamic>),
 );
 
-Map<String, dynamic> _$VendedorSupervisorResponseToJson(
-  VendedorSupervisorResponse instance,
+Map<String, dynamic> _$AtualizarVendedorSupervisorRequestToJson(
+  AtualizarVendedorSupervisorRequest instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'nomeSupervisor': instance.nomeSupervisor,
-  'auditoria': instance.auditoria,
 };

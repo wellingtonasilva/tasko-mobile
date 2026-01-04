@@ -7,12 +7,12 @@ part 'vendedor_supervisor_response.g.dart';
 class VendedorSupervisorResponse {
   final int id;
   final String nomeSupervisor;
-  final Auditoria auditoria;
+  final Auditoria? auditoria;
 
   VendedorSupervisorResponse({
     required this.id,
     required this.nomeSupervisor,
-    required this.auditoria,
+    this.auditoria,
   });
 
   factory VendedorSupervisorResponse.fromJson(Map<String, dynamic> json) =>

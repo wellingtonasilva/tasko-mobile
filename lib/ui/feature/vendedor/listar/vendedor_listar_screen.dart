@@ -4,6 +4,7 @@ import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_view_model.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_screen.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class VendedorListarScreen extends BaseScreen {
@@ -82,6 +83,14 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                           child: CustomListView<VendedorResponse>(
                             values: viewModel.vendedores,
                             onTap: (value) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VendedorManterScreen(
+                                    vendedorId: value.id,
+                                  ),
+                                ),
+                              );
                               /*
                               context.pushNamed(
                                 Routes.vendedorManter,
@@ -104,7 +113,7 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
         ),
         appBar: AppBar(
           backgroundColor: kColorStylePrimaryNeutralPaletteLightDefault,
-          title: Text('Colaboradores'),
+          title: Text('Vendedores (${viewModel.vendedores.length})'),
           actions: [
             IconButton(
               onPressed: () {
