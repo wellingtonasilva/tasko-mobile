@@ -13,7 +13,7 @@ class HomeScreen extends BaseScreen {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  BaseScreenState<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends BaseScreenState<HomeScreen> {
