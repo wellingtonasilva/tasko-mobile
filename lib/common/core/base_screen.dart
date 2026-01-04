@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-abstract class BaseScreen extends StatefulWidget {
+abstract class BaseScreen extends ConsumerStatefulWidget {
   const BaseScreen({super.key});
 }
 
-abstract class BaseScreenState<T extends BaseScreen> extends State<T> {
+abstract class BaseScreenState<T extends BaseScreen> extends ConsumerState<T> {
   bool _isLoading = false;
   String? _errorMessage;
 
