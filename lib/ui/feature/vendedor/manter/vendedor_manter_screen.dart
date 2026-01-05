@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
+import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
+import 'package:tasko_mobile/common/widgets/appbar/custom_app_bar_default.dart';
+import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
+import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
+import 'package:tasko_mobile/common/widgets/buttons/custom_icon_button.dart';
 import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
+import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_textfield.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_supervisor_response.dart';
@@ -145,7 +151,17 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
 
   @override
   PreferredSizeWidget? buildAppBar(BuildContext context) {
-    return AppBar(title: const Text('Manter Vendedor'));
+    return CustomAppBarDefault(
+      onMenuPressed: () {
+        showSnackBar('Menu pressed', isError: false);
+      },
+      onSearchPressed: () {
+        showSnackBar('Search pressed', isError: false);
+      },
+      onSettingsPressed: () {
+        showSnackBar('Settings pressed', isError: false);
+      },
+    );
   }
 
   @override
@@ -166,64 +182,134 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        backgroundColor: kColorStylePrimaryNeutralPaletteLightDefault,
-        /*
-        appBar: AppBar(
-          backgroundColor: kColorStylePrimaryNeutralPaletteLightDefault,
-          title: const Text('Manter FVS'),
-        ),
-        */
+        backgroundColor: kColorStylePrimary100,
         body: SafeArea(
-          child: Form(
-            key: formKey,
-            autovalidateMode: AutovalidateMode.disabled,
-            child: Column(
-              children: [
-                Divider(
-                  height: 1,
-                  thickness: 0.9,
-                  color: kColorStyleSecondinaryLight300,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 15.0,
+                left: 15.0,
+                right: 15.0,
+              ),
+              child: Container(
+                width: MediaQuery.of(context).size.width - 20,
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13),
+                  color: kColorStylePrimary0,
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        buildTextField(codigoVendedor),
-                        buildTextField(nomeVendedor),
-                        buildTextField(numeroCPF),
-                        buildTextField(email),
-                        buildTextField(numeroTelefone),
-                        buildTextField(valorMetaMensal),
-                        buildTextField(percentualComissao),
-                        buildTextField(ultimoSincronismo, isReadOnly: true),
-                        buildTextField(codigoDispositivo, isReadOnly: true),
-                        const SizedBox(height: 10),
-                        const Text('Supervisor'),
-                        const SizedBox(height: 10),
-                        viewModel.listarSupervisorCommand.running
-                            ? buildLoadingIndicator()
-                            : viewModel.obterPorIdCommand.completed &&
-                                  viewModel.listarSupervisorCommand.completed
-                            ? buildDropdownFieldSupervisor(viewModel)
-                            : buildLoadingIndicator(),
-                        const SizedBox(height: 10),
-                        const Text('Território'),
-                        const SizedBox(height: 10),
-                        viewModel.listarTerritorioCommand.running
-                            ? buildLoadingIndicator()
-                            : viewModel.obterPorIdCommand.completed &&
-                                  viewModel.listarTerritorioCommand.completed
-                            ? buildDropdownFieldTerritorio(viewModel)
-                            : buildLoadingIndicator(),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
+                child: Form(
+                  key: formKey,
+                  autovalidateMode: AutovalidateMode.disabled,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Manter Vendedor',
+                              style: kTestStyleBoldText20.copyWith(
+                                color: kColorStyleSecondinaryDarkDefault,
+                              ),
+                            ),
+                            CustomIconButton(
+                              icon: const Icon(
+                                Icons.close,
+                                color: kColorStyleSecondinaryDarkDefault,
+                                size: 20,
+                              ),
+                              borderRadius: 5,
+                              buttonSize: 35,
+                              fillColor: Colors.white,
+                              hoverColor: Colors.grey.shade200,
+                              borderColor: kColorStyleSecondinaryLight200,
+                              borderWidth: 1,
+                              showLoadingIndicator: false,
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildTextField(codigoVendedor),
+                              buildTextField(nomeVendedor),
+                              buildTextField(numeroCPF),
+                              buildTextField(email),
+                              buildTextField(numeroTelefone),
+                              buildTextField(valorMetaMensal),
+                              buildTextField(percentualComissao),
+                              buildTextField(
+                                ultimoSincronismo,
+                                isReadOnly: true,
+                              ),
+                              buildTextField(
+                                codigoDispositivo,
+                                isReadOnly: true,
+                              ),
+                              const SizedBox(height: 10),
+                              const Text('Supervisor'),
+                              const SizedBox(height: 10),
+                              viewModel.listarSupervisorCommand.running
+                                  ? buildLoadingIndicator()
+                                  : viewModel.obterPorIdCommand.completed &&
+                                        viewModel
+                                            .listarSupervisorCommand
+                                            .completed
+                                  ? buildDropdownFieldSupervisor(viewModel)
+                                  : buildLoadingIndicator(),
+                              const SizedBox(height: 10),
+                              const Text('Território'),
+                              const SizedBox(height: 10),
+                              viewModel.listarTerritorioCommand.running
+                                  ? buildLoadingIndicator()
+                                  : viewModel.obterPorIdCommand.completed &&
+                                        viewModel
+                                            .listarTerritorioCommand
+                                            .completed
+                                  ? buildDropdownFieldTerritorio(viewModel)
+                                  : buildLoadingIndicator(),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Divider(color: kColorStyleSecondinaryLight200),
+                      const SizedBox(height: 5),
+                      //buildSubmitButton(context),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: CustomButtonSecondary(
+                              label: 'Cancelar',
+                              onPressed: () {
+                                formKey.currentState?.reset();
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: CustomButtonPrimary(
+                              label: 'Salvar',
+                              onPressed: () {},
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                //buildSubmitButton(context),
-              ],
+              ),
             ),
           ),
         ),
@@ -238,9 +324,13 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
   }) {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
-      child: CustomTextfield(
-        controller: field.controller,
-        labelText: field.labelText,
+      child: Column(
+        children: [
+          CustomLabel(labelText: field.labelText),
+          const SizedBox(height: 10),
+          CustomTextfield(controller: field.controller),
+          const SizedBox(height: 10),
+        ],
       ),
     );
   }
