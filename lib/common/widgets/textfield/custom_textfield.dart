@@ -7,19 +7,21 @@ class CustomTextfield extends StatelessWidget {
   final String? labelText;
   final TextEditingController? controller;
   final bool disabled;
+  final String? Function(BuildContext, String?)? validator;
 
   const CustomTextfield({
     super.key,
     this.labelText,
     this.controller,
     this.disabled = false,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         autofocus: true,
         autofillHints: const [AutofillHints.email],
@@ -60,6 +62,8 @@ class CustomTextfield extends StatelessWidget {
               : kColorStyleSecondinaryDarkDefault,
         ),
         keyboardType: TextInputType.emailAddress,
+        validator: (value) =>
+            validator != null ? validator!(context, value) : null,
       ),
     );
   }

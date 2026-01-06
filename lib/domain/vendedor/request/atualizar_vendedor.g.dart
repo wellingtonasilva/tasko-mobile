@@ -17,10 +17,12 @@ AtualizarVendedorRequest _$AtualizarVendedorRequestFromJson(
   numeroTelefone: json['numeroTelefone'] as String,
   valorMetaMensal: (json['valorMetaMensal'] as num).toDouble(),
   percentualComissao: (json['percentualComissao'] as num).toDouble(),
-  ultimoSincronismo: DateTime.parse(json['ultimoSincronismo'] as String),
-  codigoDispositivo: json['codigoDispositivo'] as String,
-  supervisorId: (json['supervisorId'] as num).toInt(),
-  territorioId: (json['territorioId'] as num).toInt(),
+  ultimoSincronismo: json['ultimoSincronismo'] == null
+      ? null
+      : DateTime.parse(json['ultimoSincronismo'] as String),
+  codigoDispositivo: json['codigoDispositivo'] as String?,
+  supervisorId: (json['supervisorId'] as num?)?.toInt(),
+  territorioId: (json['territorioId'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$AtualizarVendedorRequestToJson(
@@ -34,7 +36,7 @@ Map<String, dynamic> _$AtualizarVendedorRequestToJson(
   'numeroTelefone': instance.numeroTelefone,
   'valorMetaMensal': instance.valorMetaMensal,
   'percentualComissao': instance.percentualComissao,
-  'ultimoSincronismo': instance.ultimoSincronismo.toIso8601String(),
+  'ultimoSincronismo': instance.ultimoSincronismo?.toIso8601String(),
   'codigoDispositivo': instance.codigoDispositivo,
   'supervisorId': instance.supervisorId,
   'territorioId': instance.territorioId,

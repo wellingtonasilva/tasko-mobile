@@ -6,12 +6,12 @@ part 'vendedor_supervisor_response.g.dart';
 @JsonSerializable()
 class VendedorSupervisorResponse {
   final int id;
-  final String nomeSupervisor;
+  final String? nomeSupervisor;
   final Auditoria? auditoria;
 
   VendedorSupervisorResponse({
     required this.id,
-    required this.nomeSupervisor,
+    this.nomeSupervisor,
     this.auditoria,
   });
 

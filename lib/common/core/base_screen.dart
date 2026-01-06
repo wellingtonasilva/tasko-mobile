@@ -130,4 +130,16 @@ abstract class BaseScreenState<T extends BaseScreen> extends ConsumerState<T> {
       floatingActionButton: buildFloatingActionButton(context),
     );
   }
+
+  Widget buildLoadingIndicator() {
+    return const Center(
+      child: SizedBox(
+        width: 24.0,
+        height: 24.0,
+        child: CircularProgressIndicator(
+          color: kColorStylePrimaryNeutralPaletteDarkDefault,
+        ),
+      ),
+    );
+  }
 }
