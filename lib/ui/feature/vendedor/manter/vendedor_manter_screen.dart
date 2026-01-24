@@ -11,9 +11,9 @@ import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dar
 import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_textfield.dart';
 import 'package:tasko_mobile/domain/vendedor/request/atualizar_vendedor.dart';
-import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_supervisor_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_territorio_response.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_controllers.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_ui_state.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
@@ -29,23 +29,13 @@ class VendedorManterScreen extends BaseScreen {
 }
 
 class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
-  final formKey = GlobalKey<FormState>();
-  late final CustomFormFieldData id;
-  late final CustomFormFieldData codigoVendedor;
-  late final CustomFormFieldData nomeVendedor;
-  late final CustomFormFieldData numeroCPF;
-  late final CustomFormFieldData email;
-  late final CustomFormFieldData numeroTelefone;
-  late final CustomFormFieldData valorMetaMensal;
-  late final CustomFormFieldData percentualComissao;
-  late final CustomFormFieldData ultimoSincronismo;
-  late final CustomFormFieldData codigoDispositivo;
+  late final VendedorManterControllers _controllers;
 
   @override
   initState() {
     super.initState();
 
-    _buildControllers();
+    _controllers = VendedorManterControllers();
 
     final viewModel = ref.read(vendedorManterViewModelProvider.notifier);
     viewModel.showSnackBar = (String message, Result result) {
@@ -65,17 +55,7 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
 
   @override
   dispose() {
-    id.controller.dispose();
-    codigoVendedor.controller.dispose();
-    nomeVendedor.controller.dispose();
-    numeroCPF.controller.dispose();
-    email.controller.dispose();
-    numeroTelefone.controller.dispose();
-    valorMetaMensal.controller.dispose();
-    percentualComissao.controller.dispose();
-    ultimoSincronismo.controller.dispose();
-    codigoDispositivo.controller.dispose();
-
+    _controllers.dispose();
     super.dispose();
   }
 
@@ -102,7 +82,7 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
       next,
     ) {
       if (next.vendedor != null) {
-        _updateFormFields(next.vendedor!);
+        _controllers.updateFormFields(next.vendedor!);
         setState(() {});
       }
     });
@@ -130,7 +110,7 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
                   color: kColorStylePrimary0,
                 ),
                 child: Form(
-                  key: formKey,
+                  key: _controllers.formKey,
                   autovalidateMode: AutovalidateMode.disabled,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -151,19 +131,19 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              buildTextField(codigoVendedor),
-                              buildTextField(nomeVendedor),
-                              buildTextField(numeroCPF),
-                              buildTextField(email),
-                              buildTextField(numeroTelefone),
-                              buildTextField(valorMetaMensal),
-                              buildTextField(percentualComissao),
+                              buildTextField(_controllers.codigoVendedor),
+                              buildTextField(_controllers.nomeVendedor),
+                              buildTextField(_controllers.numeroCPF),
+                              buildTextField(_controllers.email),
+                              buildTextField(_controllers.numeroTelefone),
+                              buildTextField(_controllers.valorMetaMensal),
+                              buildTextField(_controllers.percentualComissao),
                               buildTextField(
-                                ultimoSincronismo,
+                                _controllers.ultimoSincronismo,
                                 isReadOnly: true,
                               ),
                               buildTextField(
-                                codigoDispositivo,
+                                _controllers.codigoDispositivo,
                                 isReadOnly: true,
                               ),
                               const SizedBox(height: 10),
@@ -313,111 +293,29 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
     );
   }
 
-  void _buildControllers() {
-    id = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'ID',
-      validator: (context, val) =>
-          val == null || val.isEmpty ? 'Por favor informe o ID.' : null,
-    );
-    codigoVendedor = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Código Vendedor',
-      validator: (context, val) => val == null || val.isEmpty
-          ? 'Por favor informe o Código Vendedor.'
-          : null,
-    );
-    nomeVendedor = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Nome Vendedor',
-      validator: (context, val) => val == null || val.isEmpty
-          ? 'Por favor informe o Nome Vendedor.'
-          : null,
-    );
-    numeroCPF = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Número CPF',
-      validator: (context, val) =>
-          val == null || val.isEmpty ? 'Por favor informe o Número CPF.' : null,
-    );
-    email = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Email',
-      validator: (context, val) =>
-          val == null || val.isEmpty ? 'Por favor informe o Email.' : null,
-    );
-    numeroTelefone = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Número Telefone',
-      validator: (context, val) => val == null || val.isEmpty
-          ? 'Por favor informe o Número Telefone.'
-          : null,
-    );
-    valorMetaMensal = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Valor Meta Mensal',
-    );
-    percentualComissao = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Percentual Comissão',
-    );
-    ultimoSincronismo = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Último Sincronismo',
-    );
-    codigoDispositivo = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Código Dispositivo',
-    );
-  }
-
-  void _updateFormFields(VendedorResponse vendedor) {
-    id.controller.text = vendedor.id.toString();
-    codigoVendedor.controller.text = vendedor.codigoVendedor ?? '';
-    nomeVendedor.controller.text = vendedor.nomeVendedor ?? '';
-    numeroCPF.controller.text = vendedor.numeroCPF ?? '';
-    email.controller.text = vendedor.email ?? '';
-    numeroTelefone.controller.text = vendedor.numeroTelefone ?? '';
-    valorMetaMensal.controller.text =
-        vendedor.valorMetaMensal?.toStringAsFixed(2) ?? '';
-    percentualComissao.controller.text =
-        vendedor.percentualComissao.toStringAsFixed(2) ?? '';
-    ultimoSincronismo.controller.text =
-        vendedor.ultimoSincronismo?.toIso8601String() ?? '';
-    codigoDispositivo.controller.text = vendedor.codigoDispositivo ?? '';
-  }
-
   void _handleCancelarPressed() {
     showSnackBar('Cancelar pressed');
   }
 
   void _handleSalvarPressed() {
-    if (formKey.currentState?.validate() ?? false) {
-      formKey.currentState?.save();
+    if (_controllers.formKey.currentState?.validate() ?? false) {
+      _controllers.formKey.currentState?.save();
 
       final viewModel = ref.read(vendedorManterViewModelProvider);
 
       final request = AtualizarVendedorRequest(
-        id: int.tryParse(id.controller.text) ?? 0,
-        codigoVendedor: codigoVendedor.controller.text,
-        nomeVendedor: nomeVendedor.controller.text,
-        numeroCPF: numeroCPF.controller.text,
-        email: email.controller.text,
-        numeroTelefone: numeroTelefone.controller.text,
+        id: int.tryParse(_controllers.id.controller.text) ?? 0,
+        codigoVendedor: _controllers.codigoVendedor.controller.text,
+        nomeVendedor: _controllers.nomeVendedor.controller.text,
+        numeroCPF: _controllers.numeroCPF.controller.text,
+        email: _controllers.email.controller.text,
+        numeroTelefone: _controllers.numeroTelefone.controller.text,
         valorMetaMensal:
-            double.tryParse(valorMetaMensal.controller.text) ?? 0.0,
+            double.tryParse(_controllers.valorMetaMensal.controller.text) ??
+            0.0,
         percentualComissao:
-            double.tryParse(percentualComissao.controller.text) ?? 0.0,
+            double.tryParse(_controllers.percentualComissao.controller.text) ??
+            0.0,
         supervisorId: viewModel.selectedSupervisor?.id ?? 0,
         territorioId: viewModel.selectedTerritorio?.id ?? 0,
       );
