@@ -7,7 +7,7 @@ class CustomButtonSecondary extends StatelessWidget {
   final VoidCallback onPressed;
   final IconData? leadingIcon;
   final IconData? trailingIcon;
-  final double height;
+  final double? height;
 
   const CustomButtonSecondary({
     super.key,

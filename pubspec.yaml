@@ -89,6 +89,9 @@ flutter:
     - assets/images/pos_icon_rice.svg
     - assets/images/pos_icon_star.svg
     - assets/images/pos_icon_arrow_down.png
+    - assets/images/pos_icon_settings_linear.png
+    - assets/images/pos_icon_search_normal.png
+    - assets/images/pos_icon_setting.png
 
 
   fonts:

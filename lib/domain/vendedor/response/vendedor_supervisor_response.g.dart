@@ -10,7 +10,7 @@ VendedorSupervisorResponse _$VendedorSupervisorResponseFromJson(
   Map<String, dynamic> json,
 ) => VendedorSupervisorResponse(
   id: (json['id'] as num).toInt(),
-  nomeSupervisor: json['nomeSupervisor'] as String,
+  nomeSupervisor: json['nomeSupervisor'] as String?,
   auditoria: json['auditoria'] == null
       ? null
       : Auditoria.fromJson(json['auditoria'] as Map<String, dynamic>),

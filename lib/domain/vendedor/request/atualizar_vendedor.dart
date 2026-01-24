@@ -12,10 +12,10 @@ class AtualizarVendedorRequest {
   final String numeroTelefone;
   final double valorMetaMensal;
   final double percentualComissao;
-  final DateTime ultimoSincronismo;
-  final String codigoDispositivo;
-  final int supervisorId;
-  final int territorioId;
+  final DateTime? ultimoSincronismo;
+  final String? codigoDispositivo;
+  final int? supervisorId;
+  final int? territorioId;
 
   AtualizarVendedorRequest({
     required this.id,
@@ -26,10 +26,10 @@ class AtualizarVendedorRequest {
     required this.numeroTelefone,
     required this.valorMetaMensal,
     required this.percentualComissao,
-    required this.ultimoSincronismo,
-    required this.codigoDispositivo,
-    required this.supervisorId,
-    required this.territorioId,
+    this.ultimoSincronismo,
+    this.codigoDispositivo,
+    this.supervisorId,
+    this.territorioId,
   });
 
   factory AtualizarVendedorRequest.fromJson(Map<String, dynamic> json) =>

@@ -73,3 +73,4 @@ const kColorStyleSecondinaryLight100 = Color(0xFFEDF1F3);
 const kColorStyleSecondinaryLightDefault = Color(0xFFEDF1F3);
 
 const kColorStylePrimary0 = Color(0xFFFFFFFF);
+const kColorStylePrimary100 = Color(0xFFF6F8F9);

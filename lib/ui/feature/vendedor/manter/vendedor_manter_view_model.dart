@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/data/repositories/vendedor/supervisor/vendedor_supervisor_repository_remote.dart';
 import 'package:tasko_mobile/data/repositories/vendedor/territorio/vendedor_territorio_repository_remote.dart';
 import 'package:tasko_mobile/data/repositories/vendedor/vendedor_repository_remote.dart';
@@ -25,6 +26,33 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
       listarSupervisorCommand: Command0<void>(_listarSupervisor)..execute(),
       listarTerritorioCommand: Command0<void>(_listarTerritorio)..execute(),
     );
+  }
+
+  void selectSupervisor(VendedorSupervisorResponse? supervisor) {
+    state = state.copyWith(selectedSupervisor: supervisor);
+  }
+
+  VendedorSupervisorResponse? get computedSelectedSupervisor {
+    if (state.vendedor?.supervisor == null || state.supervisores == null) {
+      return null;
+    }
+
+    return state.supervisores!.firstWhere(
+      (s) => s.id == state.vendedor?.supervisor!.id,
+      orElse: () => VendedorSupervisorResponse(id: -1),
+    );
+  }
+
+  DropdownLoadingState get supervisorDropdownState {
+    if (state.listarSupervisorCommand.running ||
+        state.obterPorIdCommand.running) {
+      return DropdownLoadingState.loading;
+    }
+    if (state.listarSupervisorCommand.completed &&
+        state.obterPorIdCommand.completed) {
+      return DropdownLoadingState.ready;
+    }
+    return DropdownLoadingState.error;
   }
 
   Future<Result<VendedorResponse>> _obterPorId((int id,) parameters) async {
