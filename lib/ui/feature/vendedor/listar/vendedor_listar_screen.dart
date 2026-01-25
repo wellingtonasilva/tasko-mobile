@@ -167,8 +167,10 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                               padding: const EdgeInsets.only(top: 10, left: 10),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const SizedBox(height: 5),
+                                  const SizedBox(height: 10),
                                   Text(
                                     'Lista de Vendedores',
                                     style: kTestStyleBoldText16,
