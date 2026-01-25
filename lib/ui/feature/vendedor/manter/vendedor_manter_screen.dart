@@ -121,7 +121,7 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
                         child: CustomTituloBarDefault(
                           title: 'Manter Vendedor',
                           onClosePressed: () {
-                            showSnackBar('Fechar pressed');
+                            Navigator.of(context).pop();
                           },
                         ),
                       ),

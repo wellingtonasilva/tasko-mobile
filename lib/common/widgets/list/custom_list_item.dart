@@ -24,28 +24,15 @@ class CustomListItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: InkWell(
-        child: Container(
-          width: 468.9,
-          //height: 72,
-          decoration: BoxDecoration(
-            color: kColorStylePrimaryNeutralPaletteLightDefault,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 2,
-                color: kColorStyleSecondinaryLight300,
-                offset: Offset(0, 1),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(12, 5, 0, 10),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -66,16 +53,17 @@ class CustomListItem extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-                onTap != null
-                    ? Icon(
-                        Icons.chevron_right_rounded,
-                        color: kColorStyleSecondinaryDark600,
-                        size: 24,
-                      )
-                    : const SizedBox.shrink(),
-              ],
-            ),
+                  onTap != null
+                      ? Icon(
+                          Icons.chevron_right_rounded,
+                          color: kColorStyleSecondinaryDark600,
+                          size: 24,
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              ),
+              Divider(thickness: 1, color: kColorStyleSecondinaryLight200),
+            ],
           ),
         ),
       ),
