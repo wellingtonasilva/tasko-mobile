@@ -3,9 +3,7 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_app_bar_default.dart';
-import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/dashboard/custom_dashboard_card_default.dart';
 import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
@@ -73,7 +71,7 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        backgroundColor: kColorStylePrimaryNeutralPaletteLightDefault,
+        backgroundColor: kColorStylePrimary100,
         body: RefreshIndicator(
           onRefresh: () async {
             return viewModel.listarVendedoresCommand.execute();
@@ -119,28 +117,15 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CustomDashboardCardDefault(
-                          title: 'Total Customers',
-                          value: '4,324',
+                          title: 'Purchase Invoice',
+                          value: '543',
                           icon: Image.asset(
-                            'assets/images/pos_icon_people.png',
+                            'assets/images/pos_icon_document_text.png',
                             color: kColorStyleInformationDarkDefault,
                             width: 35,
                           ),
                           iconBackgroundColor:
                               kColorStyleInformationLightDefault,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Total Order',
-                          value: '5,021',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_bowl_food_fill.png',
-                            color: kColorStyleErrorDark500,
-                            width: 35,
-                          ),
-                          iconBackgroundColor: kColorStyleErrorLight100,
                         ),
                       ),
                       Padding(
@@ -158,70 +143,77 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Total Products',
-                          value: '150',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_box.png',
-                            color: kColorStylePrimaryNeutralPaletteDark500,
-                            width: 35,
-                          ),
-                          iconBackgroundColor:
-                              kColorStylePrimaryNeutralPaletteLight100,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Total Category Product',
-                          value: '06',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_directbox_default.png',
-                            color: kColorStyleSuccessDark500,
-                            width: 35,
-                          ),
-                          iconBackgroundColor: kColorStyleSuccessLightefault,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Purchase Invoice',
-                          value: '543',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_document_text.png',
-                            color: kColorStyleInformationDarkDefault,
-                            width: 35,
-                          ),
-                          iconBackgroundColor:
-                              kColorStyleInformationLightDefault,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: CustomListView<VendedorResponse>(
-                          values: viewModel.vendedores,
-                          onTap: (value) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    VendedorManterScreen(vendedorId: value.id),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(minHeight: 200),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: kColorStyleSecondinaryDark200,
+                                width: 1,
                               ),
-                            );
-                            /*
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x1F000000),
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10, left: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    'Lista de Vendedores',
+                                    style: kTestStyleBoldText16,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  viewModel.listarVendedoresCommand.running
+                                      ? const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : CustomListView<VendedorResponse>(
+                                          values: viewModel.vendedores,
+                                          onTap: (value) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    VendedorManterScreen(
+                                                      vendedorId: value.id,
+                                                    ),
+                                              ),
+                                            );
+                                            /*
                                 context.pushNamed(
                                   Routes.vendedorManter,
                                   pathParameters: {'id': value.id.toString()},
                                 );
                                 */
-                          },
-                          getTitle: (value) => value.nomeVendedor,
-                          getSubtitle: (value) => value.numeroTelefone,
+                                          },
+                                          getTitle: (value) =>
+                                              value.nomeVendedor,
+                                          getSubtitle: (value) =>
+                                              value.numeroTelefone,
 
-                          onDelete: (vendedor, index) {
-                            _excluirVendedor(vendedor.id, index, vendedor);
-                          },
+                                          onDelete: (vendedor, index) {
+                                            _excluirVendedor(
+                                              vendedor.id,
+                                              index,
+                                              vendedor,
+                                            );
+                                          },
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -234,85 +226,6 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
       ),
     );
   }
-
-  /*
-  @override
-  Widget buildContent(BuildContext context) {
-    final viewModel = ref.watch(vendedorListarViewModelProvider);
-
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: kColorStylePrimaryNeutralPaletteLightDefault,
-        body: RefreshIndicator(
-          onRefresh: () async {
-            return viewModel.listarVendedoresCommand.execute();
-          },
-          child: SafeArea(
-            top: true,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Divider(
-                  height: 1,
-                  thickness: .9,
-                  color: kColorStyleSecondinaryLight300,
-                ),
-                Expanded(
-                  child: viewModel.listarVendedoresCommand.running
-                      ? const Center(child: CircularProgressIndicator())
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: CustomListView<VendedorResponse>(
-                            values: viewModel.vendedores,
-                            onTap: (value) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => VendedorManterScreen(
-                                    vendedorId: value.id,
-                                  ),
-                                ),
-                              );
-                              /*
-                              context.pushNamed(
-                                Routes.vendedorManter,
-                                pathParameters: {'id': value.id.toString()},
-                              );
-                              */
-                            },
-                            getTitle: (value) => value.nomeVendedor,
-                            getSubtitle: (value) => value.numeroTelefone,
-
-                            onDelete: (vendedor, index) {
-                              _excluirVendedor(vendedor.id, index, vendedor);
-                            },
-                          ),
-                        ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        appBar: AppBar(
-          backgroundColor: kColorStylePrimaryNeutralPaletteLightDefault,
-          title: Text('Vendedores (${viewModel.vendedores.length})'),
-          actions: [
-            IconButton(
-              onPressed: () {
-                //context.pushNamed(Routes.vendedorAdicionar);
-              },
-              icon: Icon(Icons.add_circle_outline_rounded),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  */
 
   void _excluirVendedor(
     int id,

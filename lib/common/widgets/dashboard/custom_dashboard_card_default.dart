@@ -90,3 +90,122 @@ Widget customDashboardMiniItemPreview() {
     ),
   );
 }
+
+@Preview(name: 'Custom Dashboard Mini Money Item')
+Widget customDashboardCardDefaultPreview() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: CustomDashboardCardDefault(
+      title: 'Total Sales',
+      value: '\$121,412',
+      icon: Image.asset(
+        'assets/images/pos_icon_moneys.png',
+        color: kColorStylePrimaryNeutralPaletteDark500,
+        width: 35,
+      ),
+      iconBackgroundColor: kColorStylePrimaryNeutralPaletteLight100,
+    ),
+  );
+}
+
+@Preview(name: 'Custom Dashboard Mini People Item')
+Widget customDashboardCardPeopleDefaultPreview() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: CustomDashboardCardDefault(
+      title: 'Total Customers',
+      value: '4,324',
+      icon: Image.asset(
+        'assets/images/pos_icon_people.png',
+        color: kColorStyleInformationDarkDefault,
+        width: 35,
+      ),
+      iconBackgroundColor: kColorStyleInformationLightDefault,
+    ),
+  );
+}
+
+@Preview(name: 'Custom Dashboard Mini Food Item')
+Widget customDashboardCardFoodDefaultPreview() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: CustomDashboardCardDefault(
+      title: 'Total Order',
+      value: '5,021',
+      icon: Image.asset(
+        'assets/images/pos_icon_bowl_food_fill.png',
+        color: kColorStyleErrorDark500,
+        width: 35,
+      ),
+      iconBackgroundColor: kColorStyleErrorLight100,
+    ),
+  );
+}
+
+@Preview(name: 'Custom Dashboard Mini Box Item')
+Widget customDashboardCardBoxDefaultPreview() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: CustomDashboardCardDefault(
+      title: 'Total Tip',
+      value: '\$1,412',
+      icon: Image.asset(
+        'assets/images/pos_icon_money_tick.png',
+        color: kColorStyleSuccessDark500,
+        width: 35,
+      ),
+      iconBackgroundColor: kColorStyleSuccessLightefault,
+    ),
+  );
+}
+
+@Preview(name: 'Custom Dashboard Mini Document Item')
+Widget customDashboardCardDocumentDefaultPreview() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: CustomDashboardCardDefault(
+      title: 'Total Products',
+      value: '150',
+      icon: Image.asset(
+        'assets/images/pos_icon_box.png',
+        color: kColorStylePrimaryNeutralPaletteDark500,
+        width: 35,
+      ),
+      iconBackgroundColor: kColorStylePrimaryNeutralPaletteLight100,
+    ),
+  );
+}
+
+@Preview(name: 'Custom Dashboard Mini Direct Box Item')
+Widget customDashboardCardDirectBoxDefaultPreview() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: CustomDashboardCardDefault(
+      title: 'Total Category Product',
+      value: '06',
+      icon: Image.asset(
+        'assets/images/pos_icon_directbox_default.png',
+        color: kColorStyleSuccessDark500,
+        width: 35,
+      ),
+      iconBackgroundColor: kColorStyleSuccessLightefault,
+    ),
+  );
+}
+
+@Preview(name: 'Custom Dashboard Mini Document Text Item')
+Widget customDashboardCardDocumentTextDefaultPreview() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: CustomDashboardCardDefault(
+      title: 'Purchase Invoice',
+      value: '543',
+      icon: Image.asset(
+        'assets/images/pos_icon_document_text.png',
+        color: kColorStyleInformationDarkDefault,
+        width: 35,
+      ),
+      iconBackgroundColor: kColorStyleInformationLightDefault,
+    ),
+  );
+}
