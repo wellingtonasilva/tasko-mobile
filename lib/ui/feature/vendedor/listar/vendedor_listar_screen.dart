@@ -6,6 +6,7 @@ import 'package:tasko_mobile/common/widgets/appbar/custom_app_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
+import 'package:tasko_mobile/common/widgets/dashboard/custom_dashboard_card_default.dart';
 import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_view_model.dart';
@@ -73,39 +74,159 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
       },
       child: Scaffold(
         backgroundColor: kColorStylePrimaryNeutralPaletteLightDefault,
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(color: kColorStylePrimary100),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Vendedor', style: kTestStyleBoldText24),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomButtonPrimary(
-                      label: 'Adicionar Vendedor',
-                      onPressed: () {},
-                      trailingIcon: Icons.add,
-                    ),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Conteúdo da tela de listar vendedor',
-                        style: Theme.of(context).textTheme.bodyMedium,
+        body: RefreshIndicator(
+          onRefresh: () async {
+            return viewModel.listarVendedoresCommand.execute();
+          },
+          child: SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(color: kColorStylePrimary100),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Vendedor', style: kTestStyleBoldText24),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomButtonPrimary(
+                          label: 'Adicionar Vendedor',
+                          onPressed: () {},
+                          trailingIcon: Icons.add,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomDashboardCardDefault(
+                          title: 'Total Sales',
+                          value: '\$121,412',
+                          icon: Image.asset(
+                            'assets/images/pos_icon_moneys.png',
+                            color: kColorStylePrimaryNeutralPaletteDark500,
+                            width: 35,
+                          ),
+                          iconBackgroundColor:
+                              kColorStylePrimaryNeutralPaletteLight100,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomDashboardCardDefault(
+                          title: 'Total Customers',
+                          value: '4,324',
+                          icon: Image.asset(
+                            'assets/images/pos_icon_people.png',
+                            color: kColorStyleInformationDarkDefault,
+                            width: 35,
+                          ),
+                          iconBackgroundColor:
+                              kColorStyleInformationLightDefault,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomDashboardCardDefault(
+                          title: 'Total Order',
+                          value: '5,021',
+                          icon: Image.asset(
+                            'assets/images/pos_icon_bowl_food_fill.png',
+                            color: kColorStyleErrorDark500,
+                            width: 35,
+                          ),
+                          iconBackgroundColor: kColorStyleErrorLight100,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomDashboardCardDefault(
+                          title: 'Total Tip',
+                          value: '\$1,412',
+                          icon: Image.asset(
+                            'assets/images/pos_icon_money_tick.png',
+                            color: kColorStyleSuccessDark500,
+                            width: 35,
+                          ),
+                          iconBackgroundColor: kColorStyleSuccessLightefault,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomDashboardCardDefault(
+                          title: 'Total Products',
+                          value: '150',
+                          icon: Image.asset(
+                            'assets/images/pos_icon_box.png',
+                            color: kColorStylePrimaryNeutralPaletteDark500,
+                            width: 35,
+                          ),
+                          iconBackgroundColor:
+                              kColorStylePrimaryNeutralPaletteLight100,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomDashboardCardDefault(
+                          title: 'Total Category Product',
+                          value: '06',
+                          icon: Image.asset(
+                            'assets/images/pos_icon_directbox_default.png',
+                            color: kColorStyleSuccessDark500,
+                            width: 35,
+                          ),
+                          iconBackgroundColor: kColorStyleSuccessLightefault,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomDashboardCardDefault(
+                          title: 'Purchase Invoice',
+                          value: '543',
+                          icon: Image.asset(
+                            'assets/images/pos_icon_document_text.png',
+                            color: kColorStyleInformationDarkDefault,
+                            width: 35,
+                          ),
+                          iconBackgroundColor:
+                              kColorStyleInformationLightDefault,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: CustomListView<VendedorResponse>(
+                          values: viewModel.vendedores,
+                          onTap: (value) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    VendedorManterScreen(vendedorId: value.id),
+                              ),
+                            );
+                            /*
+                                context.pushNamed(
+                                  Routes.vendedorManter,
+                                  pathParameters: {'id': value.id.toString()},
+                                );
+                                */
+                          },
+                          getTitle: (value) => value.nomeVendedor,
+                          getSubtitle: (value) => value.numeroTelefone,
+
+                          onDelete: (vendedor, index) {
+                            _excluirVendedor(vendedor.id, index, vendedor);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

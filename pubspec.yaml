@@ -92,6 +92,13 @@ flutter:
     - assets/images/pos_icon_settings_linear.png
     - assets/images/pos_icon_search_normal.png
     - assets/images/pos_icon_setting.png
+    - assets/images/pos_icon_moneys.png
+    - assets/images/pos_icon_people.png
+    - assets/images/pos_icon_bowl_food_fill.png
+    - assets/images/pos_icon_money_tick.png
+    - assets/images/pos_icon_box.png
+    - assets/images/pos_icon_directbox_default.png
+    - assets/images/pos_icon_document_text.png
 
 
   fonts:
