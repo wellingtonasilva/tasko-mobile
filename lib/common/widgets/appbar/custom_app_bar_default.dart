@@ -76,7 +76,7 @@ class CustomAppBarDefault extends StatelessWidget
           ),
         ],
       ),
-      backgroundColor: kColorStylePrimary100,
+      backgroundColor: kColorStylePrimaryNeutralPaletteLightDefault,
       leading: Padding(
         padding: const EdgeInsets.all(8.0),
         child: CustomIconButton(

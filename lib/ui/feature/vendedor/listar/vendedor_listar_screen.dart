@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
+import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
+import 'package:tasko_mobile/common/widgets/appbar/custom_app_bar_default.dart';
+import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
+import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
+import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_view_model.dart';
@@ -44,12 +49,72 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
 
   @override
   PreferredSizeWidget? buildAppBar(BuildContext context) {
-    return AppBar(
-      title: const Text('Listar Vendedores'),
-      backgroundColor: kColorStylePrimaryNeutralPaletteDarkDefault,
+    return CustomAppBarDefault(
+      onMenuPressed: () {
+        showSnackBar('Menu pressed', isError: false);
+      },
+      onSearchPressed: () {
+        showSnackBar('Search pressed', isError: false);
+      },
+      onSettingsPressed: () {
+        showSnackBar('Settings pressed', isError: false);
+      },
     );
   }
 
+  @override
+  Widget buildContent(BuildContext context) {
+    final viewModel = ref.watch(vendedorListarViewModelProvider);
+
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: kColorStylePrimaryNeutralPaletteLightDefault,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15.0),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(color: kColorStylePrimary100),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Vendedor', style: kTestStyleBoldText24),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CustomButtonPrimary(
+                      label: 'Adicionar Vendedor',
+                      onPressed: () {},
+                      trailingIcon: Icons.add,
+                    ),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Conteúdo da tela de listar vendedor',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /*
   @override
   Widget buildContent(BuildContext context) {
     final viewModel = ref.watch(vendedorListarViewModelProvider);
@@ -126,6 +191,7 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
       ),
     );
   }
+  */
 
   void _excluirVendedor(
     int id,
