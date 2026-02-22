@@ -46,6 +46,7 @@ dependencies:
   dropdown_button2: 2.3.9
   path: ^1.9.1
   sqflite: ^2.4.2
+  flutter_dotenv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,7 @@ flutter:
 
 
   assets:
+    - .env
     - assets/images/pos_login_v2_tablet_left.png
     - assets/images/pos_login_v3_tablet_left.png
     - assets/images/pos_logo.png

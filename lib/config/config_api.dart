@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ConfigApi {
@@ -12,9 +13,8 @@ class ConfigApi {
 
 final configApiProvider = Provider<ConfigApi>((ref) {
   return ConfigApi(
-    apiHost: '192.168.1.96',
-    apiPort: 8080,
-    isDevelopment: true, // Define como true para ambiente de desenvolvimento
+    apiHost: dotenv.env['API_HOST'] ?? 'localhost',
+    apiPort: int.tryParse(dotenv.env['API_PORT'] ?? ''),
+    isDevelopment: dotenv.env['IS_DEVELOPMENT'] == 'true',
   );
-  //return ConfigApi(apiHost: 'hgi-backend.onrender.com');
 });
