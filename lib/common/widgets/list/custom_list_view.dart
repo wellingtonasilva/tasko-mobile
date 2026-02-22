@@ -29,6 +29,7 @@ class CustomListView<T> extends StatelessWidget {
     }
 
     return ListView.builder(
+      padding: const EdgeInsets.all(8.0),
       shrinkWrap: true,
       itemCount: values.length,
       itemBuilder: (context, index) {
