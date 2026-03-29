@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tasko_mobile/data/repositories/vendedor/vendedor_repository_remote.dart';
+import 'package:tasko_mobile/data/repositories/vendedor/vendedor_repository_hybrid.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
@@ -18,11 +20,14 @@ class VendedorListarViewModel extends Notifier<VendedorListarUiState> {
   }
 
   Future<Result<void>> _listarVendedores() async {
-    final repository = ref.read(vendedorRepositoryRemoteProvider);
+    final repository = ref.read(vendedorRepositoryHybridProvider);
     final result = await repository.listar();
 
     if (result is Success<List<VendedorResponse>>) {
       state = state.copyWith(vendedores: result.value);
+
+      // Keeps UI local-first and refreshes data from backend in background.
+      unawaited(_sincronizarEmBackground(repository));
     } else if (result is Failure) {
       state = state.copyWith(
         vendedores: [],
@@ -37,8 +42,17 @@ class VendedorListarViewModel extends Notifier<VendedorListarUiState> {
     return result;
   }
 
+  Future<void> _sincronizarEmBackground(
+    VendedorRepositoryHybrid repository,
+  ) async {
+    final syncResult = await repository.sincronizarListaComServidor();
+    if (syncResult is Success<List<VendedorResponse>>) {
+      state = state.copyWith(vendedores: syncResult.value);
+    }
+  }
+
   Future<Result<void>> _excluirVendedor(int id) async {
-    final repository = ref.read(vendedorRepositoryRemoteProvider);
+    final repository = ref.read(vendedorRepositoryHybridProvider);
     final result = await repository.excluir(id);
     if (result is Success<void>) {
       await _listarVendedores();

@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Tasko Mobile',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       //home: const HomeScreen(),
       home: const VendedorListarScreen(),

@@ -10,6 +10,7 @@ import 'package:tasko_mobile/common/widgets/dashboard/custom_dashboard_card_defa
 import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_view_model.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_screen.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -103,7 +104,21 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: CustomButtonPrimary(
                           label: 'Adicionar Vendedor',
-                          onPressed: () {},
+                          onPressed: () async {
+                            final adicionado = await Navigator.push<bool>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const VendedorAdicionarScreen(),
+                              ),
+                            );
+                            if (adicionado == true) {
+                              ref
+                                  .read(vendedorListarViewModelProvider)
+                                  .listarVendedoresCommand
+                                  .execute();
+                            }
+                          },
                           trailingIcon: Icons.add,
                         ),
                       ),
