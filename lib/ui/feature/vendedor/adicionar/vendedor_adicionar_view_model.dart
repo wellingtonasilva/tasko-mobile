@@ -3,26 +3,24 @@ import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/data/repositories/vendedor/supervisor/vendedor_supervisor_repository_remote.dart';
 import 'package:tasko_mobile/data/repositories/vendedor/territorio/vendedor_territorio_repository_remote.dart';
 import 'package:tasko_mobile/data/repositories/vendedor/vendedor_repository_hybrid.dart';
-import 'package:tasko_mobile/domain/vendedor/request/atualizar_vendedor.dart';
+import 'package:tasko_mobile/domain/vendedor/request/adicionar_vendedor_request.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_supervisor_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_territorio_response.dart';
-import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_ui_state.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
 
-class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
+class VendedorAdicionarViewModel extends Notifier<VendedorAdicionarUiState> {
   void Function(String, Result result)? showSnackBar;
+  void Function()? onAdicionarSucesso;
 
   @override
-  VendedorManterUiState build() {
-    return VendedorManterUiState(
-      obterPorIdCommand: Command1<VendedorResponse, (int id,)>(_obterPorId),
-      atualizarCommand:
-          Command1<
-            VendedorResponse,
-            (int id, AtualizarVendedorRequest request)
-          >(_atualizar),
+  VendedorAdicionarUiState build() {
+    return VendedorAdicionarUiState(
+      adicionarCommand: Command1<VendedorResponse, AdicionarVendedorRequest>(
+        _adicionar,
+      ),
       listarSupervisorCommand: Command0<void>(_listarSupervisor)..execute(),
       listarTerritorioCommand: Command0<void>(_listarTerritorio)..execute(),
     );
@@ -32,54 +30,39 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
     state = state.copyWith(selectedSupervisor: supervisor);
   }
 
-  VendedorSupervisorResponse? get computedSelectedSupervisor {
-    if (state.vendedor?.supervisor == null || state.supervisores == null) {
-      return null;
-    }
-
-    return state.supervisores!.firstWhere(
-      (s) => s.id == state.vendedor?.supervisor!.id,
-      orElse: () => VendedorSupervisorResponse(id: -1),
-    );
+  void selectTerritorio(VendedorTerritorioResponse? territorio) {
+    state = state.copyWith(selectedTerritorio: territorio);
   }
 
   DropdownLoadingState get supervisorDropdownState {
-    if (state.listarSupervisorCommand.running ||
-        state.obterPorIdCommand.running) {
+    if (state.listarSupervisorCommand.running) {
       return DropdownLoadingState.loading;
     }
-    if (state.listarSupervisorCommand.completed &&
-        state.obterPorIdCommand.completed) {
+    if (state.listarSupervisorCommand.completed) {
       return DropdownLoadingState.ready;
     }
     return DropdownLoadingState.error;
   }
 
-  Future<Result<VendedorResponse>> _obterPorId((int id,) parameters) async {
-    final (id,) = parameters;
-    final result = await ref
-        .read(vendedorRepositoryHybridProvider)
-        .obterPorId(id);
-    if (result is Success<VendedorResponse>) {
-      state = state.copyWith(vendedor: result.value);
-    } else if (result is Failure<VendedorResponse>) {
-      showSnackBar?.call(
-        (result).errors?[0] ?? 'An unknown error occurred',
-        result,
-      );
+  DropdownLoadingState get territorioDropdownState {
+    if (state.listarTerritorioCommand.running) {
+      return DropdownLoadingState.loading;
     }
-    return result;
+    if (state.listarTerritorioCommand.completed) {
+      return DropdownLoadingState.ready;
+    }
+    return DropdownLoadingState.error;
   }
 
-  Future<Result<VendedorResponse>> _atualizar(
-    (int id, AtualizarVendedorRequest request) parameters,
+  Future<Result<VendedorResponse>> _adicionar(
+    AdicionarVendedorRequest request,
   ) async {
-    final (id, request) = parameters;
     final result = await ref
         .read(vendedorRepositoryHybridProvider)
-        .atualizar(id, request);
+        .adicionar(request);
     if (result is Success<VendedorResponse>) {
-      state = state.copyWith(vendedor: null);
+      showSnackBar?.call('Vendedor adicionado com sucesso!', result);
+      onAdicionarSucesso?.call();
     } else if (result is Failure<VendedorResponse>) {
       showSnackBar?.call(
         (result).errors?[0] ?? 'An unknown error occurred',
@@ -120,7 +103,7 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
   }
 }
 
-final vendedorManterViewModelProvider =
-    NotifierProvider<VendedorManterViewModel, VendedorManterUiState>(
-      () => VendedorManterViewModel(),
+final vendedorAdicionarViewModelProvider =
+    NotifierProvider<VendedorAdicionarViewModel, VendedorAdicionarUiState>(
+      () => VendedorAdicionarViewModel(),
     );
