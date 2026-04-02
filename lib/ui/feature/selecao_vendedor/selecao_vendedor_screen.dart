@@ -73,7 +73,7 @@ class _SelecaoVendedorScreenState
                   ref
                       .read(selecaoVendedorViewModelProvider.notifier)
                       .selecionarVendedor(vendedor);
-                  context.go('/vendedores');
+                  context.go('/home');
                 },
               ),
             ),
