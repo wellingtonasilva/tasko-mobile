@@ -60,21 +60,6 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
   }
 
   @override
-  PreferredSizeWidget? buildAppBar(BuildContext context) {
-    return CustomAppBarDefault(
-      onMenuPressed: () {
-        showSnackBar('Menu pressed', isError: false);
-      },
-      onSearchPressed: () {
-        showSnackBar('Search pressed', isError: false);
-      },
-      onSettingsPressed: () {
-        showSnackBar('Settings pressed', isError: false);
-      },
-    );
-  }
-
-  @override
   Widget buildContent(BuildContext context) {
     final viewModel = ref.watch(vendedorManterViewModelProvider);
     ref.listen<VendedorManterUiState>(vendedorManterViewModelProvider, (
