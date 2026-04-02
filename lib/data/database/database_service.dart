@@ -4,10 +4,16 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static const _dbName = 'tasko_mobile.db';
-  static const _dbVersion = 3;
+  static const _dbVersion = 4;
 
   static const vendedoresTable = 'vendedores';
   static const syncQueueTable = 'sync_queue';
+  static const clientesTable = 'clientes';
+  static const produtosTable = 'produtos';
+  static const pedidosTable = 'pedidos';
+  static const pedidoItensTable = 'pedido_itens';
+  static const agendaVisitasTable = 'agenda_visitas';
+  static const agendaVisitaCheckinsTable = 'agenda_visita_checkins';
 
   static final DatabaseService instance = DatabaseService._internal();
   DatabaseService._internal();
@@ -39,6 +45,12 @@ class DatabaseService {
   Future<void> _onCreate(Database db, int version) async {
     await _createVendedoresTable(db);
     await _createSyncQueueTable(db);
+    await _createClientesTable(db);
+    await _createProdutosTable(db);
+    await _createPedidosTable(db);
+    await _createPedidoItensTable(db);
+    await _createAgendaVisitasTable(db);
+    await _createAgendaVisitaCheckinsTable(db);
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -50,6 +62,10 @@ class DatabaseService {
 
     if (oldVersion < 3) {
       await _upgradeToV3(db);
+    }
+
+    if (oldVersion < 4) {
+      await _upgradeToV4(db);
     }
   }
 
@@ -83,6 +99,15 @@ class DatabaseService {
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_sync_queue_due ON $syncQueueTable (status, next_retry_at, created_at)',
     );
+  }
+
+  Future<void> _upgradeToV4(Database db) async {
+    await _createClientesTable(db);
+    await _createProdutosTable(db);
+    await _createPedidosTable(db);
+    await _createPedidoItensTable(db);
+    await _createAgendaVisitasTable(db);
+    await _createAgendaVisitaCheckinsTable(db);
   }
 
   Future<void> _addColumnIfNotExists(
@@ -165,6 +190,299 @@ class DatabaseService {
     );
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_sync_queue_due ON $syncQueueTable (status, next_retry_at, created_at)',
+    );
+  }
+
+  Future<void> _createClientesTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $clientesTable (
+        id INTEGER PRIMARY KEY,
+        local_uuid TEXT,
+        vendedor_id INTEGER,
+        codigo_cliente TEXT,
+        razao_social TEXT NOT NULL,
+        nome_fantasia TEXT,
+        cnpj_cpf TEXT,
+        inscricao_estadual TEXT,
+        tipo TEXT,
+        segmento TEXT,
+        categoria TEXT,
+        cep TEXT,
+        logradouro TEXT,
+        complemento TEXT,
+        bairro TEXT,
+        cidade TEXT,
+        estado TEXT,
+        latitude REAL,
+        longitude REAL,
+        limite_credito REAL,
+        prazo_pagamento INTEGER,
+        data_ultimo_pedido TEXT,
+        valor_ultima_compra REAL,
+        bloqueado INTEGER NOT NULL DEFAULT 0,
+        motivo_bloqueio TEXT,
+        auditoria_criado_em TEXT,
+        auditoria_atualizado_em TEXT,
+        auditoria_indicador_ativo INTEGER,
+        local_updated_at TEXT NOT NULL,
+        server_updated_at TEXT,
+        synced_at TEXT,
+        dirty INTEGER NOT NULL DEFAULT 0,
+        deleted INTEGER NOT NULL DEFAULT 0,
+        sync_error TEXT,
+        sync_attempt_count INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_clientes_vendedor ON $clientesTable (vendedor_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_clientes_dirty ON $clientesTable (dirty)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_clientes_deleted ON $clientesTable (deleted)',
+    );
+  }
+
+  Future<void> _createProdutosTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $produtosTable (
+        id INTEGER PRIMARY KEY,
+        local_uuid TEXT,
+        codigo_produto TEXT,
+        nome_produto TEXT NOT NULL,
+        descricao_produto TEXT,
+        unidade_medida_id INTEGER,
+        unidade_medida_nome TEXT,
+        grupo_id INTEGER,
+        grupo_nome TEXT,
+        subgrupo_id INTEGER,
+        subgrupo_nome TEXT,
+        peso_liquido REAL,
+        marca TEXT,
+        fornecedor TEXT,
+        aliquota_icms REAL,
+        aliquota_ipi REAL,
+        dimensao_altura REAL,
+        dimensao_largura REAL,
+        dimensao_profundidade REAL,
+        preco_custo REAL,
+        preco_sugerido REAL,
+        margem_minima REAL,
+        quantidade_disponivel REAL,
+        quantidade_reservada REAL,
+        codigos_barras_json TEXT,
+        auditoria_criado_em TEXT,
+        auditoria_atualizado_em TEXT,
+        auditoria_indicador_ativo INTEGER,
+        local_updated_at TEXT NOT NULL,
+        server_updated_at TEXT,
+        synced_at TEXT,
+        dirty INTEGER NOT NULL DEFAULT 0,
+        deleted INTEGER NOT NULL DEFAULT 0,
+        sync_error TEXT,
+        sync_attempt_count INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_produtos_nome ON $produtosTable (nome_produto)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_produtos_dirty ON $produtosTable (dirty)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_produtos_deleted ON $produtosTable (deleted)',
+    );
+  }
+
+  Future<void> _createPedidosTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $pedidosTable (
+        id INTEGER PRIMARY KEY,
+        local_uuid TEXT,
+        numero_pedido TEXT,
+        cliente_id INTEGER NOT NULL,
+        vendedor_id INTEGER NOT NULL,
+        pedido_status_tipo_id INTEGER,
+        pedido_status_tipo_nome TEXT,
+        data_pedido TEXT NOT NULL,
+        data_entrega_prevista TEXT,
+        observacao TEXT,
+        subtotal REAL NOT NULL DEFAULT 0,
+        percentual_desconto REAL,
+        valor_desconto REAL,
+        valor_frete REAL,
+        valor_total REAL NOT NULL DEFAULT 0,
+        forma_pagamento_id INTEGER,
+        forma_pagamento_nome TEXT,
+        condicao_pagamento_id INTEGER,
+        condicao_pagamento_nome TEXT,
+        latitude REAL,
+        longitude REAL,
+        sincronizado INTEGER NOT NULL DEFAULT 0,
+        criado_offline INTEGER NOT NULL DEFAULT 0,
+        uuid_offline TEXT,
+        auditoria_criado_em TEXT,
+        auditoria_atualizado_em TEXT,
+        auditoria_indicador_ativo INTEGER,
+        local_updated_at TEXT NOT NULL,
+        server_updated_at TEXT,
+        synced_at TEXT,
+        dirty INTEGER NOT NULL DEFAULT 0,
+        deleted INTEGER NOT NULL DEFAULT 0,
+        sync_error TEXT,
+        sync_attempt_count INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedidos_cliente ON $pedidosTable (cliente_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedidos_vendedor ON $pedidosTable (vendedor_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedidos_dirty ON $pedidosTable (dirty)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedidos_deleted ON $pedidosTable (deleted)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedidos_uuid_offline ON $pedidosTable (uuid_offline)',
+    );
+  }
+
+  Future<void> _createPedidoItensTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $pedidoItensTable (
+        id INTEGER PRIMARY KEY,
+        local_uuid TEXT,
+        pedido_id INTEGER NOT NULL,
+        produto_id INTEGER NOT NULL,
+        quantidade REAL NOT NULL,
+        preco_unitario REAL NOT NULL,
+        percentual_desconto REAL,
+        valor_desconto REAL,
+        valor_total REAL NOT NULL,
+        auditoria_criado_em TEXT,
+        auditoria_atualizado_em TEXT,
+        auditoria_indicador_ativo INTEGER,
+        local_updated_at TEXT NOT NULL,
+        server_updated_at TEXT,
+        synced_at TEXT,
+        dirty INTEGER NOT NULL DEFAULT 0,
+        deleted INTEGER NOT NULL DEFAULT 0,
+        sync_error TEXT,
+        sync_attempt_count INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY (pedido_id) REFERENCES $pedidosTable (id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedido_itens_pedido ON $pedidoItensTable (pedido_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedido_itens_dirty ON $pedidoItensTable (dirty)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedido_itens_deleted ON $pedidoItensTable (deleted)',
+    );
+  }
+
+  Future<void> _createAgendaVisitasTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $agendaVisitasTable (
+        id INTEGER PRIMARY KEY,
+        local_uuid TEXT,
+        data_agendada TEXT NOT NULL,
+        data_realizada TEXT,
+        duracao_prevista INTEGER,
+        duracao_real INTEGER,
+        objetivo TEXT,
+        observacao TEXT,
+        resultado TEXT,
+        vendedor_id INTEGER NOT NULL,
+        cliente_id INTEGER,
+        agenda_visita_status_id INTEGER,
+        agenda_visita_status_nome TEXT,
+        latitude REAL,
+        longitude REAL,
+        pedido_gerado INTEGER NOT NULL DEFAULT 0,
+        pedido_id INTEGER,
+        valor_pedido REAL,
+        sincronizado INTEGER NOT NULL DEFAULT 0,
+        criado_offline INTEGER NOT NULL DEFAULT 0,
+        uuid_offline TEXT,
+        auditoria_criado_em TEXT,
+        auditoria_atualizado_em TEXT,
+        auditoria_indicador_ativo INTEGER,
+        local_updated_at TEXT NOT NULL,
+        server_updated_at TEXT,
+        synced_at TEXT,
+        dirty INTEGER NOT NULL DEFAULT 0,
+        deleted INTEGER NOT NULL DEFAULT 0,
+        sync_error TEXT,
+        sync_attempt_count INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_agenda_visitas_vendedor ON $agendaVisitasTable (vendedor_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_agenda_visitas_data ON $agendaVisitasTable (data_agendada)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_agenda_visitas_dirty ON $agendaVisitasTable (dirty)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_agenda_visitas_deleted ON $agendaVisitasTable (deleted)',
+    );
+  }
+
+  Future<void> _createAgendaVisitaCheckinsTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $agendaVisitaCheckinsTable (
+        id INTEGER PRIMARY KEY,
+        local_uuid TEXT,
+        agenda_visita_id INTEGER NOT NULL,
+        vendedor_id INTEGER NOT NULL,
+        cliente_id INTEGER,
+        checkin_tipo_id INTEGER,
+        checkin_tipo_nome TEXT,
+        observacao TEXT,
+        latitude REAL,
+        longitude REAL,
+        distancia_cliente REAL,
+        dentro_raio_permitido INTEGER,
+        sincronizado INTEGER NOT NULL DEFAULT 0,
+        uuid_offline TEXT,
+        auditoria_criado_em TEXT,
+        auditoria_atualizado_em TEXT,
+        auditoria_indicador_ativo INTEGER,
+        local_updated_at TEXT NOT NULL,
+        server_updated_at TEXT,
+        synced_at TEXT,
+        dirty INTEGER NOT NULL DEFAULT 0,
+        deleted INTEGER NOT NULL DEFAULT 0,
+        sync_error TEXT,
+        sync_attempt_count INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY (agenda_visita_id)
+          REFERENCES $agendaVisitasTable (id)
+          ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_agenda_checkins_visita ON $agendaVisitaCheckinsTable (agenda_visita_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_agenda_checkins_dirty ON $agendaVisitaCheckinsTable (dirty)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_agenda_checkins_deleted ON $agendaVisitaCheckinsTable (deleted)',
     );
   }
 }
