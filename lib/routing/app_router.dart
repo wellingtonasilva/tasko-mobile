@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
+import 'package:tasko_mobile/ui/feature/home/home_screen.dart';
+import 'package:tasko_mobile/ui/feature/home/modulo_placeholder_screen.dart';
 import 'package:tasko_mobile/ui/feature/selecao_vendedor/selecao_vendedor_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_screen.dart';
@@ -19,7 +21,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       }
 
       if (vendedorSelecionado != null && isSelecaoRoute) {
-        return '/vendedores';
+        return '/home';
       }
 
       return null;
@@ -31,9 +33,48 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SelecaoVendedorScreen(),
       ),
       GoRoute(
+        path: '/home',
+        name: 'home',
+        builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
         path: '/vendedores',
         name: 'vendedores-listar',
         builder: (context, state) => const VendedorListarScreen(),
+      ),
+      GoRoute(
+        path: '/clientes',
+        name: 'clientes',
+        builder: (context, state) => const ModuloPlaceholderScreen(
+          title: 'Clientes',
+          menuKey: 'clientes',
+        ),
+      ),
+      GoRoute(
+        path: '/produtos',
+        name: 'produtos',
+        builder: (context, state) => const ModuloPlaceholderScreen(
+          title: 'Produtos',
+          menuKey: 'produtos',
+        ),
+      ),
+      GoRoute(
+        path: '/pedidos',
+        name: 'pedidos',
+        builder: (context, state) =>
+            const ModuloPlaceholderScreen(title: 'Pedidos', menuKey: 'pedidos'),
+      ),
+      GoRoute(
+        path: '/agenda',
+        name: 'agenda',
+        builder: (context, state) =>
+            const ModuloPlaceholderScreen(title: 'Agenda', menuKey: 'agenda'),
+      ),
+      GoRoute(
+        path: '/metas',
+        name: 'metas',
+        builder: (context, state) =>
+            const ModuloPlaceholderScreen(title: 'Metas', menuKey: 'metas'),
       ),
       GoRoute(
         path: '/vendedores/adicionar',

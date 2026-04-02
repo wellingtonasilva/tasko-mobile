@@ -3,9 +3,29 @@ import 'package:flutter/widget_previews.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({super.key, required this.onTap});
+  const CustomDrawer({super.key, required this.onTap, this.currentMenu});
 
   final Function(String menuOptions) onTap;
+  final String? currentMenu;
+
+  Widget _buildMenuItem({
+    required String keyName,
+    required String label,
+    required IconData icon,
+  }) {
+    return Builder(
+      builder: (context) {
+        return ListTile(
+          leading: Icon(icon),
+          title: Text(label),
+          selected: currentMenu == keyName,
+          onTap: () {
+            onTap(keyName);
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,42 +52,38 @@ class CustomDrawer extends StatelessWidget {
               height: 40,
             ),
           ),
-          ListTile(
-            title: const Text('Opcao1'),
-            onTap: () {
-              onTap('opcao1');
-            },
+          _buildMenuItem(keyName: 'home', label: 'Home', icon: Icons.home),
+          _buildMenuItem(
+            keyName: 'vendedores',
+            label: 'Vendedores',
+            icon: Icons.badge,
           ),
-          ListTile(
-            title: const Text('Opcao2'),
-            onTap: () {
-              onTap('opcao2');
-            },
+          _buildMenuItem(
+            keyName: 'clientes',
+            label: 'Clientes',
+            icon: Icons.groups,
           ),
-          ListTile(
-            title: const Text('Opcao3'),
-            onTap: () {
-              onTap('opcao3');
-            },
+          _buildMenuItem(
+            keyName: 'produtos',
+            label: 'Produtos',
+            icon: Icons.inventory_2,
           ),
-          ListTile(
-            title: const Text('Opcao4'),
-            onTap: () {
-              onTap('opcao4');
-            },
+          _buildMenuItem(
+            keyName: 'pedidos',
+            label: 'Pedidos',
+            icon: Icons.shopping_cart,
           ),
-          ListTile(
-            title: const Text('Opcao5'),
-            onTap: () {
-              onTap('opcao5');
-            },
+          _buildMenuItem(
+            keyName: 'agenda',
+            label: 'Agenda',
+            icon: Icons.calendar_month,
           ),
-
-          ListTile(
-            title: const Text('Opcao6'),
-            onTap: () {
-              onTap('opcao6');
-            },
+          _buildMenuItem(keyName: 'metas', label: 'Metas', icon: Icons.flag),
+          const Divider(),
+          _buildMenuItem(
+            keyName: 'trocar-vendedor',
+            label: 'Trocar Vendedor',
+            icon: Icons.switch_account,
           ),
         ],
       ),
@@ -77,5 +93,5 @@ class CustomDrawer extends StatelessWidget {
 
 @Preview(name: 'Custom Drawer')
 Widget customDrawerPreview() {
-  return CustomDrawer(onTap: (String menuOptions) {});
+  return CustomDrawer(onTap: (String menuOptions) {}, currentMenu: 'home');
 }
