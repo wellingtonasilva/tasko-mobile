@@ -82,51 +82,63 @@ abstract class BaseScreenState<T extends BaseScreen> extends ConsumerState<T> {
   /// Permite customizar o FloatingActionButton (opcional)
   Widget? buildFloatingActionButton(BuildContext context) => null;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(context),
-      body: Stack(
-        children: [
-          // Conteúdo principal
-          buildContent(context),
+  /// Quando false, a tela renderiza apenas o stack de conteúdo/erro/loading
+  /// sem criar um Scaffold. Útil quando a tela é renderizada dentro de um shell.
+  bool get useScaffold => true;
 
-          // Mensagem de erro (se houver)
-          if (_errorMessage != null)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                color: kColorStyleErrorLight200,
-                child: Row(
-                  children: [
-                    const Icon(Icons.error, color: Colors.red),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _errorMessage!,
-                        style: const TextStyle(color: Colors.red),
-                      ),
+  Widget _buildBodyStack(BuildContext context) {
+    return Stack(
+      children: [
+        // Conteúdo principal
+        buildContent(context),
+
+        // Mensagem de erro (se houver)
+        if (_errorMessage != null)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              color: kColorStyleErrorLight200,
+              child: Row(
+                children: [
+                  const Icon(Icons.error, color: Colors.red),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Colors.red),
-                      onPressed: clearError,
-                    ),
-                  ],
-                ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.red),
+                    onPressed: clearError,
+                  ),
+                ],
               ),
             ),
+          ),
 
-          // Indicador de loading
-          if (_isLoading)
-            Container(
-              color: Colors.black.withOpacity(0.5),
-              child: const Center(child: CircularProgressIndicator()),
-            ),
-        ],
-      ),
+        // Indicador de loading
+        if (_isLoading)
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(child: CircularProgressIndicator()),
+          ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!useScaffold) {
+      return _buildBodyStack(context);
+    }
+
+    return Scaffold(
+      appBar: buildAppBar(context),
+      body: _buildBodyStack(context),
       floatingActionButton: buildFloatingActionButton(context),
     );
   }
