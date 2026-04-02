@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
@@ -10,8 +11,6 @@ import 'package:tasko_mobile/common/widgets/dashboard/custom_dashboard_card_defa
 import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_view_model.dart';
-import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_screen.dart';
-import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_screen.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class VendedorListarScreen extends BaseScreen {
@@ -105,12 +104,8 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                         child: CustomButtonPrimary(
                           label: 'Adicionar Vendedor',
                           onPressed: () async {
-                            final adicionado = await Navigator.push<bool>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const VendedorAdicionarScreen(),
-                              ),
+                            final adicionado = await context.pushNamed<bool>(
+                              'vendedores-adicionar',
                             );
                             if (adicionado == true) {
                               ref
@@ -206,14 +201,11 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                                       : CustomListView<VendedorResponse>(
                                           values: viewModel.vendedores,
                                           onTap: (value) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    VendedorManterScreen(
-                                                      vendedorId: value.id,
-                                                    ),
-                                              ),
+                                            context.pushNamed(
+                                              'vendedores-manter',
+                                              pathParameters: {
+                                                'id': value.id.toString(),
+                                              },
                                             );
                                             /*
                                 context.pushNamed(
