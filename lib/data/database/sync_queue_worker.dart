@@ -2,8 +2,13 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/data/database/cliente_local_data_source.dart';
 import 'package:tasko_mobile/data/database/sync_queue_data_source.dart';
 import 'package:tasko_mobile/data/database/vendedor_local_data_source.dart';
+import 'package:tasko_mobile/data/service/cliente_service.dart';
+import 'package:tasko_mobile/domain/cliente/request/adicionar_cliente_request.dart';
+import 'package:tasko_mobile/domain/cliente/request/atualizar_cliente_request.dart';
+import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 import 'package:tasko_mobile/data/service/vendedor_service.dart';
 import 'package:tasko_mobile/domain/vendedor/request/adicionar_vendedor_request.dart';
 import 'package:tasko_mobile/domain/vendedor/request/atualizar_vendedor.dart';
@@ -15,17 +20,24 @@ class SyncQueueWorker {
     required SyncQueueDataSource queueDataSource,
     required VendedorLocalDataSource vendedorLocalDataSource,
     required VendedorService vendedorService,
+    required ClienteLocalDataSource clienteLocalDataSource,
+    required ClienteService clienteService,
   }) : _queue = queueDataSource,
        _vendedorLocal = vendedorLocalDataSource,
-       _vendedorService = vendedorService;
+       _vendedorService = vendedorService,
+       _clienteLocal = clienteLocalDataSource,
+       _clienteService = clienteService;
 
   static const _maxAttempts = 6;
   static const _baseRetrySeconds = 5;
   static const _entityTypeVendedor = 'vendedor';
+  static const _entityTypeCliente = 'cliente';
 
   final SyncQueueDataSource _queue;
   final VendedorLocalDataSource _vendedorLocal;
   final VendedorService _vendedorService;
+  final ClienteLocalDataSource _clienteLocal;
+  final ClienteService _clienteService;
 
   Future<Result<void>> runOnce({int limit = 20}) async {
     final dueItemsResult = await _queue.getDueItems(limit: limit);
@@ -75,10 +87,6 @@ class SyncQueueWorker {
   }
 
   Future<Result<void>> _processItem(SyncQueueItem item) async {
-    if (item.entityType != _entityTypeVendedor) {
-      return Result.success(null);
-    }
-
     if (item.payload == null || item.payload!.isEmpty) {
       return Result.failure(['Payload vazio na fila de sincronizacao']);
     }
@@ -86,14 +94,106 @@ class SyncQueueWorker {
     try {
       final payload = jsonDecode(item.payload!) as Map<String, dynamic>;
 
-      switch (item.operation) {
-        case 'add':
-          return await _processVendedorAdd(item, payload);
-        case 'update':
-          return await _processVendedorUpdate(item, payload);
+      switch (item.entityType) {
+        case _entityTypeVendedor:
+          switch (item.operation) {
+            case 'add':
+              return await _processVendedorAdd(item, payload);
+            case 'update':
+              return await _processVendedorUpdate(item, payload);
+            default:
+              return Result.success(null);
+          }
+        case _entityTypeCliente:
+          switch (item.operation) {
+            case 'add':
+              return await _processClienteAdd(item, payload);
+            case 'update':
+              return await _processClienteUpdate(item, payload);
+            case 'delete':
+              return await _processClienteDelete(item);
+            default:
+              return Result.success(null);
+          }
         default:
           return Result.success(null);
       }
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<void>> _processClienteAdd(
+    SyncQueueItem item,
+    Map<String, dynamic> payload,
+  ) async {
+    try {
+      final request = AdicionarClienteRequest.fromJson(payload);
+      final result = await _clienteService.adicionar(request);
+
+      if (result is Failure<ClienteResponse>) {
+        return Result.failure(result.errors);
+      }
+
+      final remote = (result as Success<ClienteResponse>).value;
+      final localId = int.tryParse(item.entityId);
+      if (localId == null) {
+        return Result.failure([
+          'Entity id invalido para sincronizacao de create',
+        ]);
+      }
+
+      final reconcileResult = await _clienteLocal.reconcileOfflineCreate(
+        localId: localId,
+        remote: remote,
+      );
+      if (reconcileResult is Failure<void>) {
+        return reconcileResult;
+      }
+
+      return Result.success(null);
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<void>> _processClienteUpdate(
+    SyncQueueItem item,
+    Map<String, dynamic> payload,
+  ) async {
+    try {
+      final request = AtualizarClienteRequest.fromJson(payload);
+      final result = await _clienteService.atualizar(request.id, request);
+
+      if (result is Failure<ClienteResponse>) {
+        return Result.failure(result.errors);
+      }
+
+      final remote = (result as Success<ClienteResponse>).value;
+      final persistedResult = await _clienteLocal.upsert(remote);
+      if (persistedResult is Failure<void>) {
+        return persistedResult;
+      }
+
+      return Result.success(null);
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<void>> _processClienteDelete(SyncQueueItem item) async {
+    try {
+      final id = int.tryParse(item.entityId);
+      if (id == null) {
+        return Result.failure(['Entity id invalido para exclusao de cliente']);
+      }
+
+      final result = await _clienteService.excluir(id);
+      if (result is Failure<void>) {
+        return result;
+      }
+
+      return Result.success(null);
     } on Exception catch (error) {
       return Result.failure([error.toString()]);
     }
@@ -179,10 +279,14 @@ final syncQueueWorkerProvider = Provider<SyncQueueWorker>((ref) {
   final queueDataSource = ref.watch(syncQueueDataSourceProvider);
   final vendedorLocalDataSource = ref.watch(vendedorLocalDataSourceProvider);
   final vendedorService = ref.watch(vendedorServiceProvider);
+  final clienteLocalDataSource = ref.watch(clienteLocalDataSourceProvider);
+  final clienteService = ref.watch(clienteServiceProvider);
 
   return SyncQueueWorker(
     queueDataSource: queueDataSource,
     vendedorLocalDataSource: vendedorLocalDataSource,
     vendedorService: vendedorService,
+    clienteLocalDataSource: clienteLocalDataSource,
+    clienteService: clienteService,
   );
 });

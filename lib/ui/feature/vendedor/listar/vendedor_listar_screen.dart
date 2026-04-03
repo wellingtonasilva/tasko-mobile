@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
-import 'package:tasko_mobile/common/widgets/appbar/custom_app_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/container/custom_container_default.dart';
 import 'package:tasko_mobile/common/widgets/dashboard/custom_dashboard_card_default.dart';
