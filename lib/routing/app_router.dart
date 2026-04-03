@@ -8,6 +8,8 @@ import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dar
 import 'package:tasko_mobile/ui/feature/cliente/tabela_preco/cliente_tabela_preco_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/home_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/modulo_placeholder_screen.dart';
+import 'package:tasko_mobile/ui/feature/produto/detalhe/produto_detalhe_screen.dart';
+import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/selecao_vendedor/selecao_vendedor_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_screen.dart';
@@ -106,8 +108,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/produtos',
             name: 'produtos',
-            builder: (context, state) =>
-                const ModuloPlaceholderScreen(title: 'Produtos'),
+            builder: (context, state) => const ProdutoListarScreen(),
+          ),
+          GoRoute(
+            path: '/produtos/:id',
+            name: 'produtos-detalhe',
+            builder: (context, state) {
+              final produtoId = int.tryParse(state.pathParameters['id'] ?? '');
+              if (produtoId == null) {
+                return const ProdutoListarScreen();
+              }
+              return ProdutoDetalheScreen(produtoId: produtoId);
+            },
           ),
           GoRoute(
             path: '/pedidos',

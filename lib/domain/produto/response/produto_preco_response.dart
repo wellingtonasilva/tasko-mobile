@@ -1,0 +1,47 @@
+class ProdutoPrecoResponse {
+  final int id;
+  final int produtoId;
+  final int? tabelaPrecoId;
+  final String? descricaoTabelaPreco;
+  final double? valor;
+
+  ProdutoPrecoResponse({
+    required this.id,
+    required this.produtoId,
+    this.tabelaPrecoId,
+    this.descricaoTabelaPreco,
+    this.valor,
+  });
+
+  factory ProdutoPrecoResponse.fromJson(Map<String, dynamic> json) {
+    return ProdutoPrecoResponse(
+      id: _toInt(json['id']) ?? 0,
+      produtoId: _toInt(json['produtoId']) ?? 0,
+      tabelaPrecoId: _toInt(json['tabelaPrecoId']),
+      descricaoTabelaPreco: json['descricaoTabelaPreco'] as String?,
+      valor: _toDouble(json['valor']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'produtoId': produtoId,
+      'tabelaPrecoId': tabelaPrecoId,
+      'descricaoTabelaPreco': descricaoTabelaPreco,
+      'valor': valor,
+    };
+  }
+
+  static int? _toInt(Object? value) {
+    if (value is int) return value;
+    return int.tryParse(value?.toString() ?? '');
+  }
+
+  static double? _toDouble(Object? value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    return double.tryParse(value.toString());
+  }
+}
