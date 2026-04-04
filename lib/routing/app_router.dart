@@ -8,6 +8,8 @@ import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dar
 import 'package:tasko_mobile/ui/feature/cliente/tabela_preco/cliente_tabela_preco_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/home_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/modulo_placeholder_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/detalhe/produto_detalhe_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/selecao_vendedor/selecao_vendedor_screen.dart';
@@ -124,8 +126,23 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/pedidos',
             name: 'pedidos',
-            builder: (context, state) =>
-                const ModuloPlaceholderScreen(title: 'Pedidos'),
+            builder: (context, state) => const PedidoListarScreen(),
+          ),
+          GoRoute(
+            path: '/pedidos/criar',
+            name: 'pedidos-criar',
+            builder: (context, state) => const PedidoCriarScreen(),
+          ),
+          GoRoute(
+            path: '/pedidos/:id',
+            name: 'pedidos-detalhe',
+            builder: (context, state) {
+              final pedidoId = int.tryParse(state.pathParameters['id'] ?? '');
+              if (pedidoId == null) {
+                return const PedidoListarScreen();
+              }
+              return const PedidoListarScreen();
+            },
           ),
           GoRoute(
             path: '/agenda',

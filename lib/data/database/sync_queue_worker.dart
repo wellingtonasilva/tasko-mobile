@@ -3,13 +3,20 @@ import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/data/database/cliente_local_data_source.dart';
+import 'package:tasko_mobile/data/database/pedido_local_data_source.dart';
 import 'package:tasko_mobile/data/database/sync_queue_data_source.dart';
 import 'package:tasko_mobile/data/database/vendedor_local_data_source.dart';
 import 'package:tasko_mobile/data/service/cliente_service.dart';
+import 'package:tasko_mobile/data/service/pedido_item_service.dart';
+import 'package:tasko_mobile/data/service/pedido_service.dart';
 import 'package:tasko_mobile/domain/cliente/request/adicionar_cliente_request.dart';
 import 'package:tasko_mobile/domain/cliente/request/atualizar_cliente_request.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 import 'package:tasko_mobile/data/service/vendedor_service.dart';
+import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_item_request.dart';
+import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
+import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
+import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/domain/vendedor/request/adicionar_vendedor_request.dart';
 import 'package:tasko_mobile/domain/vendedor/request/atualizar_vendedor.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
@@ -22,22 +29,32 @@ class SyncQueueWorker {
     required VendedorService vendedorService,
     required ClienteLocalDataSource clienteLocalDataSource,
     required ClienteService clienteService,
+    required PedidoLocalDataSource pedidoLocalDataSource,
+    required PedidoService pedidoService,
+    required PedidoItemService pedidoItemService,
   }) : _queue = queueDataSource,
        _vendedorLocal = vendedorLocalDataSource,
        _vendedorService = vendedorService,
        _clienteLocal = clienteLocalDataSource,
-       _clienteService = clienteService;
+       _clienteService = clienteService,
+       _pedidoLocal = pedidoLocalDataSource,
+       _pedidoService = pedidoService,
+       _pedidoItemService = pedidoItemService;
 
   static const _maxAttempts = 6;
   static const _baseRetrySeconds = 5;
   static const _entityTypeVendedor = 'vendedor';
   static const _entityTypeCliente = 'cliente';
+  static const _entityTypePedido = 'pedido';
 
   final SyncQueueDataSource _queue;
   final VendedorLocalDataSource _vendedorLocal;
   final VendedorService _vendedorService;
   final ClienteLocalDataSource _clienteLocal;
   final ClienteService _clienteService;
+  final PedidoLocalDataSource _pedidoLocal;
+  final PedidoService _pedidoService;
+  final PedidoItemService _pedidoItemService;
 
   Future<Result<void>> runOnce({int limit = 20}) async {
     final dueItemsResult = await _queue.getDueItems(limit: limit);
@@ -112,6 +129,15 @@ class SyncQueueWorker {
               return await _processClienteUpdate(item, payload);
             case 'delete':
               return await _processClienteDelete(item);
+            default:
+              return Result.success(null);
+          }
+        case _entityTypePedido:
+          switch (item.operation) {
+            case 'add':
+              return await _processPedidoAdd(item, payload);
+            case 'delete':
+              return await _processPedidoDelete(item);
             default:
               return Result.success(null);
           }
@@ -257,6 +283,85 @@ class SyncQueueWorker {
     }
   }
 
+  Future<Result<void>> _processPedidoAdd(
+    SyncQueueItem item,
+    Map<String, dynamic> payload,
+  ) async {
+    try {
+      final request = AdicionarPedidoRequest.fromJson(payload);
+      final result = await _pedidoService.adicionar(request);
+
+      if (result is Failure<PedidoResponse>) {
+        return Result.failure(result.errors);
+      }
+
+      final remote = (result as Success<PedidoResponse>).value;
+      final localId = int.tryParse(item.entityId);
+      if (localId == null) {
+        return Result.failure([
+          'Entity id invalido para sincronizacao de create',
+        ]);
+      }
+
+      // Get local items before reconciling (which deletes local pedido row)
+      final localItensResult = await _pedidoLocal.listarItensPorPedidoId(
+        localId,
+      );
+      final localItens = localItensResult is Success<List<PedidoItemResponse>>
+          ? localItensResult.value
+          : <PedidoItemResponse>[];
+
+      // Reconcile: replace local negative-ID pedido with server ID
+      final reconcileResult = await _pedidoLocal.reconcileOfflineCreate(
+        localId: localId,
+        remote: remote,
+      );
+      if (reconcileResult is Failure<void>) {
+        return reconcileResult;
+      }
+
+      // POST each item with the server pedidoId
+      for (final localItem in localItens) {
+        final itemRequest = AdicionarPedidoItemRequest(
+          pedidoId: remote.id,
+          produtoId: localItem.produtoId,
+          quantidade: localItem.quantidade,
+          precoUnitario: localItem.precoUnitario,
+          percentualDesconto: localItem.percentualDesconto,
+          valorDesconto: localItem.valorDesconto,
+          valorTotal: localItem.valorTotal,
+        );
+
+        final itemResult = await _pedidoItemService.adicionar(itemRequest);
+        if (itemResult is Success<PedidoItemResponse>) {
+          await _pedidoLocal.upsertItem(itemResult.value);
+        }
+      }
+
+      return Result.success(null);
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<void>> _processPedidoDelete(SyncQueueItem item) async {
+    try {
+      final id = int.tryParse(item.entityId);
+      if (id == null) {
+        return Result.failure(['Entity id invalido para exclusao de pedido']);
+      }
+
+      final result = await _pedidoService.excluir(id);
+      if (result is Failure<void>) {
+        return result;
+      }
+
+      return Result.success(null);
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
   Duration _computeBackoff(int attempt) {
     final expSeconds = _baseRetrySeconds * pow(2, max(0, attempt - 1)).toInt();
     final cappedSeconds = expSeconds > 300 ? 300 : expSeconds;
@@ -281,6 +386,9 @@ final syncQueueWorkerProvider = Provider<SyncQueueWorker>((ref) {
   final vendedorService = ref.watch(vendedorServiceProvider);
   final clienteLocalDataSource = ref.watch(clienteLocalDataSourceProvider);
   final clienteService = ref.watch(clienteServiceProvider);
+  final pedidoLocalDataSource = ref.watch(pedidoLocalDataSourceProvider);
+  final pedidoService = ref.watch(pedidoServiceProvider);
+  final pedidoItemService = ref.watch(pedidoItemServiceProvider);
 
   return SyncQueueWorker(
     queueDataSource: queueDataSource,
@@ -288,5 +396,8 @@ final syncQueueWorkerProvider = Provider<SyncQueueWorker>((ref) {
     vendedorService: vendedorService,
     clienteLocalDataSource: clienteLocalDataSource,
     clienteService: clienteService,
+    pedidoLocalDataSource: pedidoLocalDataSource,
+    pedidoService: pedidoService,
+    pedidoItemService: pedidoItemService,
   );
 });
