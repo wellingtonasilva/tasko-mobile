@@ -7,6 +7,9 @@ import 'package:tasko_mobile/ui/feature/cliente/listar/cliente_listar_screen.dar
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/tabela_preco/cliente_tabela_preco_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/home_screen.dart';
+import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_screen.dart';
+import 'package:tasko_mobile/ui/feature/agenda_visita/detalhe/agenda_visita_detalhe_screen.dart';
+import 'package:tasko_mobile/ui/feature/agenda_visita/listar/agenda_visita_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/modulo_placeholder_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_screen.dart';
@@ -147,8 +150,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/agenda',
             name: 'agenda',
-            builder: (context, state) =>
-                const ModuloPlaceholderScreen(title: 'Agenda'),
+            builder: (context, state) => const AgendaVisitaListarScreen(),
+          ),
+          GoRoute(
+            path: '/agenda/criar',
+            name: 'agenda-criar',
+            builder: (context, state) => const AgendaVisitaCriarScreen(),
+          ),
+          GoRoute(
+            path: '/agenda/:id',
+            name: 'agenda-detalhe',
+            builder: (context, state) {
+              final agendaVisitaId = int.tryParse(
+                state.pathParameters['id'] ?? '',
+              );
+              if (agendaVisitaId == null) {
+                return const AgendaVisitaListarScreen();
+              }
+              return AgendaVisitaDetalheScreen(agendaVisitaId: agendaVisitaId);
+            },
           ),
           GoRoute(
             path: '/metas',
