@@ -2,6 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
 import 'package:tasko_mobile/common/widgets/scaffold/app_shell_scaffold.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/create_new_password_v3_mobile_screen.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/reset_password_success_v3_smartphone_screen.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/ciar_conta/register_v3_smartphone_screen.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/login/login_v3_mobile_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/adicionar/cliente_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/listar/cliente_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dart';
@@ -24,7 +28,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final vendedorSelecionado = ref.watch(vendedorSelecionadoProvider);
 
   return GoRouter(
-    initialLocation: '/selecao-vendedor',
+    // initialLocation: '/selecao-vendedor',
+    initialLocation: '/login',
+    /*
     redirect: (context, state) {
       final isSelecaoRoute = state.matchedLocation == '/selecao-vendedor';
 
@@ -38,11 +44,36 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       return null;
     },
+    */
     routes: <RouteBase>[
       GoRoute(
         path: '/selecao-vendedor',
         name: 'selecao-vendedor',
         builder: (context, state) => const SelecaoVendedorScreen(),
+      ),
+      GoRoute(
+        path: '/login',
+        name: 'login',
+        builder: (context, state) => const LoginV3MobileScreen(),
+        routes: [
+          GoRoute(
+            path: 'criar-password',
+            name: 'criar-password',
+            builder: (context, state) =>
+                const CreateNewPasswordV3MobileScreen(),
+          ),
+          GoRoute(
+            path: 'reset-password-success',
+            name: 'reset-password-success',
+            builder: (context, state) =>
+                const ResetPasswordSuccessV3SmartphoneScreen(),
+          ),
+          GoRoute(
+            path: 'criar-conta',
+            name: 'criar-conta',
+            builder: (context, state) => const RegisterV3SmartphoneScreen(),
+          ),
+        ],
       ),
       ShellRoute(
         builder: (context, state, child) {
