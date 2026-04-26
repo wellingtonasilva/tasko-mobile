@@ -54,7 +54,7 @@ class CreateNewPasswordV3MobileScreen extends StatelessWidget {
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Create new password',
+                              'Criar nova senha',
                               style: kTestStyleBoldText24,
                             ),
                           ),
@@ -62,7 +62,7 @@ class CreateNewPasswordV3MobileScreen extends StatelessWidget {
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Let\'s create a new and more secure password',
+                              'Vamos criar uma nova senha mais segura',
                               style: kTestStyleMediumText14.copyWith(
                                 color: kColorStyleSecondinaryLight400,
                               ),
@@ -80,7 +80,7 @@ class CreateNewPasswordV3MobileScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 24),
                           CustomButton(
-                            label: 'Continue',
+                            label: 'Continuar',
                             options: CustomButtonOptions(
                               color:
                                   kColorStylePrimaryNeutralPaletteDarkDefault,
@@ -118,7 +118,7 @@ class CreateNewPasswordV3MobileScreen extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  '© 2023 Posive. All rights reserved.',
+                                  '© 2026 WAS Sistemas. All rights reserved.',
                                   style: kTestStyleMediumText14.copyWith(
                                     color: kColorStyleSecondinaryLight400,
                                   ),
@@ -130,7 +130,7 @@ class CreateNewPasswordV3MobileScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Term & Condition',
+                                'Termos & Condições',
                                 style: kTestStyleBoldText14.copyWith(
                                   color: kColorStyleInformationDarkDefault,
                                 ),
@@ -145,7 +145,7 @@ class CreateNewPasswordV3MobileScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'Privacy & Policy',
+                                'Política de Privacidade',
                                 style: kTestStyleBoldText14.copyWith(
                                   color: kColorStyleInformationDarkDefault,
                                 ),

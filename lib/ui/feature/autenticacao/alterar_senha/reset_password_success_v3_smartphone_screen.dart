@@ -51,7 +51,7 @@ class ResetPasswordSuccessV3SmartphoneScreen extends StatelessWidget {
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Reset password succesful',
+                              'Senha redefinida com sucesso',
                               style: kTestStyleBoldText24,
                             ),
                           ),
@@ -59,7 +59,7 @@ class ResetPasswordSuccessV3SmartphoneScreen extends StatelessWidget {
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Successfully changed password. you can enter the main page',
+                              'Senha alterada com sucesso. Você pode acessar a página principal',
                               style: kTestStyleMediumText14.copyWith(
                                 color: kColorStyleSecondinaryLight400,
                               ),
@@ -67,7 +67,7 @@ class ResetPasswordSuccessV3SmartphoneScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 24),
                           CustomButton(
-                            label: 'Go to home',
+                            label: 'Ir para o início',
                             options: CustomButtonOptions(
                               color:
                                   kColorStylePrimaryNeutralPaletteDarkDefault,
@@ -105,7 +105,7 @@ class ResetPasswordSuccessV3SmartphoneScreen extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  '© 2023 Posive. All rights reserved.',
+                                  '© 2026 WAS Sistemas. All rights reserved.',
                                   style: kTestStyleMediumText14.copyWith(
                                     color: kColorStyleSecondinaryLight400,
                                   ),
@@ -117,7 +117,7 @@ class ResetPasswordSuccessV3SmartphoneScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Term & Condition',
+                                'Termos & Condições',
                                 style: kTestStyleBoldText14.copyWith(
                                   color: kColorStyleInformationDarkDefault,
                                 ),
@@ -132,7 +132,7 @@ class ResetPasswordSuccessV3SmartphoneScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'Privacy & Policy',
+                                'Política de Privacidade',
                                 style: kTestStyleBoldText14.copyWith(
                                   color: kColorStyleInformationDarkDefault,
                                 ),
