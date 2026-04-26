@@ -54,7 +54,7 @@ class RegisterV3SmartphoneScreen extends StatelessWidget {
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Register',
+                              'Cadastrar',
                               style: kTestStyleBoldText32,
                             ),
                           ),
@@ -62,7 +62,7 @@ class RegisterV3SmartphoneScreen extends StatelessWidget {
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Let’s create new account',
+                              'Vamos criar uma nova conta',
                               style: kTestStyleMediumText14.copyWith(
                                 color: kColorStyleSecondinaryLight400,
                               ),
@@ -95,7 +95,7 @@ class RegisterV3SmartphoneScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 24),
                           CustomButton(
-                            label: 'Register',
+                            label: 'Cadastrar',
                             options: CustomButtonOptions(
                               color:
                                   kColorStylePrimaryNeutralPaletteDarkDefault,
@@ -147,7 +147,7 @@ class RegisterV3SmartphoneScreen extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    'Already have an account? ',
+                                    'Já tem uma conta? ',
                                     style: kTestStyleMediumText14.copyWith(
                                       color: kColorStyleSecondinaryLight400,
                                     ),
@@ -155,7 +155,7 @@ class RegisterV3SmartphoneScreen extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                'Login Here',
+                                'Entrar',
                                 style: kTestStyleBoldText14.copyWith(
                                   color: kColorStyleInformationDarkDefault,
                                 ),
@@ -167,7 +167,7 @@ class RegisterV3SmartphoneScreen extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  '© 2023 Posive. All rights reserved.',
+                                  '© 2026 WAS Sistemas. All rights reserved.',
                                   style: kTestStyleMediumText14.copyWith(
                                     color: kColorStyleSecondinaryLight400,
                                   ),
@@ -179,7 +179,7 @@ class RegisterV3SmartphoneScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Term & Condition',
+                                'Termos & Condições',
                                 style: kTestStyleBoldText14.copyWith(
                                   color: kColorStyleInformationDarkDefault,
                                 ),
@@ -194,7 +194,7 @@ class RegisterV3SmartphoneScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'Privacy & Policy',
+                                'Política de Privacidade',
                                 style: kTestStyleBoldText14.copyWith(
                                   color: kColorStyleInformationDarkDefault,
                                 ),

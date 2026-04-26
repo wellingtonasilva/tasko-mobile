@@ -43,7 +43,7 @@ class LoginV3MobileScreen extends StatelessWidget {
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          'Let’s login into your account first',
+                          'Vamos fazer login na sua conta primeiro',
                           style: kTestStyleMediumText14.copyWith(
                             color: kColorStyleSecondinaryLight400,
                           ),
@@ -51,12 +51,12 @@ class LoginV3MobileScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 30),
                       CustomTextFormField(
-                        labelText: 'E-mail',
+                        labelText: 'Usuário ou Email',
                         autofillHints: [AutofillHints.email],
                       ),
                       SizedBox(height: 10),
                       CustomTextFormField(
-                        labelText: 'Password',
+                        labelText: 'Senha',
                         autofillHints: [AutofillHints.password],
                       ),
                       SizedBox(height: 22),
@@ -68,7 +68,7 @@ class LoginV3MobileScreen extends StatelessWidget {
                             children: [
                               Checkbox(value: false, onChanged: (value) {}),
                               Text(
-                                'Remember me',
+                                'Lembrar-me',
                                 style: kTestStyleMediumText14.copyWith(
                                   color: kColorStyleSecondinaryLight400,
                                 ),
@@ -80,7 +80,7 @@ class LoginV3MobileScreen extends StatelessWidget {
                               context.pushNamed<bool>('criar-password');
                             },
                             child: Text(
-                              'Forgot Password',
+                              'Esqueceu a senha?',
                               style: kTestStyleBoldText14.copyWith(
                                 color: kColorStyleInformationDarkDefault,
                               ),
@@ -201,7 +201,7 @@ class LoginV3MobileScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'Don’t have an account? ',
+                                'Não tem uma conta? ',
                                 style: kTestStyleMediumText14.copyWith(
                                   color: kColorStyleSecondinaryLight400,
                                 ),
@@ -214,7 +214,7 @@ class LoginV3MobileScreen extends StatelessWidget {
                               context.go('/login/criar-conta');
                             },
                             child: Text(
-                              'Register Here',
+                              'Cadastre-se aqui',
                               style: kTestStyleBoldText14.copyWith(
                                 color: kColorStyleInformationDarkDefault,
                               ),
@@ -227,7 +227,7 @@ class LoginV3MobileScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              '© 2023 Posive. All rights reserved.',
+                              '© 2026 WAS Sistemas. All rights reserved.',
                               style: kTestStyleMediumText14.copyWith(
                                 color: kColorStyleSecondinaryLight400,
                               ),
@@ -239,7 +239,7 @@ class LoginV3MobileScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Term & Condition',
+                            'Termos & Condições',
                             style: kTestStyleBoldText14.copyWith(
                               color: kColorStyleInformationDarkDefault,
                             ),
@@ -254,7 +254,7 @@ class LoginV3MobileScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Privacy & Policy',
+                            'Política de Privacidade',
                             style: kTestStyleBoldText14.copyWith(
                               color: kColorStyleInformationDarkDefault,
                             ),
@@ -286,7 +286,7 @@ class LoginV3MobileScreen extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Unleash the Power of Our Intuitive Point of Sale Solution',
+                                  'Desperte o poder da nossa solução intuitiva de ponto de venda',
                                   style: kTestStyleBoldText24.copyWith(
                                     color: Colors.white,
                                   ),
@@ -295,7 +295,7 @@ class LoginV3MobileScreen extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Experience the future of retail with our user-friendly POS platform. Increase your sales, streamline operations, and delight your customers with a modern and efficient checkout process',
+                                  'Experimente o futuro do varejo com nossa plataforma de PDV amigável. Aumente suas vendas, otimize operações e encante seus clientes com um processo de checkout moderno e eficiente',
                                   style: kTestStyleRegularText14.copyWith(
                                     color: Colors.white,
                                   ),
