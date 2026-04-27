@@ -216,10 +216,15 @@ class _CriarContaScreenState extends ConsumerState<CriarContaScreen> {
                                     ),
                                   ],
                                 ),
-                                Text(
-                                  'Entrar',
-                                  style: kTestStyleBoldText14.copyWith(
-                                    color: kColorStyleInformationDarkDefault,
+                                GestureDetector(
+                                  onTap: () {
+                                    context.go('/login');
+                                  },
+                                  child: Text(
+                                    'Entrar',
+                                    style: kTestStyleBoldText14.copyWith(
+                                      color: kColorStyleInformationDarkDefault,
+                                    ),
                                   ),
                                 ),
                               ],
