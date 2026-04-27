@@ -11,16 +11,16 @@ class UsuarioLoginResponse {
   final VendedorResponse? vendedor;
   final String nomeUsuario;
   final String token;
-  //final List<UsuarioPerfilResponse> perfis;
-  //final List<UsuarioEmpresaResponse> empresas;
+  final List<UsuarioPerfilResponse> perfis;
+  final List<UsuarioEmpresaResponse> empresas;
 
   UsuarioLoginResponse({
     required this.id,
     this.vendedor,
     required this.nomeUsuario,
     required this.token,
-    //required this.perfis,
-    //required this.empresas,
+    required this.perfis,
+    required this.empresas,
   });
 
   factory UsuarioLoginResponse.fromJson(Map<String, dynamic> json) =>

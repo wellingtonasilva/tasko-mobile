@@ -9,6 +9,7 @@ class CustomTextFormField extends StatefulWidget {
   final Widget? prefixIcon;
   final Color? fillColor;
   final String? hintText;
+  final String? Function(BuildContext, String?)? validator;
 
   const CustomTextFormField({
     super.key,
@@ -18,6 +19,7 @@ class CustomTextFormField extends StatefulWidget {
     this.prefixIcon,
     this.fillColor,
     this.hintText,
+    this.validator,
   });
 
   @override
@@ -44,6 +46,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       textCapitalization: TextCapitalization.words,
       obscureText: !_isPassword ? false : !passwordVisibility,
       autofillHints: widget.autofillHints,
+      validator: widget.validator != null
+          ? (value) => widget.validator!(context, value)
+          : null,
       decoration: InputDecoration(
         labelText: widget.labelText,
         labelStyle: kTestStyleMediumText16.copyWith(

@@ -4,7 +4,7 @@ import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
 import 'package:tasko_mobile/common/widgets/scaffold/app_shell_scaffold.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/create_new_password_v3_mobile_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/reset_password_success_v3_smartphone_screen.dart';
-import 'package:tasko_mobile/ui/feature/autenticacao/ciar_conta/register_v3_smartphone_screen.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/criar_conta/criar_conta_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/login/login_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/adicionar/cliente_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/listar/cliente_listar_screen.dart';
@@ -71,7 +71,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'criar-conta',
             name: 'criar-conta',
-            builder: (context, state) => const RegisterV3SmartphoneScreen(),
+            builder: (context, state) => const CriarContaScreen(),
           ),
         ],
       ),
