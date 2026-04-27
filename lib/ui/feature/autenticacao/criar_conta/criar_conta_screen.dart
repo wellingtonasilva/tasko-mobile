@@ -161,10 +161,10 @@ class _CriarContaScreenState extends ConsumerState<CriarContaScreen> {
                             ),
                             SizedBox(height: 10),
                             CustomTextFormField(
-                              controller: _controllers.senha.controller,
+                              controller: _controllers.repetirSenha.controller,
                               labelText: 'Repetir Senha',
                               autofillHints: [AutofillHints.password],
-                              validator: _controllers.senha.validator,
+                              validator: _controllers.repetirSenha.validator,
                             ),
                             SizedBox(height: 24),
                             CustomButton(

@@ -6,6 +6,7 @@ class CriarContaControllers {
   late final CustomFormFieldData nomeEmpresa;
   late final CustomFormFieldData email;
   late final CustomFormFieldData senha;
+  late final CustomFormFieldData repetirSenha;
 
   CriarContaControllers() {
     nomeEmpresa = CustomFormFieldData(
@@ -30,6 +31,13 @@ class CriarContaControllers {
       validator: (context, val) =>
           val == null || val.isEmpty ? 'Por favor informe a Senha.' : null,
     );
+    repetirSenha = CustomFormFieldData(
+      controller: TextEditingController(),
+      focusNode: FocusNode(),
+      labelText: 'Repetir Senha',
+      validator: (context, val) =>
+          val == null || val.isEmpty ? 'Por favor repita a Senha.' : null,
+    );
   }
 
   void dispose() {
@@ -39,5 +47,7 @@ class CriarContaControllers {
     email.focusNode.dispose();
     senha.controller.dispose();
     senha.focusNode.dispose();
+    repetirSenha.controller.dispose();
+    repetirSenha.focusNode.dispose();
   }
 }

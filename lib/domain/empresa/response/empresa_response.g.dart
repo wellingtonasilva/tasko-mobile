@@ -9,16 +9,16 @@ part of 'empresa_response.dart';
 EmpresaResponse _$EmpresaResponseFromJson(Map<String, dynamic> json) =>
     EmpresaResponse(
       id: (json['id'] as num).toInt(),
-      dominio: json['dominio'] as String,
+      dominio: json['dominio'] as String?,
       nomeEmpresa: json['nomeEmpresa'] as String,
-      numeroCnpj: json['numeroCnpj'] as String,
+      numeroCnpj: json['numeroCnpj'] as String?,
       email: json['email'] as String,
-      logradouro: json['logradouro'] as String,
-      numero: json['numero'] as String,
-      nomeCidade: json['nomeCidade'] as String,
-      nomeBairro: json['nomeBairro'] as String,
-      uf: json['uf'] as String,
-      numeroTelefone: json['numeroTelefone'] as String,
+      logradouro: json['logradouro'] as String?,
+      numero: json['numero'] as String?,
+      nomeCidade: json['nomeCidade'] as String?,
+      nomeBairro: json['nomeBairro'] as String?,
+      uf: json['uf'] as String?,
+      numeroTelefone: json['numeroTelefone'] as String?,
     );
 
 Map<String, dynamic> _$EmpresaResponseToJson(EmpresaResponse instance) =>

@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:tasko_mobile/config/config_api.dart';
 import 'package:tasko_mobile/config/http_client_config.dart';
 import 'package:tasko_mobile/domain/empresa/request/adicionar_empresa_request.dart';
@@ -96,7 +98,7 @@ class EmpresaService {
       final response = await _client.post(
         url,
         headers: _headers,
-        body: request.toJson(),
+        body: jsonEncode(request.toJson()),
       );
       return convertToResult<EmpresaResponse>((decodedJson) {
         final dynamic rawData = decodedJson['data'];
