@@ -8,7 +8,7 @@ part 'usuario_login_response.g.dart';
 @JsonSerializable()
 class UsuarioLoginResponse {
   final int id;
-  final VendedorResponse vendedor;
+  final VendedorResponse? vendedor;
   final String nomeUsuario;
   final String token;
   final List<UsuarioPerfilResponse> perfis;
@@ -16,7 +16,7 @@ class UsuarioLoginResponse {
 
   UsuarioLoginResponse({
     required this.id,
-    required this.vendedor,
+    this.vendedor,
     required this.nomeUsuario,
     required this.token,
     required this.perfis,

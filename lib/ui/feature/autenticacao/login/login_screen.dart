@@ -1,15 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_text_form_field.dart';
+import 'package:tasko_mobile/domain/usuario/request/login_request.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/login/login_controllers.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/login/login_view_model.dart';
+import 'package:tasko_mobile/util/result.dart';
 
-class LoginV3MobileScreen extends StatelessWidget {
-  const LoginV3MobileScreen({super.key});
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  late final LoginControllers _controllers;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = LoginControllers();
+
+    final viewModel = ref.read(loginViewModelProvider.notifier);
+    viewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+
+    viewModel.onLoginSucesso = () {
+      if (mounted) {
+        context.go('/home');
+      }
+    };
+  }
+
+  void showSnackBar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            color: isError
+                ? kColorStyleErrorLight400
+                : kColorStyleSuccessDark600,
+          ),
+        ),
+        backgroundColor: isError
+            ? kColorStyleErrorDark700
+            : kColorStyleSuccessLight200,
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'Fechar',
+          textColor: isError
+              ? kColorStyleErrorLight400
+              : kColorStyleSuccessDark600,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = ref.watch(loginViewModelProvider);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -51,12 +114,14 @@ class LoginV3MobileScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 30),
                       CustomTextFormField(
-                        labelText: 'Usuário ou Email',
+                        controller: _controllers.nomeUsuario.controller,
+                        labelText: _controllers.nomeUsuario.labelText,
                         autofillHints: [AutofillHints.email],
                       ),
                       SizedBox(height: 10),
                       CustomTextFormField(
-                        labelText: 'Senha',
+                        controller: _controllers.senha.controller,
+                        labelText: _controllers.senha.labelText,
                         autofillHints: [AutofillHints.password],
                       ),
                       SizedBox(height: 22),
@@ -113,19 +178,12 @@ class LoginV3MobileScreen extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Não foi possível salvar as informações.',
-                                style: kTestStyleBoldText14.copyWith(
-                                  color: kColorStyleInformationDark600,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  kColorStyleInformationLightDefault,
-                            ),
+                          final request = LoginRequest(
+                            nomeUsuario:
+                                _controllers.nomeUsuario.controller.text,
+                            senha: _controllers.senha.controller.text,
                           );
+                          viewModel.loginCommand.execute(request);
                         },
                       ),
                       SizedBox(height: 24),

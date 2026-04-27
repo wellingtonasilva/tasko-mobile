@@ -10,7 +10,9 @@ UsuarioLoginResponse _$UsuarioLoginResponseFromJson(
   Map<String, dynamic> json,
 ) => UsuarioLoginResponse(
   id: (json['id'] as num).toInt(),
-  vendedor: VendedorResponse.fromJson(json['vendedor'] as Map<String, dynamic>),
+  vendedor: json['vendedor'] == null
+      ? null
+      : VendedorResponse.fromJson(json['vendedor'] as Map<String, dynamic>),
   nomeUsuario: json['nomeUsuario'] as String,
   token: json['token'] as String,
   perfis: (json['perfis'] as List<dynamic>)
