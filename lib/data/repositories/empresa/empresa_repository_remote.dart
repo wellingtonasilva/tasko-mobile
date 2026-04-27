@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/data/repositories/empresa/empresa_repository.dart';
 import 'package:tasko_mobile/data/service/empresa_service.dart';
 import 'package:tasko_mobile/domain/empresa/request/adicionar_empresa_request.dart';
@@ -45,3 +46,10 @@ class EmpresaRepositoryRemote implements EmpresaRepository {
     return _empresaService.obterPorId(id);
   }
 }
+
+final empresaRepositoryRemoteProvider = Provider<EmpresaRepositoryRemote>((
+  ref,
+) {
+  final empresaService = ref.watch(empresaServiceProvider);
+  return EmpresaRepositoryRemote(empresaService: empresaService);
+});

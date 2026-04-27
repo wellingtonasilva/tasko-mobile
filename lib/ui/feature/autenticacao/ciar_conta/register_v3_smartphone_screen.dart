@@ -70,27 +70,23 @@ class RegisterV3SmartphoneScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 24),
                           CustomTextFormField(
-                            labelText: 'Your name',
-                            autofillHints: [AutofillHints.name],
+                            labelText: 'Nome da Empresa',
+                            autofillHints: [AutofillHints.organizationName],
                           ),
                           SizedBox(height: 10),
                           CustomTextFormField(
                             labelText: 'E-mail',
                             autofillHints: [AutofillHints.email],
                           ),
+
                           SizedBox(height: 10),
                           CustomTextFormField(
-                            labelText: 'Phone Number',
-                            autofillHints: [AutofillHints.telephoneNumber],
-                          ),
-                          SizedBox(height: 10),
-                          CustomTextFormField(
-                            labelText: 'Password',
+                            labelText: 'Senha',
                             autofillHints: [AutofillHints.password],
                           ),
                           SizedBox(height: 10),
                           CustomTextFormField(
-                            labelText: 'Repeat Password',
+                            labelText: 'Repetir Senha',
                             autofillHints: [AutofillHints.password],
                           ),
                           SizedBox(height: 24),

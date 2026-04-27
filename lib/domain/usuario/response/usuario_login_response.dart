@@ -8,19 +8,19 @@ part 'usuario_login_response.g.dart';
 @JsonSerializable()
 class UsuarioLoginResponse {
   final int id;
-  final VendedorResponse vendedor;
+  final VendedorResponse? vendedor;
   final String nomeUsuario;
   final String token;
-  final List<UsuarioPerfilResponse> perfis;
-  final List<UsuarioEmpresaResponse> empresas;
+  //final List<UsuarioPerfilResponse> perfis;
+  //final List<UsuarioEmpresaResponse> empresas;
 
   UsuarioLoginResponse({
     required this.id,
-    required this.vendedor,
+    this.vendedor,
     required this.nomeUsuario,
     required this.token,
-    required this.perfis,
-    required this.empresas,
+    //required this.perfis,
+    //required this.empresas,
   });
 
   factory UsuarioLoginResponse.fromJson(Map<String, dynamic> json) =>

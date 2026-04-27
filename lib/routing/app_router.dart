@@ -5,7 +5,7 @@ import 'package:tasko_mobile/common/widgets/scaffold/app_shell_scaffold.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/create_new_password_v3_mobile_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/reset_password_success_v3_smartphone_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/ciar_conta/register_v3_smartphone_screen.dart';
-import 'package:tasko_mobile/ui/feature/autenticacao/login/login_v3_mobile_screen.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/login/login_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/adicionar/cliente_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/listar/cliente_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dart';
@@ -54,7 +54,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/login',
         name: 'login',
-        builder: (context, state) => const LoginV3MobileScreen(),
+        builder: (context, state) => const LoginScreen(),
         routes: [
           GoRoute(
             path: 'criar-password',

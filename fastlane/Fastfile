@@ -1,0 +1,37 @@
+default_platform(:android)
+
+platform :android do
+  desc "Upload the signed Android App Bundle to Google Play internal testing"
+  lane :upload_internal do
+    json_key = ENV["FL_SERVICE_ACCOUNT_PATH"].to_s.strip
+    package_name = ENV.fetch("FL_PACKAGE_NAME", "br.com.wsilva.tasko.go").strip
+    track = ENV.fetch("FL_TRACK", "internal").strip
+    aab_path = File.expand_path(
+      ENV.fetch("FL_AAB_PATH", "build/app/outputs/bundle/release/app-release.aab").strip
+    )
+
+    UI.user_error!("FL_SERVICE_ACCOUNT_PATH is required") if json_key.empty?
+    UI.user_error!("FL_PACKAGE_NAME is required") if package_name.empty?
+    UI.user_error!("FL_TRACK is required") if track.empty?
+    UI.user_error!("FL_AAB_PATH is required") if aab_path.empty?
+
+    json_key_path = File.expand_path(json_key)
+
+    UI.user_error!("Service account JSON not found") unless File.exist?(json_key_path)
+    UI.user_error!("Android App Bundle not found") unless File.exist?(aab_path)
+
+    UI.message("Uploading #{File.basename(aab_path)}")
+    UI.message("Package: #{package_name} | Track: #{track}")
+
+    upload_to_play_store(
+      json_key: json_key_path,
+      package_name: package_name,
+      track: track,
+      aab: aab_path,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: true
+    )
+  end
+end
