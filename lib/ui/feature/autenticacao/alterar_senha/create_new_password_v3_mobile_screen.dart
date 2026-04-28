@@ -6,7 +6,9 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_text_form_field.dart';
 
 class CreateNewPasswordV3MobileScreen extends StatelessWidget {
-  const CreateNewPasswordV3MobileScreen({super.key});
+  final String? token;
+
+  const CreateNewPasswordV3MobileScreen({super.key, this.token});
 
   @override
   Widget build(BuildContext context) {

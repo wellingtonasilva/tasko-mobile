@@ -47,6 +47,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     */
     routes: <RouteBase>[
       GoRoute(
+        path: '/reset-password',
+        builder: (context, state) {
+          final token = state.uri.queryParameters['token'];
+          return CreateNewPasswordV3MobileScreen(token: token);
+        },
+      ),
+      GoRoute(
         path: '/selecao-vendedor',
         name: 'selecao-vendedor',
         builder: (context, state) => const SelecaoVendedorScreen(),
