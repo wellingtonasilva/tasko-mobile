@@ -28,9 +28,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     DeepLinkService.listen((uri) {
       if (uri.path == '/reset-password') {
         final token = uri.queryParameters['token'];
-
-        //context.go('/reset-password?token=$token');
-        context.go("/reset-password?token=123");
+        context.go('/reset-password?token=$token');
       }
     });
   }

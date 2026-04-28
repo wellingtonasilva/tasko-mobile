@@ -43,7 +43,7 @@ class CreateNewPasswordV3MobileScreen extends StatelessWidget {
                         alignment: Alignment.topLeft,
                         child: IconButton(
                           onPressed: () {
-                            context.pop();
+                            context.go('/login');
                           },
                           icon: Icon(Icons.arrow_back),
                         ),
@@ -53,6 +53,12 @@ class CreateNewPasswordV3MobileScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 24, right: 24),
                       child: Column(
                         children: [
+                          Text(
+                            'Token: $token',
+                            style: kTestStyleMediumText14.copyWith(
+                              color: kColorStyleSecondinaryLight400,
+                            ),
+                          ),
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(

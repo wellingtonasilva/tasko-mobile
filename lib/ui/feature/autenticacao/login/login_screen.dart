@@ -142,7 +142,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              context.pushNamed<bool>('criar-password');
+                              context.pushNamed<bool>('recuperar-senha');
                             },
                             child: Text(
                               'Esqueceu a senha?',
@@ -186,7 +186,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           viewModel.loginCommand.execute(request);
                         },
                       ),
-                      SizedBox(height: 24),
+                      SizedBox(height: 20),
+                      /*
                       Row(
                         children: [
                           Expanded(
@@ -253,6 +254,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         },
                       ),
                       SizedBox(height: 24),
+                      */
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

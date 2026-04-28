@@ -35,6 +35,11 @@
                     android:scheme="https"
                     android:host="wassistemas.com"
                     android:pathPrefix="/reset-password" />
+
+                <data
+                    android:scheme="https"
+                    android:host="www.wassistemas.com"
+                    android:pathPrefix="/reset-password" />
             </intent-filter>
 
             <intent-filter>
