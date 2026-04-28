@@ -9,6 +9,8 @@ import 'package:tasko_mobile/util/result.dart';
 class LoginViewModel extends Notifier<LoginUiState> {
   void Function(String, Result result)? showSnackBar;
   void Function()? onLoginSucesso;
+  void Function()? onStartEvent;
+  void Function()? onFinishEvent;
 
   @override
   LoginUiState build() {
@@ -18,6 +20,7 @@ class LoginViewModel extends Notifier<LoginUiState> {
   }
 
   Future<Result<UsuarioLoginResponse>> _login(LoginRequest request) async {
+    onStartEvent?.call();
     final result = await ref.read(loginRepositoryRemoteProvider).login(request);
     if (result is Success<UsuarioLoginResponse>) {
       showSnackBar?.call('Login realizado com sucesso!', result);
@@ -28,6 +31,7 @@ class LoginViewModel extends Notifier<LoginUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 }

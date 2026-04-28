@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
+import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_text_form_field.dart';
 import 'package:tasko_mobile/domain/usuario/request/solicitacao_recuperar_senha_request.dart';
@@ -11,15 +11,15 @@ import 'package:tasko_mobile/ui/feature/autenticacao/recuperar_senha/recuperar_s
 import 'package:tasko_mobile/ui/feature/autenticacao/recuperar_senha/recuperar_senha_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
 
-class RecuperarSenhaScreen extends ConsumerStatefulWidget {
+class RecuperarSenhaScreen extends BaseScreen {
   const RecuperarSenhaScreen({super.key});
 
   @override
-  ConsumerState<RecuperarSenhaScreen> createState() =>
+  BaseScreenState<RecuperarSenhaScreen> createState() =>
       _RecuperarSenhaScreenState();
 }
 
-class _RecuperarSenhaScreenState extends ConsumerState<RecuperarSenhaScreen> {
+class _RecuperarSenhaScreenState extends BaseScreenState<RecuperarSenhaScreen> {
   late final RecuperarSenhaControllers _controllers;
 
   @override
@@ -41,38 +41,20 @@ class _RecuperarSenhaScreenState extends ConsumerState<RecuperarSenhaScreen> {
         context.go('/login');
       }
     };
-  }
-
-  void showSnackBar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(
-            color: isError
-                ? kColorStyleErrorLight400
-                : kColorStyleSuccessDark600,
-          ),
-        ),
-        backgroundColor: isError
-            ? kColorStyleErrorDark700
-            : kColorStyleSuccessLight200,
-        duration: const Duration(seconds: 3),
-        action: SnackBarAction(
-          label: 'Fechar',
-          textColor: isError
-              ? kColorStyleErrorLight400
-              : kColorStyleSuccessDark600,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ),
-    );
+    viewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     final viewModel = ref.watch(recuperarSenhaViewModelProvider);
 
     return GestureDetector(
@@ -81,195 +63,198 @@ class _RecuperarSenhaScreenState extends ConsumerState<RecuperarSenhaScreen> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        backgroundColor: kColorStyleSecondinaryDark900,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    SizedBox(height: 60),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 24),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Image.asset(
-                          'assets/images/pos_logo.png',
-                          height: 34,
+        backgroundColor: kColorStylePrimary0,
+        body: SafeArea(
+          bottom: false,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 60),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, left: 24),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Image.asset(
+                            'assets/images/pos_logo.png',
+                            height: 50,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 10),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: IconButton(
-                          onPressed: () {
-                            context.go('/login');
-                          },
-                          icon: Icon(Icons.arrow_back),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, left: 10),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: IconButton(
+                            onPressed: () {
+                              context.go('/login');
+                            },
+                            icon: Icon(Icons.arrow_back),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 24, right: 24),
-                      child: Form(
-                        key: _controllers.formKey,
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Recuperar senha',
-                                style: kTestStyleBoldText24,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Vamos recuperar sua senha. Por favor, informe o e-mail associado à sua conta.',
-                                style: kTestStyleMediumText14.copyWith(
-                                  color: kColorStyleSecondinaryLight400,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 24, right: 24),
+                        child: Form(
+                          key: _controllers.formKey,
+                          child: Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Recuperar senha',
+                                  style: kTestStyleBoldText24,
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 24),
-                            CustomTextFormField(
-                              labelText: 'E-mail',
-                              controller: _controllers.email.controller,
-                              validator: _controllers.email.validator,
-                              autofillHints: [AutofillHints.email],
-                            ),
-                            SizedBox(height: 24),
-                            CustomButton(
-                              label: 'Continuar',
-                              options: CustomButtonOptions(
-                                color:
-                                    kColorStylePrimaryNeutralPaletteDarkDefault,
-                                width: double.infinity,
-                                height: 50,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                  24,
-                                  0,
-                                  24,
-                                  0,
+                              SizedBox(height: 5),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Vamos recuperar sua senha. Por favor, informe o e-mail associado à sua conta.',
+                                  style: kTestStyleMediumText14.copyWith(
+                                    color: kColorStyleSecondinaryLight400,
+                                  ),
                                 ),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0,
-                                  0,
-                                  0,
-                                  0,
-                                ),
-                                elevation: 3,
-                                borderSide: BorderSide(
+                              ),
+                              SizedBox(height: 24),
+                              CustomTextFormField(
+                                labelText: 'E-mail',
+                                controller: _controllers.email.controller,
+                                validator: _controllers.email.validator,
+                                autofillHints: [AutofillHints.email],
+                              ),
+                              SizedBox(height: 24),
+                              CustomButton(
+                                label: 'Continuar',
+                                options: CustomButtonOptions(
                                   color:
-                                      kColorStylePrimaryNeutralPaletteDark600,
-                                  width: 1,
+                                      kColorStylePrimaryNeutralPaletteDarkDefault,
+                                  width: double.infinity,
+                                  height: 50,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                    24,
+                                    0,
+                                    24,
+                                    0,
+                                  ),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                  ),
+                                  elevation: 3,
+                                  borderSide: BorderSide(
+                                    color:
+                                        kColorStylePrimaryNeutralPaletteDark600,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                  textStyle: kTestStyleBoldText16.copyWith(
+                                    color:
+                                        kColorStylePrimaryNeutralPaletteLightDefault,
+                                  ),
                                 ),
-                                borderRadius: BorderRadius.circular(8),
-                                textStyle: kTestStyleBoldText16.copyWith(
-                                  color:
-                                      kColorStylePrimaryNeutralPaletteLightDefault,
+                                onPressed: () {
+                                  //context.go('/login/reset-password-success');
+                                  _handleRecuperarSenha(viewModel);
+                                },
+                              ),
+                              SizedBox(height: 24),
+                              Center(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '© 2026 WAS Sistemas. All rights reserved.',
+                                      style: kTestStyleMediumText14.copyWith(
+                                        color: kColorStyleSecondinaryLight400,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              onPressed: () {
-                                //context.go('/login/reset-password-success');
-                                _handleRecuperarSenha(viewModel);
-                              },
-                            ),
-                            SizedBox(height: 24),
-                            Center(
-                              child: Column(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    '© 2026 WAS Sistemas. All rights reserved.',
-                                    style: kTestStyleMediumText14.copyWith(
+                                    'Termos & Condições',
+                                    style: kTestStyleBoldText14.copyWith(
+                                      color: kColorStyleInformationDarkDefault,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
                                       color: kColorStyleSecondinaryLight400,
+                                      width: 1,
+                                      height: 15,
+                                      child: SizedBox(height: 10),
+                                    ),
+                                  ),
+                                  Text(
+                                    'Política de Privacidade',
+                                    style: kTestStyleBoldText14.copyWith(
+                                      color: kColorStyleInformationDarkDefault,
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Termos & Condições',
-                                  style: kTestStyleBoldText14.copyWith(
-                                    color: kColorStyleInformationDarkDefault,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    color: kColorStyleSecondinaryLight400,
-                                    width: 1,
-                                    height: 15,
-                                    child: SizedBox(height: 10),
-                                  ),
-                                ),
-                                Text(
-                                  'Política de Privacidade',
-                                  style: kTestStyleBoldText14.copyWith(
-                                    color: kColorStyleInformationDarkDefault,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 50),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                color: Colors.black,
-                child: Stack(
-                  children: [
-                    Image.asset('assets/images/pos_login_v3_tablet_left.png'),
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      bottom: 10,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          alignment: Alignment.bottomCenter,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Unleash the Power of Our Intuitive Point of Sale Solution',
-                                  style: kTestStyleBoldText24.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Experience the future of retail with our user-friendly POS platform. Increase your sales, streamline operations, and delight your customers with a modern and efficient checkout process',
-                                  style: kTestStyleRegularText14.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
+                              SizedBox(height: 50),
                             ],
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Container(
+                  color: Colors.black,
+                  child: Stack(
+                    children: [
+                      Image.asset('assets/images/pos_login_v3_tablet_left.png'),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Container(
+                            alignment: Alignment.bottomCenter,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Unleash the Power of Our Intuitive Point of Sale Solution',
+                                    style: kTestStyleBoldText24.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Experience the future of retail with our user-friendly POS platform. Increase your sales, streamline operations, and delight your customers with a modern and efficient checkout process',
+                                    style: kTestStyleRegularText14.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

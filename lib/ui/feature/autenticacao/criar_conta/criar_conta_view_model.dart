@@ -9,6 +9,8 @@ import 'package:tasko_mobile/util/result.dart';
 class CriarContaViewModel extends Notifier<CriarContaUiState> {
   void Function(String, Result result)? showSnackBar;
   void Function()? onCriarContaComSucesso;
+  void Function()? onStartEvent;
+  void Function()? onFinishEvent;
 
   @override
   CriarContaUiState build() {
@@ -22,6 +24,7 @@ class CriarContaViewModel extends Notifier<CriarContaUiState> {
   Future<Result<EmpresaResponse>> _criarEmpresa(
     CriarEmpresaRequest request,
   ) async {
+    onStartEvent?.call();
     final result = await ref
         .read(empresaRepositoryRemoteProvider)
         .criarEmpresa(request);
@@ -34,6 +37,7 @@ class CriarContaViewModel extends Notifier<CriarContaUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 }
