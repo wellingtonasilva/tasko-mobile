@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "br.com.wsilva.tasko.go",
+      "sha256_cert_fingerprints": [
+        "A7:81:C7:5D:DA:18:AC:17:51:39:A1:FD:2C:07:47:21:1C:1D:4B:35:F0:46:AA:8A:1A:B1:65:97:53:88:8D:46"
+      ]
+    }
+  }
+]

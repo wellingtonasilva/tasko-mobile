@@ -6,6 +6,8 @@ import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/create_new_pa
 import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/reset_password_success_v3_smartphone_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/criar_conta/criar_conta_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/login/login_screen.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/recuperar_senha/recuperar_senha_screen.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/resetar_senha/resetar_senha_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/adicionar/cliente_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/listar/cliente_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dart';
@@ -47,6 +49,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     */
     routes: <RouteBase>[
       GoRoute(
+        path: '/reset-password',
+        builder: (context, state) {
+          final token = state.uri.queryParameters['token'];
+          return ResetarSenhaScreen(token: token);
+        },
+      ),
+      GoRoute(
         path: '/selecao-vendedor',
         name: 'selecao-vendedor',
         builder: (context, state) => const SelecaoVendedorScreen(),
@@ -61,6 +70,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             name: 'criar-password',
             builder: (context, state) =>
                 const CreateNewPasswordV3MobileScreen(),
+          ),
+          GoRoute(
+            path: 'recuperar-senha',
+            name: 'recuperar-senha',
+            builder: (context, state) => const RecuperarSenhaScreen(),
           ),
           GoRoute(
             path: 'reset-password-success',
