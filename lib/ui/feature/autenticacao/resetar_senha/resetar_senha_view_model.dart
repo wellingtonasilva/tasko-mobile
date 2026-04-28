@@ -8,6 +8,8 @@ import 'package:tasko_mobile/util/result.dart';
 class ResetarSenhaViewModel extends Notifier<ResetarSenhaUiState> {
   void Function(String, Result result)? showSnackBar;
   void Function()? onResetarSenhaSucesso;
+  void Function()? onStartEvent;
+  void Function()? onFinishEvent;
 
   @override
   ResetarSenhaUiState build() {
@@ -17,9 +19,11 @@ class ResetarSenhaViewModel extends Notifier<ResetarSenhaUiState> {
   }
 
   Future<Result<void>> _resetarSenha(ResetarSenhaRequest request) async {
+    onStartEvent?.call();
     final result = await ref
         .read(loginRepositoryRemoteProvider)
         .resetarSenha(request);
+
     if (result is Success<void>) {
       showSnackBar?.call('Senha resetada com sucesso!', result);
       onResetarSenhaSucesso?.call();
@@ -29,6 +33,7 @@ class ResetarSenhaViewModel extends Notifier<ResetarSenhaUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 }

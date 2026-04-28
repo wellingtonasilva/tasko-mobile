@@ -8,6 +8,8 @@ import 'recuperar_senha_ui_state.dart';
 class RecuperarSenhaViewModel extends Notifier<RecuperarSenhaUiState> {
   void Function(String, Result result)? showSnackBar;
   void Function()? onRecuperarSenhaSucesso;
+  void Function()? onStartEvent;
+  void Function()? onFinishEvent;
 
   @override
   RecuperarSenhaUiState build() {
@@ -24,6 +26,7 @@ class RecuperarSenhaViewModel extends Notifier<RecuperarSenhaUiState> {
   Future<Result<void>> _solicitarRecuperacaoSenha(
     SolicitacaoRecuperarSenhaRequest request,
   ) async {
+    onStartEvent?.call();
     final result = await ref
         .read(loginRepositoryRemoteProvider)
         .solicitarRecuperacaoSenha(request);
@@ -37,6 +40,7 @@ class RecuperarSenhaViewModel extends Notifier<RecuperarSenhaUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 }
