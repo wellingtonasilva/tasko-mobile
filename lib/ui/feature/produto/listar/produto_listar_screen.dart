@@ -33,6 +33,8 @@ class _ProdutoListarScreenState extends BaseScreenState<ProdutoListarScreen> {
       }
       showSnackBar(message, isError: result is Failure);
     };
+    ref.read(produtoListarViewModelProvider).carregarGruposCommand.execute();
+    ref.read(produtoListarViewModelProvider).listarProdutosCommand.execute();
   }
 
   @override

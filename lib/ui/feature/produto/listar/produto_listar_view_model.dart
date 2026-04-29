@@ -18,8 +18,8 @@ class ProdutoListarViewModel extends Notifier<ProdutoListarUiState> {
       grupos: [],
       grupoSelecionadoId: null,
       termoBusca: '',
-      listarProdutosCommand: Command0<void>(_listarProdutos)..execute(),
-      carregarGruposCommand: Command0<void>(_carregarGrupos)..execute(),
+      listarProdutosCommand: Command0<void>(_listarProdutos),
+      carregarGruposCommand: Command0<void>(_carregarGrupos),
     );
   }
 

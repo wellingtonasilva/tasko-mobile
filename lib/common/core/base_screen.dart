@@ -59,15 +59,6 @@ abstract class BaseScreenState<T extends BaseScreen> extends ConsumerState<T> {
             ? kColorStyleErrorDark700
             : kColorStyleSuccessLight200,
         duration: const Duration(seconds: 3),
-        action: SnackBarAction(
-          label: 'Fechar',
-          textColor: isError
-              ? kColorStyleErrorLight400
-              : kColorStyleSuccessDark600,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
       ),
     );
   }
