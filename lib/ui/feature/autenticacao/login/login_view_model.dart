@@ -3,6 +3,7 @@ import 'package:tasko_mobile/data/repositories/login/login_repository_remote.dar
 import 'package:tasko_mobile/domain/usuario/request/login_request.dart';
 import 'package:tasko_mobile/domain/usuario/response/usuario_login_response.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/login/login_ui_state.dart';
+import 'package:tasko_mobile/common/core/auth_persistence.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -23,6 +24,9 @@ class LoginViewModel extends Notifier<LoginUiState> {
     onStartEvent?.call();
     final result = await ref.read(loginRepositoryRemoteProvider).login(request);
     if (result is Success<UsuarioLoginResponse>) {
+      // Persistir token e empresaId
+      final storage = ref.read(authLocalStorageProvider);
+      await persistLoginData(result.value, storage);
       showSnackBar?.call('Login realizado com sucesso!', result);
       onLoginSucesso?.call();
     } else if (result is Failure<UsuarioLoginResponse>) {

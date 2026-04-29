@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
+import 'package:tasko_mobile/common/core/auth_http_client.dart';
 
 class HttpClientConfig {
   /// Cria um cliente HTTP que ignora erros de certificado SSL
@@ -28,5 +29,6 @@ class HttpClientConfig {
 }
 
 final httpClientProvider = Provider<http.Client>((ref) {
-  return HttpClientConfig.getClient(isDevelopment: true);
+  final baseClient = HttpClientConfig.getClient(isDevelopment: true);
+  return AuthHttpClient(baseClient);
 });
