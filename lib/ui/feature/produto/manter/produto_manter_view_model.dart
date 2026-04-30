@@ -12,6 +12,8 @@ import 'produto_manter_ui_state.dart';
 
 class ProdutoManterViewModel extends Notifier<ProdutoManterUiState> {
   void Function(String, Result result)? showSnackBar;
+  void Function()? onStartEvent;
+  void Function()? onFinishEvent;
 
   @override
   ProdutoManterUiState build() {
@@ -36,6 +38,7 @@ class ProdutoManterViewModel extends Notifier<ProdutoManterUiState> {
   }
 
   Future<Result<ProdutoResponse>> _obterPorId(int produtoId) async {
+    onStartEvent?.call();
     final result = await ref
         .read(produtoRepositoryHybridProvider)
         .obterPorId(produtoId);
@@ -47,10 +50,12 @@ class ProdutoManterViewModel extends Notifier<ProdutoManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 
   Future<Result<List<ProdutoGrupoResponse>>> _listarGrupos() async {
+    onStartEvent?.call();
     final result = await ref
         .read(produtoRepositoryHybridProvider)
         .listarGrupos();
@@ -62,10 +67,12 @@ class ProdutoManterViewModel extends Notifier<ProdutoManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 
   Future<Result<List<ProdutoSubgrupoResponse>>> _listarSubgrupos() async {
+    onStartEvent?.call();
     final result = await ref
         .read(produtoRepositoryHybridProvider)
         .listarSubgrupos();
@@ -77,11 +84,13 @@ class ProdutoManterViewModel extends Notifier<ProdutoManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 
   Future<Result<List<ProdutoUnidadeMedidaResponse>>>
   _listarUnidadesMedida() async {
+    onStartEvent?.call();
     final result = await ref
         .read(produtoRepositoryHybridProvider)
         .listarUnidadesMedida();
@@ -94,12 +103,14 @@ class ProdutoManterViewModel extends Notifier<ProdutoManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 
   Future<Result<List<ProdutoCodigoBarrasResponse>>> _listarCodigosBarras(
     int produtoId,
   ) async {
+    onStartEvent?.call();
     final result = await ref
         .read(produtoRepositoryHybridProvider)
         .listarCodigosBarras(produtoId: produtoId);
@@ -112,11 +123,13 @@ class ProdutoManterViewModel extends Notifier<ProdutoManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 
   Future<Result<List<ProdutoEstoqueLocalizacaoResponse>>>
   _listarEstoquesLocalizacao(int produtoId) async {
+    onStartEvent?.call();
     final result = await ref
         .read(produtoRepositoryHybridProvider)
         .listarEstoques(produtoId: produtoId);
@@ -129,6 +142,12 @@ class ProdutoManterViewModel extends Notifier<ProdutoManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 }
+
+final produtoManterViewModelProvider =
+    NotifierProvider<ProdutoManterViewModel, ProdutoManterUiState>(
+      () => ProdutoManterViewModel(),
+    );

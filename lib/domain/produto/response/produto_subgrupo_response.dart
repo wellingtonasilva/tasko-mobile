@@ -1,20 +1,18 @@
 class ProdutoSubgrupoResponse {
   final int id;
-  final int? grupoId;
-  final String nome;
+  final String descricaoSubgrupo;
 
-  ProdutoSubgrupoResponse({required this.id, this.grupoId, required this.nome});
+  ProdutoSubgrupoResponse({required this.id, required this.descricaoSubgrupo});
 
   factory ProdutoSubgrupoResponse.fromJson(Map<String, dynamic> json) {
     return ProdutoSubgrupoResponse(
       id: _toInt(json['id']) ?? 0,
-      grupoId: _toInt(json['grupoId']),
-      nome: (json['nome'] as String?) ?? '',
+      descricaoSubgrupo: (json['descricaoSubgrupo'] as String?) ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'grupoId': grupoId, 'nome': nome};
+    return {'id': id, 'descricaoSubgrupo': descricaoSubgrupo};
   }
 
   static int? _toInt(Object? value) {

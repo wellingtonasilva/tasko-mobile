@@ -157,8 +157,10 @@ class _FiltroGrupo extends StatelessWidget {
       items: [
         const DropdownMenuItem<int?>(value: null, child: Text('Todos')),
         ...grupos.map(
-          (grupo) =>
-              DropdownMenuItem<int?>(value: grupo.id, child: Text(grupo.nome)),
+          (grupo) => DropdownMenuItem<int?>(
+            value: grupo.id,
+            child: Text(grupo.descricaoGrupo),
+          ),
         ),
       ],
       onChanged: onChanged,

@@ -8,6 +8,7 @@ class CustomTextfield extends StatelessWidget {
   final TextEditingController? controller;
   final bool disabled;
   final String? Function(BuildContext, String?)? validator;
+  final Widget? prefixIcon;
 
   const CustomTextfield({
     super.key,
@@ -15,6 +16,7 @@ class CustomTextfield extends StatelessWidget {
     this.controller,
     this.disabled = false,
     this.validator,
+    this.prefixIcon,
   });
 
   @override
@@ -55,6 +57,7 @@ class CustomTextfield extends StatelessWidget {
               ? kColorStyleSecondinaryLight200
               : kColorStylePrimary0,
           contentPadding: const EdgeInsetsDirectional.fromSTEB(18, 18, 0, 18),
+          prefixIcon: prefixIcon,
         ),
         style: kTestStyleMediumText16.copyWith(
           color: disabled
