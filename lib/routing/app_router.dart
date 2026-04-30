@@ -5,6 +5,7 @@ import 'package:tasko_mobile/common/widgets/scaffold/app_shell_scaffold.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/create_new_password_v3_mobile_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/reset_password_success_v3_smartphone_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/criar_conta/criar_conta_screen.dart';
+import 'package:tasko_mobile/ui/feature/autenticacao/criar_conta/criar_conta_sucesso_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/login/login_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/recuperar_senha/recuperar_senha_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/resetar_senha/resetar_senha_screen.dart';
@@ -86,6 +87,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: 'criar-conta',
             name: 'criar-conta',
             builder: (context, state) => const CriarContaScreen(),
+          ),
+          GoRoute(
+            path: 'criar-conta-sucesso',
+            name: 'criar-conta-sucesso',
+            builder: (context, state) => const CriarContaSucessoScreen(),
           ),
         ],
       ),

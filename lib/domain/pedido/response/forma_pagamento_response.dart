@@ -1,17 +1,17 @@
 class FormaPagamentoResponse {
   final int id;
-  final String? nome;
+  final String? descricaoFormaPagamento;
 
-  FormaPagamentoResponse({required this.id, this.nome});
+  FormaPagamentoResponse({required this.id, this.descricaoFormaPagamento});
 
   factory FormaPagamentoResponse.fromJson(Map<String, dynamic> json) {
     return FormaPagamentoResponse(
       id: (json['id'] as int?) ?? 0,
-      nome: json['nome'] as String?,
+      descricaoFormaPagamento: json['descricaoFormaPagamento'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'nome': nome};
+    return {'id': id, 'descricaoFormaPagamento': descricaoFormaPagamento};
   }
 }

@@ -32,7 +32,7 @@ class PedidoCriarViewModel extends Notifier<PedidoCriarUiState> {
       valorDesconto: 0,
       valorFrete: 0,
       valorTotal: 0,
-      carregarDadosCommand: Command0<void>(_carregarDados)..execute(),
+      carregarDadosCommand: Command0<void>(_carregarDados),
       salvarPedidoCommand: Command1<PedidoResponse, void>(_salvarPedido),
     );
   }
@@ -184,8 +184,10 @@ class PedidoCriarViewModel extends Notifier<PedidoCriarUiState> {
     final result = await repository.adicionar(
       request,
       itens: itemRequests,
-      formaPagamentoNome: state.formaPagamentoSelecionada?.nome,
-      condicaoPagamentoNome: state.condicaoPagamentoSelecionada?.nome,
+      formaPagamentoNome:
+          state.formaPagamentoSelecionada?.descricaoFormaPagamento,
+      condicaoPagamentoNome:
+          state.condicaoPagamentoSelecionada?.descricaoCondicaoPagamento,
       pedidoStatusTipoNome: 'Rascunho',
     );
 

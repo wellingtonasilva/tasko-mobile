@@ -4,6 +4,7 @@ import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
+import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/condicao_pagamento_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/forma_pagamento_response.dart';
@@ -37,6 +38,7 @@ class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
     viewModel.onSalvarSucesso = () {
       if (mounted) Navigator.of(context).pop(true);
     };
+    ref.read(pedidoCriarViewModelProvider).carregarDadosCommand.execute();
   }
 
   @override
@@ -273,7 +275,12 @@ class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
           isExpanded: true,
           initialValue: uiState.formaPagamentoSelecionada,
           items: uiState.formasPagamento
-              .map((f) => DropdownMenuItem(value: f, child: Text(f.nome ?? '')))
+              .map(
+                (f) => DropdownMenuItem(
+                  value: f,
+                  child: Text(f.descricaoFormaPagamento ?? ''),
+                ),
+              )
               .toList(),
           onChanged: viewModel.selecionarFormaPagamento,
         ),
@@ -286,7 +293,12 @@ class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
           isExpanded: true,
           initialValue: uiState.condicaoPagamentoSelecionada,
           items: uiState.condicoesPagamento
-              .map((c) => DropdownMenuItem(value: c, child: Text(c.nome ?? '')))
+              .map(
+                (c) => DropdownMenuItem(
+                  value: c,
+                  child: Text(c.descricaoCondicaoPagamento ?? ''),
+                ),
+              )
               .toList(),
           onChanged: viewModel.selecionarCondicaoPagamento,
         ),
@@ -307,11 +319,12 @@ class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
         _resumoRow('Total', _formatCurrency(uiState.valorTotal), bold: true),
         _resumoRow(
           'Forma Pagamento',
-          uiState.formaPagamentoSelecionada?.nome ?? '-',
+          uiState.formaPagamentoSelecionada?.descricaoFormaPagamento ?? '-',
         ),
         _resumoRow(
           'Condicao Pagamento',
-          uiState.condicaoPagamentoSelecionada?.nome ?? '-',
+          uiState.condicaoPagamentoSelecionada?.descricaoCondicaoPagamento ??
+              '-',
         ),
       ],
     );

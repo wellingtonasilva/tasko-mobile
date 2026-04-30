@@ -8,7 +8,7 @@ import 'package:tasko_mobile/util/result.dart';
 class ProdutoCodigoBarrasService {
   final ConfigApi _configApi;
   final http.Client _client;
-  final String _path = '/api/v1/produtos/codigos-barras-tipos';
+  final String _path = '/api/v1/produtos/codigos-barras';
   final Map<String, String> _headers = {'Content-Type': 'application/json'};
 
   ProdutoCodigoBarrasService({
