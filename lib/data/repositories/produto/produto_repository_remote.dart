@@ -5,12 +5,14 @@ import 'package:tasko_mobile/data/service/produto_estoque_service.dart';
 import 'package:tasko_mobile/data/service/produto_grupo_service.dart';
 import 'package:tasko_mobile/data/service/produto_preco_service.dart';
 import 'package:tasko_mobile/data/service/produto_service.dart';
+import 'package:tasko_mobile/data/service/produto_subgrupo_service.dart';
 import 'package:tasko_mobile/data/service/produto_unidade_medida_service.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_codigo_barras_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_estoque_localizacao_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_grupo_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_preco_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
+import 'package:tasko_mobile/domain/produto/response/produto_subgrupo_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_unidade_medida_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -22,12 +24,14 @@ class ProdutoRepositoryRemote implements ProdutoRepository {
     required ProdutoCodigoBarrasService codigoBarrasService,
     required ProdutoGrupoService grupoService,
     required ProdutoUnidadeMedidaService unidadeMedidaService,
+    required ProdutoSubgrupoService subgrupoService,
   }) : _service = service,
        _precoService = precoService,
        _estoqueService = estoqueService,
        _codigoBarrasService = codigoBarrasService,
        _grupoService = grupoService,
-       _unidadeMedidaService = unidadeMedidaService;
+       _unidadeMedidaService = unidadeMedidaService,
+       _subgrupoService = subgrupoService;
 
   final ProdutoService _service;
   final ProdutoPrecoService _precoService;
@@ -35,7 +39,7 @@ class ProdutoRepositoryRemote implements ProdutoRepository {
   final ProdutoCodigoBarrasService _codigoBarrasService;
   final ProdutoGrupoService _grupoService;
   final ProdutoUnidadeMedidaService _unidadeMedidaService;
-
+  final ProdutoSubgrupoService _subgrupoService;
   @override
   Future<Result<List<ProdutoResponse>>> listar({
     String? termoBusca,
@@ -106,6 +110,11 @@ class ProdutoRepositoryRemote implements ProdutoRepository {
   Future<Result<List<ProdutoUnidadeMedidaResponse>>> listarUnidadesMedida() {
     return _unidadeMedidaService.listar();
   }
+
+  @override
+  Future<Result<List<ProdutoSubgrupoResponse>>> listarSubgrupos() {
+    return _subgrupoService.listar();
+  }
 }
 
 final produtoRepositoryRemoteProvider = Provider<ProdutoRepositoryRemote>((
@@ -117,6 +126,7 @@ final produtoRepositoryRemoteProvider = Provider<ProdutoRepositoryRemote>((
   final codigoBarrasService = ref.watch(produtoCodigoBarrasServiceProvider);
   final grupoService = ref.watch(produtoGrupoServiceProvider);
   final unidadeMedidaService = ref.watch(produtoUnidadeMedidaServiceProvider);
+  final subgrupoService = ref.watch(produtoSubgrupoServiceProvider);
 
   return ProdutoRepositoryRemote(
     service: service,
@@ -125,5 +135,6 @@ final produtoRepositoryRemoteProvider = Provider<ProdutoRepositoryRemote>((
     codigoBarrasService: codigoBarrasService,
     grupoService: grupoService,
     unidadeMedidaService: unidadeMedidaService,
+    subgrupoService: subgrupoService,
   );
 });

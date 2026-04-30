@@ -3,6 +3,7 @@ import 'package:tasko_mobile/domain/produto/response/produto_estoque_localizacao
 import 'package:tasko_mobile/domain/produto/response/produto_grupo_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_preco_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
+import 'package:tasko_mobile/domain/produto/response/produto_subgrupo_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_unidade_medida_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -28,4 +29,5 @@ abstract class ProdutoRepository {
   Future<Result<List<ProdutoGrupoResponse>>> listarGrupos();
 
   Future<Result<List<ProdutoUnidadeMedidaResponse>>> listarUnidadesMedida();
+  Future<Result<List<ProdutoSubgrupoResponse>>> listarSubgrupos();
 }

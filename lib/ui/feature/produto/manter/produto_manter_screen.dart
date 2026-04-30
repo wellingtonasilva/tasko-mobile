@@ -8,17 +8,17 @@ import 'package:tasko_mobile/domain/produto/response/produto_preco_response.dart
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
-class ProdutoDetalheScreen extends BaseScreen {
-  const ProdutoDetalheScreen({super.key, required this.produtoId});
+class ProdutoManterScreen extends BaseScreen {
+  const ProdutoManterScreen({super.key, required this.produtoId});
 
   final int produtoId;
 
   @override
-  BaseScreenState<ProdutoDetalheScreen> createState() =>
-      _ProdutoDetalheScreenState();
+  BaseScreenState<ProdutoManterScreen> createState() =>
+      _ProdutoManterScreenState();
 }
 
-class _ProdutoDetalheScreenState extends BaseScreenState<ProdutoDetalheScreen> {
+class _ProdutoManterScreenState extends BaseScreenState<ProdutoManterScreen> {
   ProdutoResponse? _produto;
   List<ProdutoPrecoResponse> _precos = const [];
   List<ProdutoEstoqueLocalizacaoResponse> _estoques = const [];

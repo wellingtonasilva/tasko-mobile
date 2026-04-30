@@ -8,6 +8,7 @@ import 'package:tasko_mobile/domain/produto/response/produto_grupo_response.dart
 import 'package:tasko_mobile/domain/produto/response/produto_preco_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_unidade_medida_response.dart';
+import 'package:tasko_mobile/domain/produto/response/produto_subgrupo_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class ProdutoRepositoryHybrid implements ProdutoRepository {
@@ -122,6 +123,11 @@ class ProdutoRepositoryHybrid implements ProdutoRepository {
       grupoId: grupoId,
       subgrupoId: subgrupoId,
     );
+  }
+
+  @override
+  Future<Result<List<ProdutoSubgrupoResponse>>> listarSubgrupos() {
+    return _remote.listarSubgrupos();
   }
 }
 
