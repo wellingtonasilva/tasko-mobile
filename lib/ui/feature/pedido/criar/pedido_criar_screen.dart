@@ -8,6 +8,7 @@ import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.da
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/condicao_pagamento_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/forma_pagamento_response.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_ui_state.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_item_form_dialog.dart';
@@ -22,6 +23,8 @@ class PedidoCriarScreen extends BaseScreen {
 
 class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
   int _currentStep = 0;
+  static const int _totalSteps =
+      5; // Vendedor, Cliente, Itens, Pagamento, Resumo
   String _formatCurrency(double value) => 'R\$ ${value.toStringAsFixed(2)}';
 
   @override
@@ -80,7 +83,7 @@ class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
                       currentStep: _currentStep,
                       type: StepperType.vertical,
                       onStepContinue: () {
-                        if (_currentStep < 3) {
+                        if (_currentStep < _totalSteps - 1) {
                           setState(() => _currentStep += 1);
                         } else {
                           uiState.salvarPedidoCommand.execute(null);
@@ -107,7 +110,7 @@ class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
                               if (_currentStep > 0) const SizedBox(width: 12),
                               Expanded(
                                 child: CustomButtonPrimary(
-                                  label: _currentStep < 3
+                                  label: _currentStep < _totalSteps - 1
                                       ? 'Proximo'
                                       : 'Salvar Pedido',
                                   onPressed: () =>
@@ -120,8 +123,16 @@ class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
                       },
                       steps: [
                         Step(
-                          title: const Text('Cliente'),
+                          title: const Text('Vendedor'),
                           isActive: _currentStep >= 0,
+                          state: uiState.vendedorSelecionado != null
+                              ? StepState.complete
+                              : StepState.indexed,
+                          content: _buildVendedorStep(uiState, viewModel),
+                        ),
+                        Step(
+                          title: const Text('Cliente'),
+                          isActive: _currentStep >= 1,
                           state: uiState.clienteSelecionado != null
                               ? StepState.complete
                               : StepState.indexed,
@@ -129,7 +140,7 @@ class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
                         ),
                         Step(
                           title: const Text('Itens'),
-                          isActive: _currentStep >= 1,
+                          isActive: _currentStep >= 2,
                           state: uiState.itens.isNotEmpty
                               ? StepState.complete
                               : StepState.indexed,
@@ -137,12 +148,12 @@ class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
                         ),
                         Step(
                           title: const Text('Pagamento'),
-                          isActive: _currentStep >= 2,
+                          isActive: _currentStep >= 3,
                           content: _buildPagamentoStep(uiState, viewModel),
                         ),
                         Step(
                           title: const Text('Resumo'),
-                          isActive: _currentStep >= 3,
+                          isActive: _currentStep >= 4,
                           content: _buildResumoStep(uiState),
                         ),
                       ],
@@ -154,6 +165,45 @@ class _PedidoCriarScreenState extends BaseScreenState<PedidoCriarScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildVendedorStep(
+    PedidoCriarUiState uiState,
+    PedidoCriarViewModel viewModel,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DropdownButtonFormField<VendedorResponse>(
+          decoration: const InputDecoration(
+            labelText: 'Selecionar Vendedor',
+            border: OutlineInputBorder(),
+          ),
+          isExpanded: true,
+          value: uiState.vendedorSelecionado,
+          items: uiState.vendedores
+              .map(
+                (v) => DropdownMenuItem(
+                  value: v,
+                  child: Text(v.nomeVendedor, overflow: TextOverflow.ellipsis),
+                ),
+              )
+              .toList(),
+          onChanged: viewModel.selecionarVendedor,
+        ),
+        if (uiState.vendedorSelecionado != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            'Código:  0{uiState.vendedorSelecionado!.codigoVendedor}',
+            style: const TextStyle(color: Colors.grey),
+          ),
+          Text(
+            'E-mail:  {uiState.vendedorSelecionado!.email}',
+            style: const TextStyle(color: Colors.grey),
+          ),
+        ],
+      ],
     );
   }
 

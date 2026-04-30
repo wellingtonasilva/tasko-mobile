@@ -118,11 +118,17 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
                                     : CustomListView<PedidoResponse>(
                                         values: viewModel.pedidos,
                                         onTap: (value) {
+                                          /*
                                           context.pushNamed(
                                             'pedidos-detalhe',
                                             pathParameters: {
                                               'id': value.id.toString(),
                                             },
+                                          );
+                                          */
+                                          showSnackBar(
+                                            'Em desenvolvimento',
+                                            isError: false,
                                           );
                                         },
                                         getTitle: (value) =>

@@ -4,6 +4,7 @@ import 'package:tasko_mobile/domain/pedido/response/condicao_pagamento_response.
 import 'package:tasko_mobile/domain/pedido/response/forma_pagamento_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/util/command.dart';
 
 class PedidoItemEntry {
@@ -49,6 +50,8 @@ class PedidoCriarUiState {
   final double valorDesconto;
   final double valorFrete;
   final double valorTotal;
+  final List<VendedorResponse> vendedores;
+  final VendedorResponse? vendedorSelecionado;
   final Command0<void> carregarDadosCommand;
   final Command1<PedidoResponse, void> salvarPedidoCommand;
 
@@ -65,6 +68,8 @@ class PedidoCriarUiState {
     required this.valorDesconto,
     required this.valorFrete,
     required this.valorTotal,
+    required this.vendedores,
+    this.vendedorSelecionado,
     required this.carregarDadosCommand,
     required this.salvarPedidoCommand,
   });
@@ -85,6 +90,9 @@ class PedidoCriarUiState {
     double? valorDesconto,
     double? valorFrete,
     double? valorTotal,
+    List<VendedorResponse>? vendedores,
+    VendedorResponse? vendedorSelecionado,
+    bool clearVendedor = false,
     Command0<void>? carregarDadosCommand,
     Command1<PedidoResponse, void>? salvarPedidoCommand,
   }) {
@@ -107,6 +115,10 @@ class PedidoCriarUiState {
       valorDesconto: valorDesconto ?? this.valorDesconto,
       valorFrete: valorFrete ?? this.valorFrete,
       valorTotal: valorTotal ?? this.valorTotal,
+      vendedores: vendedores ?? this.vendedores,
+      vendedorSelecionado: clearVendedor
+          ? null
+          : (vendedorSelecionado ?? this.vendedorSelecionado),
       carregarDadosCommand: carregarDadosCommand ?? this.carregarDadosCommand,
       salvarPedidoCommand: salvarPedidoCommand ?? this.salvarPedidoCommand,
     );
