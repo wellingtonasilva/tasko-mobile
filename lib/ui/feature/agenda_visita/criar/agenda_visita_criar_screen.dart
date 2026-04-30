@@ -7,6 +7,7 @@ import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.da
 import 'package:tasko_mobile/common/widgets/textfield/custom_textfield_medium.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_status_response.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -133,6 +134,23 @@ class _AgendaVisitaCriarScreenState
                 ),
                 const SizedBox(height: 16),
 
+                // Vendedor
+                Text('Vendedor', style: kTestStyleBoldText16),
+                const SizedBox(height: 8),
+                viewModel.carregarDadosCommand.running
+                    ? const Center(child: CircularProgressIndicator())
+                    : CustomDropdownButtonFormField<VendedorResponse>(
+                        hint: 'Selecione um vendedor',
+                        items: viewModel.vendedores,
+                        itemLabelBuilder: (v) => v.nomeVendedor,
+                        selectedValue: viewModel.vendedorSelecionado,
+                        onChanged: (v) {
+                          ref
+                              .read(agendaVisitaCriarViewModelProvider.notifier)
+                              .selecionarVendedor(v);
+                        },
+                      ),
+                const SizedBox(height: 16),
                 // Cliente
                 Text('Cliente', style: kTestStyleBoldText16),
                 const SizedBox(height: 8),
