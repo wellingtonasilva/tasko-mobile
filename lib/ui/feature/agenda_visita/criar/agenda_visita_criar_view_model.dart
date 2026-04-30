@@ -2,11 +2,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
 import 'package:tasko_mobile/data/repositories/agenda_visita/agenda_visita_repository_hybrid.dart';
 import 'package:tasko_mobile/data/repositories/cliente/cliente_repository_hybrid.dart';
+import 'package:tasko_mobile/data/repositories/vendedor/vendedor_repository_hybrid.dart';
 import 'package:tasko_mobile/data/service/agenda_visita_status_service.dart';
 import 'package:tasko_mobile/domain/agenda_visita/request/adicionar_agenda_visita_request.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_response.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_status_response.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
@@ -23,6 +25,8 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
       dataAgendada: DateTime.now(),
       carregarDadosCommand: Command0<void>(_carregarDados)..execute(),
       salvarVisitaCommand: Command1<AgendaVisitaResponse, void>(_salvarVisita),
+      vendedores: [],
+      vendedorSelecionado: null,
     );
   }
 
@@ -31,11 +35,13 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
   Future<Result<void>> _carregarDados() async {
     final clienteRepo = ref.read(clienteRepositoryHybridProvider);
     final statusService = ref.read(agendaVisitaStatusServiceProvider);
+    final vendedorRepo = ref.read(vendedorRepositoryHybridProvider);
 
     final clienteResult = await clienteRepo.listar(
       vendedorId: _vendedorSelecionadoId,
     );
     final statusResult = await statusService.listar();
+    final vendedorResult = await vendedorRepo.listar();
 
     state = state.copyWith(
       clientes: clienteResult is Success<List<ClienteResponse>>
@@ -43,6 +49,9 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
           : [],
       statusList: statusResult is Success<List<AgendaVisitaStatusResponse>>
           ? statusResult.value
+          : [],
+      vendedores: vendedorResult is Success<List<VendedorResponse>>
+          ? vendedorResult.value
           : [],
     );
 
@@ -88,13 +97,20 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
     );
   }
 
+  void selecionarVendedor(VendedorResponse? vendedor) {
+    state = state.copyWith(
+      vendedorSelecionado: vendedor,
+      clearVendedor: vendedor == null,
+    );
+  }
+
   Future<Result<AgendaVisitaResponse>> _salvarVisita(void _) async {
-    final vendedorId = _vendedorSelecionadoId;
+    final vendedorId = state.vendedorSelecionado?.id;
     if (vendedorId == null) {
       final Result<AgendaVisitaResponse> result = Result.failure([
-        'Nenhum vendedor selecionado na sessao',
+        'Selecione um vendedor',
       ]);
-      showSnackBar?.call('Nenhum vendedor selecionado', result);
+      showSnackBar?.call('Selecione um vendedor', result);
       return result;
     }
 

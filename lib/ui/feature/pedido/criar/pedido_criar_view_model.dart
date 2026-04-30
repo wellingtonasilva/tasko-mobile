@@ -3,6 +3,7 @@ import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
 import 'package:tasko_mobile/data/repositories/cliente/cliente_repository_hybrid.dart';
 import 'package:tasko_mobile/data/repositories/pedido/pedido_repository_hybrid.dart';
 import 'package:tasko_mobile/data/repositories/produto/produto_repository_hybrid.dart';
+import 'package:tasko_mobile/data/repositories/vendedor/vendedor_repository_hybrid.dart';
 import 'package:tasko_mobile/data/service/condicao_pagamento_service.dart';
 import 'package:tasko_mobile/data/service/forma_pagamento_service.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
@@ -12,6 +13,7 @@ import 'package:tasko_mobile/domain/pedido/response/condicao_pagamento_response.
 import 'package:tasko_mobile/domain/pedido/response/forma_pagamento_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
@@ -32,8 +34,10 @@ class PedidoCriarViewModel extends Notifier<PedidoCriarUiState> {
       valorDesconto: 0,
       valorFrete: 0,
       valorTotal: 0,
-      carregarDadosCommand: Command0<void>(_carregarDados)..execute(),
+      carregarDadosCommand: Command0<void>(_carregarDados),
       salvarPedidoCommand: Command1<PedidoResponse, void>(_salvarPedido),
+      vendedores: [],
+      vendedorSelecionado: null,
     );
   }
 
@@ -44,6 +48,7 @@ class PedidoCriarViewModel extends Notifier<PedidoCriarUiState> {
     final produtoRepo = ref.read(produtoRepositoryHybridProvider);
     final formaService = ref.read(formaPagamentoServiceProvider);
     final condicaoService = ref.read(condicaoPagamentoServiceProvider);
+    final vendedorRepo = ref.read(vendedorRepositoryHybridProvider);
 
     final clienteResult = await clienteRepo.listar(
       vendedorId: _vendedorSelecionadoId,
@@ -51,6 +56,7 @@ class PedidoCriarViewModel extends Notifier<PedidoCriarUiState> {
     final produtoResult = await produtoRepo.listar();
     final formaResult = await formaService.listar();
     final condicaoResult = await condicaoService.listar();
+    final vendedorResult = await vendedorRepo.listar();
 
     state = state.copyWith(
       clientes: clienteResult is Success<List<ClienteResponse>>
@@ -65,6 +71,9 @@ class PedidoCriarViewModel extends Notifier<PedidoCriarUiState> {
       condicoesPagamento:
           condicaoResult is Success<List<CondicaoPagamentoResponse>>
           ? condicaoResult.value
+          : [],
+      vendedores: vendedorResult is Success<List<VendedorResponse>>
+          ? vendedorResult.value
           : [],
     );
 
@@ -99,6 +108,13 @@ class PedidoCriarViewModel extends Notifier<PedidoCriarUiState> {
     state = state.copyWith(
       condicaoPagamentoSelecionada: condicao,
       clearCondicaoPagamento: condicao == null,
+    );
+  }
+
+  void selecionarVendedor(VendedorResponse? vendedor) {
+    state = state.copyWith(
+      vendedorSelecionado: vendedor,
+      clearVendedor: vendedor == null,
     );
   }
 
@@ -161,8 +177,8 @@ class PedidoCriarViewModel extends Notifier<PedidoCriarUiState> {
 
     final request = AdicionarPedidoRequest(
       clienteId: state.clienteSelecionado!.id,
-      vendedorId: _vendedorSelecionadoId ?? 0,
-      pedidoStatusTipoId: 1,
+      vendedorId: state.vendedorSelecionado?.id ?? 0,
+      pedidoStatusTipoId: 2, // Rascunho
       dataPedido: now.toUtc().toIso8601String(),
       dataEntregaPrevista: null,
       observacao: null,
@@ -184,8 +200,10 @@ class PedidoCriarViewModel extends Notifier<PedidoCriarUiState> {
     final result = await repository.adicionar(
       request,
       itens: itemRequests,
-      formaPagamentoNome: state.formaPagamentoSelecionada?.nome,
-      condicaoPagamentoNome: state.condicaoPagamentoSelecionada?.nome,
+      formaPagamentoNome:
+          state.formaPagamentoSelecionada?.descricaoFormaPagamento,
+      condicaoPagamentoNome:
+          state.condicaoPagamentoSelecionada?.descricaoCondicaoPagamento,
       pedidoStatusTipoNome: 'Rascunho',
     );
 

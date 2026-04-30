@@ -7,7 +7,7 @@ part 'vendedor_territorio_response.g.dart';
 @JsonSerializable()
 class VendedorTerritorioResponse {
   final int id;
-  final String nomeTerritorio;
+  final String? nomeTerritorio;
   final String? descricaoTerritorio;
   final String? nomeRegiao;
   final String? estado;
@@ -17,7 +17,7 @@ class VendedorTerritorioResponse {
 
   VendedorTerritorioResponse({
     required this.id,
-    required this.nomeTerritorio,
+    this.nomeTerritorio,
     this.descricaoTerritorio,
     this.nomeRegiao,
     this.estado,

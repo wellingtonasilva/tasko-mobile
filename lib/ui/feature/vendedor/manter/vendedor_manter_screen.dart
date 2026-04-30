@@ -260,7 +260,7 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
     return CustomDropdownButtonFormField<VendedorTerritorioResponse>(
       hint: 'Selecione um Território',
       items: viewModel.territorios ?? [],
-      itemLabelBuilder: (item) => item.nomeTerritorio,
+      itemLabelBuilder: (item) => item.nomeTerritorio ?? '',
       selectedValue: viewModel.selectedTerritorio,
       validator: (value) {
         if (value == null) {

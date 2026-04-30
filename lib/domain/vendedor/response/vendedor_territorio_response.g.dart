@@ -10,7 +10,7 @@ VendedorTerritorioResponse _$VendedorTerritorioResponseFromJson(
   Map<String, dynamic> json,
 ) => VendedorTerritorioResponse(
   id: (json['id'] as num).toInt(),
-  nomeTerritorio: json['nomeTerritorio'] as String,
+  nomeTerritorio: json['nomeTerritorio'] as String?,
   descricaoTerritorio: json['descricaoTerritorio'] as String?,
   nomeRegiao: json['nomeRegiao'] as String?,
   estado: json['estado'] as String?,

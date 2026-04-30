@@ -1,6 +1,7 @@
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_response.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_status_response.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/util/command.dart';
 
 class AgendaVisitaCriarUiState {
@@ -12,6 +13,8 @@ class AgendaVisitaCriarUiState {
   final int? duracaoPrevista;
   final String? objetivo;
   final String? observacao;
+  final List<VendedorResponse> vendedores;
+  final VendedorResponse? vendedorSelecionado;
   final Command0<void> carregarDadosCommand;
   final Command1<AgendaVisitaResponse, void> salvarVisitaCommand;
 
@@ -24,6 +27,8 @@ class AgendaVisitaCriarUiState {
     this.duracaoPrevista,
     this.objetivo,
     this.observacao,
+    required this.vendedores,
+    this.vendedorSelecionado,
     required this.carregarDadosCommand,
     required this.salvarVisitaCommand,
   });
@@ -44,6 +49,9 @@ class AgendaVisitaCriarUiState {
     bool clearObservacao = false,
     Command0<void>? carregarDadosCommand,
     Command1<AgendaVisitaResponse, void>? salvarVisitaCommand,
+    List<VendedorResponse>? vendedores,
+    VendedorResponse? vendedorSelecionado,
+    bool clearVendedor = false,
   }) {
     return AgendaVisitaCriarUiState(
       clientes: clientes ?? this.clientes,
@@ -62,6 +70,10 @@ class AgendaVisitaCriarUiState {
       observacao: clearObservacao ? null : (observacao ?? this.observacao),
       carregarDadosCommand: carregarDadosCommand ?? this.carregarDadosCommand,
       salvarVisitaCommand: salvarVisitaCommand ?? this.salvarVisitaCommand,
+      vendedores: vendedores ?? this.vendedores,
+      vendedorSelecionado: clearVendedor
+          ? null
+          : (vendedorSelecionado ?? this.vendedorSelecionado),
     );
   }
 }
