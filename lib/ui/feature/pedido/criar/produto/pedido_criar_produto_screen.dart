@@ -81,7 +81,7 @@ class _PedidoCriarProdutoScreenState
                                 children: [
                                   CustomStepperItem(
                                     title: "Cliente",
-                                    active: false,
+                                    active: true,
                                   ),
                                   CustomStepperLine(),
                                   CustomStepperItem(

@@ -4,13 +4,13 @@ import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_textfield.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_controllers.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/widgets/cliente_card.dart';
+import 'package:tasko_mobile/util/result.dart';
 
 class PedidoCriarClienteScreen extends BaseScreen {
   final Function(String cliente) onPrevious;
@@ -36,6 +36,32 @@ class _PedidoCriarClienteScreenState
   void initState() {
     super.initState();
     _controllers = PedidoCriarClienteControllers();
+
+    final viewModel = ref.read(pedidoCriarClienteViewModelProvider.notifier);
+    viewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+    viewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
+
+    ref
+        .read(pedidoCriarClienteViewModelProvider)
+        .listarClienteCommand
+        .execute();
   }
 
   @override
@@ -46,6 +72,8 @@ class _PedidoCriarClienteScreenState
 
   @override
   Widget buildContent(BuildContext context) {
+    final viewModel = ref.watch(pedidoCriarClienteViewModelProvider);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -121,7 +149,42 @@ class _PedidoCriarClienteScreenState
                               ),
                               const SizedBox(height: 20),
                               buildTextField(_controllers.pesquisaCliente),
-                              const SizedBox(height: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  viewModel.listarClienteCommand.running
+                                      ? const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount:
+                                              viewModel.clientes?.length ?? 0,
+                                          itemBuilder: (context, index) {
+                                            final cliente =
+                                                viewModel.clientes![index];
+                                            return ClienteCard(
+                                              cliente: cliente,
+                                              isSelected:
+                                                  viewModel.selectedCliente ==
+                                                  cliente,
+                                              onTap: () {
+                                                ref
+                                                    .read(
+                                                      pedidoCriarClienteViewModelProvider
+                                                          .notifier,
+                                                    )
+                                                    .selectCliente(cliente);
+                                              },
+                                            );
+                                          },
+                                        ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -172,49 +235,5 @@ class _PedidoCriarClienteScreenState
     // _controllers.clienteSelecionado = _controllers.pesquisaCliente.controller.text;
     widget.onNext(_controllers.pesquisaCliente.controller.text);
     //}
-  }
-
-  Widget _stepItem(String title, bool active) {
-    return Column(
-      children: [
-        Container(
-          width: 15,
-          height: 15, // igual ao _line
-          alignment: Alignment.center,
-          child: Container(
-            width: 15,
-            height: 15,
-            decoration: BoxDecoration(
-              color: active ? Colors.orange : Colors.grey[300],
-              shape: BoxShape.circle,
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-        Text(title, style: kTestStyleRegularText14),
-      ],
-    );
-  }
-
-  Widget buildTextField(
-    CustomFormFieldData field, {
-    bool isDate = false,
-    bool isReadOnly = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          CustomLabel(labelText: field.labelText),
-          const SizedBox(height: 10),
-          CustomTextfield(
-            controller: field.controller,
-            validator: field.validator,
-            prefixIcon: field.prefixIcon,
-          ),
-          const SizedBox(height: 10),
-        ],
-      ),
-    );
   }
 }
