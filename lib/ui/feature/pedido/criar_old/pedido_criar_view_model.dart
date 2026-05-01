@@ -14,7 +14,7 @@ import 'package:tasko_mobile/domain/pedido/response/forma_pagamento_response.dar
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_ui_state.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
 

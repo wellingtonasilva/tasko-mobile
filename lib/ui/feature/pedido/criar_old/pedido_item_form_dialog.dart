@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/domain/pedido/pedido_calculator.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_ui_state.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_ui_state.dart';
 
 class PedidoItemFormDialog extends StatefulWidget {
   final List<ProdutoResponse> produtos;
