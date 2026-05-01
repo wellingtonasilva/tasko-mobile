@@ -1,30 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
+import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
+import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
+import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
+import 'package:tasko_mobile/common/widgets/textfield/custom_textfield.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_controllers.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 
-class PedidoSelecionarProdutoScreen extends BaseScreen {
+class PedidoCriarClienteScreen extends BaseScreen {
   final Function(String cliente) onPrevious;
   final Function(String cliente) onNext;
-
-  const PedidoSelecionarProdutoScreen({
+  const PedidoCriarClienteScreen({
     super.key,
     required this.onNext,
     required this.onPrevious,
   });
 
   @override
-  BaseScreenState<PedidoSelecionarProdutoScreen> createState() =>
-      _PedidoSelecionarProdutoScreenState();
+  BaseScreenState<PedidoCriarClienteScreen> createState() =>
+      _PedidoCriarClienteScreenState();
 }
 
-class _PedidoSelecionarProdutoScreenState
-    extends BaseScreenState<PedidoSelecionarProdutoScreen> {
+class _PedidoCriarClienteScreenState
+    extends BaseScreenState<PedidoCriarClienteScreen> {
+  late PedidoCriarClienteControllers _controllers;
+  int activeStep = 1;
+  int currentStep = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = PedidoCriarClienteControllers();
+  }
+
+  @override
+  void dispose() {
+    _controllers.dispose();
+    super.dispose();
+  }
+
   @override
   Widget buildContent(BuildContext context) {
     return GestureDetector(
@@ -57,7 +76,15 @@ class _PedidoSelecionarProdutoScreenState
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CustomTituloBarDefault(title: 'Novo Pedido'),
+                        child: CustomTituloBarDefault(
+                          title: 'Novo Pedido',
+                          child: Text(
+                            '(1/4)',
+                            style: kTestStyleBoldText14.copyWith(
+                              color: kColorStyleSecondinaryLight400,
+                            ),
+                          ),
+                        ),
                       ),
                       Expanded(
                         child: SingleChildScrollView(
@@ -73,12 +100,12 @@ class _PedidoSelecionarProdutoScreenState
                                 children: [
                                   CustomStepperItem(
                                     title: "Cliente",
-                                    active: false,
+                                    active: true,
                                   ),
                                   CustomStepperLine(),
                                   CustomStepperItem(
                                     title: "Produtos",
-                                    active: true,
+                                    active: false,
                                   ),
                                   CustomStepperLine(),
                                   CustomStepperItem(
@@ -93,7 +120,7 @@ class _PedidoSelecionarProdutoScreenState
                                 ],
                               ),
                               const SizedBox(height: 20),
-
+                              buildTextField(_controllers.pesquisaCliente),
                               const SizedBox(height: 20),
                             ],
                           ),
@@ -107,9 +134,11 @@ class _PedidoSelecionarProdutoScreenState
                         children: [
                           Expanded(
                             child: CustomButtonSecondary(
-                              label: 'Voltar',
+                              label: 'Cancelar',
                               onPressed: () {
-                                widget.onPrevious('Produto');
+                                widget.onPrevious(
+                                  _controllers.pesquisaCliente.controller.text,
+                                );
                               },
                             ),
                           ),
@@ -118,7 +147,7 @@ class _PedidoSelecionarProdutoScreenState
                             child: CustomButtonPrimary(
                               label: 'Próximo',
                               onPressed: () {
-                                widget.onNext('Produto');
+                                _handleSalvarPressed();
                               },
                             ),
                           ),
@@ -131,6 +160,60 @@ class _PedidoSelecionarProdutoScreenState
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _handleCancelarPressed() {}
+
+  void _handleSalvarPressed() {
+    //if (_controllers.formKey.currentState?.validate() ?? false) {
+    // Salvar cliente selecionado no controller
+    // _controllers.clienteSelecionado = _controllers.pesquisaCliente.controller.text;
+    widget.onNext(_controllers.pesquisaCliente.controller.text);
+    //}
+  }
+
+  Widget _stepItem(String title, bool active) {
+    return Column(
+      children: [
+        Container(
+          width: 15,
+          height: 15, // igual ao _line
+          alignment: Alignment.center,
+          child: Container(
+            width: 15,
+            height: 15,
+            decoration: BoxDecoration(
+              color: active ? Colors.orange : Colors.grey[300],
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(title, style: kTestStyleRegularText14),
+      ],
+    );
+  }
+
+  Widget buildTextField(
+    CustomFormFieldData field, {
+    bool isDate = false,
+    bool isReadOnly = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(
+        children: [
+          CustomLabel(labelText: field.labelText),
+          const SizedBox(height: 10),
+          CustomTextfield(
+            controller: field.controller,
+            validator: field.validator,
+            prefixIcon: field.prefixIcon,
+          ),
+          const SizedBox(height: 10),
+        ],
       ),
     );
   }

@@ -6,18 +6,20 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_icon_button.dart';
 class CustomTituloBarDefault extends StatelessWidget {
   final String title;
   final VoidCallback? onClosePressed;
+  final Widget? child;
 
   const CustomTituloBarDefault({
     super.key,
     required this.title,
     this.onClosePressed,
+    this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
@@ -25,6 +27,7 @@ class CustomTituloBarDefault extends StatelessWidget {
             color: kColorStyleSecondinaryDarkDefault,
           ),
         ),
+        if (child != null) ...[child!],
         if (onClosePressed != null)
           CustomIconButton(
             icon: const Icon(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
+import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
@@ -8,23 +8,23 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 
-class PedidoPagamentoScreen extends BaseScreen {
+class PedidoCriarProdutoScreen extends BaseScreen {
   final Function(String cliente) onPrevious;
   final Function(String cliente) onNext;
 
-  const PedidoPagamentoScreen({
+  const PedidoCriarProdutoScreen({
     super.key,
     required this.onNext,
     required this.onPrevious,
   });
 
   @override
-  BaseScreenState<PedidoPagamentoScreen> createState() =>
-      _PedidoPagamentoScreenState();
+  BaseScreenState<PedidoCriarProdutoScreen> createState() =>
+      _PedidoCriarProdutoScreenState();
 }
 
-class _PedidoPagamentoScreenState
-    extends BaseScreenState<PedidoPagamentoScreen> {
+class _PedidoCriarProdutoScreenState
+    extends BaseScreenState<PedidoCriarProdutoScreen> {
   @override
   Widget buildContent(BuildContext context) {
     return GestureDetector(
@@ -57,7 +57,15 @@ class _PedidoPagamentoScreenState
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CustomTituloBarDefault(title: 'Novo Pedido'),
+                        child: CustomTituloBarDefault(
+                          title: 'Novo Pedido',
+                          child: Text(
+                            '(2/4)',
+                            style: kTestStyleBoldText14.copyWith(
+                              color: kColorStyleSecondinaryLight400,
+                            ),
+                          ),
+                        ),
                       ),
                       Expanded(
                         child: SingleChildScrollView(
@@ -78,12 +86,12 @@ class _PedidoPagamentoScreenState
                                   CustomStepperLine(),
                                   CustomStepperItem(
                                     title: "Produtos",
-                                    active: false,
+                                    active: true,
                                   ),
                                   CustomStepperLine(),
                                   CustomStepperItem(
                                     title: "Pagamento",
-                                    active: true,
+                                    active: false,
                                   ),
                                   CustomStepperLine(),
                                   CustomStepperItem(
@@ -109,7 +117,7 @@ class _PedidoPagamentoScreenState
                             child: CustomButtonSecondary(
                               label: 'Voltar',
                               onPressed: () {
-                                widget.onPrevious("Pagamento");
+                                widget.onPrevious('Produto');
                               },
                             ),
                           ),
@@ -118,7 +126,7 @@ class _PedidoPagamentoScreenState
                             child: CustomButtonPrimary(
                               label: 'Próximo',
                               onPressed: () {
-                                widget.onNext("Pagamento");
+                                widget.onNext('Produto');
                               },
                             ),
                           ),

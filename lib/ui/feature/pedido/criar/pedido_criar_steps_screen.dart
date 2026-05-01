@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tasko_mobile/common/colors/colors_styles.dart';
-import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
-import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_steps_controllers.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/step1_cliente/pedido_selecionar_cliente_screen.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/step2_produto/pedido_selecionar_produto_screen.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/step3_pagamento/pedido_pagamento_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/pedido_criar_pagamento_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/resumo/pedido_criar_resumo_screen.dart';
 
 class PedidoCriarStepsScreen extends BaseScreen {
   const PedidoCriarStepsScreen({super.key});
@@ -47,21 +43,27 @@ class _PedidoCriarStepsScreenState
         controller: _controllers.pageController,
         physics: NeverScrollableScrollPhysics(),
         children: [
-          PedidoSelecionarClienteScreen(
+          PedidoCriarClienteScreen(
             onPrevious: (cliente) => context.pop(),
             onNext: (cliente) {
               nextStep();
             },
           ),
-          PedidoSelecionarProdutoScreen(
+          PedidoCriarProdutoScreen(
             onPrevious: (produto) => prevStep(),
             onNext: (produto) {
               nextStep();
             },
           ),
-          PedidoPagamentoScreen(
+          PedidoCriarPagamentoScreen(
             onPrevious: (pagamento) => prevStep(),
             onNext: (pagamento) {
+              nextStep();
+            },
+          ),
+          PedidoCriarResumoScreen(
+            onPrevious: (resumo) => prevStep(),
+            onNext: (resumo) {
               nextStep();
             },
           ),

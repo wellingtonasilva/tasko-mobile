@@ -1,51 +1,30 @@
-import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_textfield.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/step1_cliente/pedido_selecionar_cliente_controllers.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
-import 'package:tasko_mobile/common/widgets/stepper/custom_stepper.dart';
+import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 
-class PedidoSelecionarClienteScreen extends BaseScreen {
+class PedidoCriarResumoScreen extends BaseScreen {
   final Function(String cliente) onPrevious;
   final Function(String cliente) onNext;
-  const PedidoSelecionarClienteScreen({
+
+  const PedidoCriarResumoScreen({
     super.key,
-    required this.onNext,
     required this.onPrevious,
+    required this.onNext,
   });
 
   @override
-  BaseScreenState<PedidoSelecionarClienteScreen> createState() =>
-      _PedidoSelecionarClienteScreenState();
+  BaseScreenState<PedidoCriarResumoScreen> createState() =>
+      _PedidoCriarResumoScreenState();
 }
 
-class _PedidoSelecionarClienteScreenState
-    extends BaseScreenState<PedidoSelecionarClienteScreen> {
-  late PedidoSelecionarClienteControllers _controllers;
-  int activeStep = 1;
-  int currentStep = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _controllers = PedidoSelecionarClienteControllers();
-  }
-
-  @override
-  void dispose() {
-    _controllers.dispose();
-    super.dispose();
-  }
-
+class _PedidoCriarResumoScreenState
+    extends BaseScreenState<PedidoCriarResumoScreen> {
   @override
   Widget buildContent(BuildContext context) {
     return GestureDetector(
@@ -78,7 +57,15 @@ class _PedidoSelecionarClienteScreenState
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CustomTituloBarDefault(title: 'Novo Pedido'),
+                        child: CustomTituloBarDefault(
+                          title: 'Novo Pedido',
+                          child: Text(
+                            '(4/4)',
+                            style: kTestStyleBoldText14.copyWith(
+                              color: kColorStyleSecondinaryLight400,
+                            ),
+                          ),
+                        ),
                       ),
                       Expanded(
                         child: SingleChildScrollView(
@@ -94,7 +81,7 @@ class _PedidoSelecionarClienteScreenState
                                 children: [
                                   CustomStepperItem(
                                     title: "Cliente",
-                                    active: true,
+                                    active: false,
                                   ),
                                   CustomStepperLine(),
                                   CustomStepperItem(
@@ -109,12 +96,12 @@ class _PedidoSelecionarClienteScreenState
                                   CustomStepperLine(),
                                   CustomStepperItem(
                                     title: "Revisão",
-                                    active: false,
+                                    active: true,
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 20),
-                              buildTextField(_controllers.pesquisaCliente),
+
                               const SizedBox(height: 20),
                             ],
                           ),
@@ -128,20 +115,18 @@ class _PedidoSelecionarClienteScreenState
                         children: [
                           Expanded(
                             child: CustomButtonSecondary(
-                              label: 'Cancelar',
+                              label: 'Voltar',
                               onPressed: () {
-                                widget.onPrevious(
-                                  _controllers.pesquisaCliente.controller.text,
-                                );
+                                widget.onPrevious("Pagamento");
                               },
                             ),
                           ),
                           const SizedBox(width: 20),
                           Expanded(
                             child: CustomButtonPrimary(
-                              label: 'Próximo',
+                              label: 'Confirmar Pedido',
                               onPressed: () {
-                                _handleSalvarPressed();
+                                widget.onNext("Resumo");
                               },
                             ),
                           ),
@@ -154,60 +139,6 @@ class _PedidoSelecionarClienteScreenState
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  void _handleCancelarPressed() {}
-
-  void _handleSalvarPressed() {
-    //if (_controllers.formKey.currentState?.validate() ?? false) {
-    // Salvar cliente selecionado no controller
-    // _controllers.clienteSelecionado = _controllers.pesquisaCliente.controller.text;
-    widget.onNext(_controllers.pesquisaCliente.controller.text);
-    //}
-  }
-
-  Widget _stepItem(String title, bool active) {
-    return Column(
-      children: [
-        Container(
-          width: 15,
-          height: 15, // igual ao _line
-          alignment: Alignment.center,
-          child: Container(
-            width: 15,
-            height: 15,
-            decoration: BoxDecoration(
-              color: active ? Colors.orange : Colors.grey[300],
-              shape: BoxShape.circle,
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-        Text(title, style: kTestStyleRegularText14),
-      ],
-    );
-  }
-
-  Widget buildTextField(
-    CustomFormFieldData field, {
-    bool isDate = false,
-    bool isReadOnly = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          CustomLabel(labelText: field.labelText),
-          const SizedBox(height: 10),
-          CustomTextfield(
-            controller: field.controller,
-            validator: field.validator,
-            prefixIcon: field.prefixIcon,
-          ),
-          const SizedBox(height: 10),
-        ],
       ),
     );
   }

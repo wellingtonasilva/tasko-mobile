@@ -36,7 +36,7 @@ class CustomButtonPrimary extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(10),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

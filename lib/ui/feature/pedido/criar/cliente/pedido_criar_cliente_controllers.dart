@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
 
-class PedidoSelecionarClienteControllers {
+class PedidoCriarClienteControllers {
   final formKey = GlobalKey<FormState>();
   late final CustomFormFieldData pesquisaCliente;
 
-  PedidoSelecionarClienteControllers() {
+  PedidoCriarClienteControllers() {
     pesquisaCliente = CustomFormFieldData(
       prefixIcon: const Icon(Icons.search),
       controller: TextEditingController(),
