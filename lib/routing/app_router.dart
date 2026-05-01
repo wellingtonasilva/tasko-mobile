@@ -20,7 +20,7 @@ import 'package:tasko_mobile/ui/feature/agenda_visita/listar/agenda_visita_lista
 import 'package:tasko_mobile/ui/feature/home/modulo_placeholder_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_screen.dart';
-import 'package:tasko_mobile/ui/feature/produto/detalhe/produto_detalhe_screen.dart';
+import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/selecao_vendedor/selecao_vendedor_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_screen.dart';
@@ -174,7 +174,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               if (produtoId == null) {
                 return const ProdutoListarScreen();
               }
-              return ProdutoDetalheScreen(produtoId: produtoId);
+              return ProdutoManterScreen(produtoId: produtoId);
             },
           ),
           GoRoute(

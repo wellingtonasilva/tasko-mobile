@@ -6,12 +6,14 @@ class CustomFormFieldData {
   final FocusNode focusNode;
   final String labelText;
   final String? Function(BuildContext, String?)? validator;
+  final Widget? prefixIcon;
 
   CustomFormFieldData({
     required this.controller,
     required this.focusNode,
     required this.labelText,
     this.validator,
+    this.prefixIcon,
   });
 }
 
