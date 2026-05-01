@@ -7,6 +7,10 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_controllers.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/produto/widgets/produto_card.dart';
+import 'package:tasko_mobile/util/result.dart';
 
 class PedidoCriarProdutoScreen extends BaseScreen {
   final Function(String cliente) onPrevious;
@@ -25,8 +29,50 @@ class PedidoCriarProdutoScreen extends BaseScreen {
 
 class _PedidoCriarProdutoScreenState
     extends BaseScreenState<PedidoCriarProdutoScreen> {
+  late PedidoCriarProdutoControllers _controllers;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = PedidoCriarProdutoControllers();
+
+    final viewModel = ref.read(pedidoCriarProdutoViewModelProvider.notifier);
+    viewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+    viewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
+
+    ref
+        .read(pedidoCriarProdutoViewModelProvider)
+        .listarProdutoCommand
+        .execute();
+  }
+
+  @override
+  void dispose() {
+    _controllers.dispose();
+    super.dispose();
+  }
+
   @override
   Widget buildContent(BuildContext context) {
+    final viewModel = ref.watch(pedidoCriarProdutoViewModelProvider);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -73,7 +119,6 @@ class _PedidoCriarProdutoScreenState
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
-
                             children: [
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -101,8 +146,43 @@ class _PedidoCriarProdutoScreenState
                                 ],
                               ),
                               const SizedBox(height: 20),
-
-                              const SizedBox(height: 20),
+                              buildTextField(_controllers.pesquisaProduto),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  viewModel.listarProdutoCommand.running
+                                      ? const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount:
+                                              viewModel.produtos?.length ?? 0,
+                                          itemBuilder: (context, index) {
+                                            final produto =
+                                                viewModel.produtos![index];
+                                            return ProdutoCard(
+                                              produto: produto,
+                                              isSelected:
+                                                  viewModel.selectedProduto ==
+                                                  produto,
+                                              onTap: () {
+                                                ref
+                                                    .read(
+                                                      pedidoCriarProdutoViewModelProvider
+                                                          .notifier,
+                                                    )
+                                                    .selectProduto(produto);
+                                              },
+                                            );
+                                          },
+                                        ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
