@@ -18,7 +18,9 @@ import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_
 import 'package:tasko_mobile/ui/feature/agenda_visita/detalhe/agenda_visita_detalhe_screen.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/listar/agenda_visita_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/modulo_placeholder_screen.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_steps_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/step1_cliente/pedido_selecionar_cliente_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
@@ -185,7 +187,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/pedidos/criar',
             name: 'pedidos-criar',
-            builder: (context, state) => const PedidoCriarScreen(),
+            builder: (context, state) => const PedidoCriarStepsScreen(),
           ),
           GoRoute(
             path: '/pedidos/:id',

@@ -9,9 +9,9 @@ import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/condicao_pagamento_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/forma_pagamento_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_ui_state.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_item_form_dialog.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_ui_state.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_item_form_dialog.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class PedidoCriarScreen extends BaseScreen {

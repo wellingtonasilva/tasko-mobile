@@ -25,21 +25,22 @@ class CustomTituloBarDefault extends StatelessWidget {
             color: kColorStyleSecondinaryDarkDefault,
           ),
         ),
-        CustomIconButton(
-          icon: const Icon(
-            Icons.close,
-            color: kColorStyleSecondinaryDarkDefault,
-            size: 20,
+        if (onClosePressed != null)
+          CustomIconButton(
+            icon: const Icon(
+              Icons.close,
+              color: kColorStyleSecondinaryDarkDefault,
+              size: 20,
+            ),
+            borderRadius: 5,
+            buttonSize: 35,
+            fillColor: Colors.white,
+            hoverColor: Colors.grey.shade200,
+            borderColor: kColorStyleSecondinaryLight200,
+            borderWidth: 1,
+            showLoadingIndicator: false,
+            onPressed: () => onClosePressed?.call(),
           ),
-          borderRadius: 5,
-          buttonSize: 35,
-          fillColor: Colors.white,
-          hoverColor: Colors.grey.shade200,
-          borderColor: kColorStyleSecondinaryLight200,
-          borderWidth: 1,
-          showLoadingIndicator: false,
-          onPressed: () => onClosePressed?.call(),
-        ),
       ],
     );
   }
