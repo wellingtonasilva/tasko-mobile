@@ -6,6 +6,7 @@ import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_client
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/pedido_criar_pagamento_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/resumo/pedido_criar_resumo_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/sucesso/pedido_criar_sucesso_screen.dart';
 
 class PedidoCriarStepsScreen extends BaseScreen {
   const PedidoCriarStepsScreen({super.key});
@@ -67,16 +68,17 @@ class _PedidoCriarStepsScreenState
               nextStep();
             },
           ),
+          PedidoCriarSucessoScreen(),
         ],
       ),
     );
   }
 
   void nextStep() {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setState(() => currentStep++);
       _controllers.pageController.nextPage(
-        duration: Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 10),
         curve: Curves.ease,
       );
     }
@@ -86,7 +88,7 @@ class _PedidoCriarStepsScreenState
     if (currentStep > 0) {
       setState(() => currentStep--);
       _controllers.pageController.previousPage(
-        duration: Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 10),
         curve: Curves.ease,
       );
     }
