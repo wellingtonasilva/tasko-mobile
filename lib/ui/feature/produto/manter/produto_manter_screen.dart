@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
-import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
@@ -65,6 +64,12 @@ class _ProdutoManterScreenState extends BaseScreenState<ProdutoManterScreen> {
         .read(produtoManterViewModelProvider)
         .obterPorIdCommand
         .execute((_produtoId));
+  }
+
+  @override
+  void dispose() {
+    _controllers.dispose();
+    super.dispose();
   }
 
   @override
@@ -294,38 +299,9 @@ class _ProdutoManterScreenState extends BaseScreenState<ProdutoManterScreen> {
     );
   }
 
-  String _formatMoney(double? value) {
-    if (value == null) return '-';
-    return 'R\$ ${value.toStringAsFixed(2)}';
-  }
-
   void _handleCancelarPressed() {
     context.pop();
   }
 
   void _handleSalvarPressed() {}
-}
-
-class _Section extends StatelessWidget {
-  const _Section({required this.title, required this.child});
-
-  final String title;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: kTestStyleBoldText16),
-            const SizedBox(height: 8),
-            child,
-          ],
-        ),
-      ),
-    );
-  }
 }
