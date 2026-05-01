@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
-import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
-import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
-import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 
 class PedidoCriarSucessoScreen extends BaseScreen {
   const PedidoCriarSucessoScreen({super.key});
@@ -94,9 +88,7 @@ class _PedidoCriarSucessoScreenState
                                       ),
                                     ),
                                     SizedBox(height: 24),
-
                                     SizedBox(height: 24),
-
                                     SizedBox(height: 50),
                                   ],
                                 ),
