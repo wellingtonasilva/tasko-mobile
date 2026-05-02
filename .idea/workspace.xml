@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a999a25e-052f-4625-92ed-2583a98ff68f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/lib/common/widgets/buttons/custom_action_edit_icon_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/common/widgets/buttons/custom_action_edit_icon_button.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/feature/pedido/criar/pagamento/pedido_criar_pagamento_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/feature/pedido/criar/pagamento/pedido_criar_pagamento_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/feature/pedido/criar/resumo/pedido_criar_resumo_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/feature/pedido/criar/resumo/pedido_criar_resumo_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

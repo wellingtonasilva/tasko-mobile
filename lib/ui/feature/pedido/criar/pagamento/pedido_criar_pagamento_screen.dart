@@ -5,9 +5,9 @@ import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_category_button.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_condicao_pagamento_button.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_forma_pagamento_button.dart';
 
 class FormaPagamento {
@@ -16,6 +16,20 @@ class FormaPagamento {
   final String icone;
 
   FormaPagamento({required this.id, required this.nome, required this.icone});
+}
+
+class CondicaoPagamento {
+  final String id;
+  final String nome;
+
+  CondicaoPagamento({required this.id, required this.nome});
+}
+
+class Parcelas {
+  final String id;
+  final String nome;
+
+  Parcelas({required this.id, required this.nome});
 }
 
 class PedidoCriarPagamentoScreen extends BaseScreen {
@@ -36,6 +50,9 @@ class PedidoCriarPagamentoScreen extends BaseScreen {
 class _PedidoCriarPagamentoScreenState
     extends BaseScreenState<PedidoCriarPagamentoScreen> {
   int selectedPaymentMethodIndex = 0;
+  int selectedPaymentConditionIndex = 0;
+  int selectedParcelasIndex = 0;
+
   final List<FormaPagamento> paymentMethods = [
     FormaPagamento(
       id: '1',
@@ -52,6 +69,22 @@ class _PedidoCriarPagamentoScreenState
       nome: 'Pix',
       icone: 'assets/images/pos_icon_pix.svg',
     ),
+  ];
+
+  final List<CondicaoPagamento> paymentConditions = [
+    CondicaoPagamento(id: '1', nome: 'À vista'),
+    CondicaoPagamento(id: '2', nome: '30 dias'),
+    CondicaoPagamento(id: '3', nome: '60 dias'),
+    CondicaoPagamento(id: '4', nome: '90 dias'),
+  ];
+
+  final List<Parcelas> parcelas = [
+    Parcelas(id: '1', nome: '1x'),
+    Parcelas(id: '2', nome: '2x'),
+    Parcelas(id: '3', nome: '3x'),
+    Parcelas(id: '4', nome: '4x'),
+    Parcelas(id: '5', nome: '5x'),
+    Parcelas(id: '6', nome: '6x'),
   ];
 
   @override
@@ -154,6 +187,84 @@ class _PedidoCriarPagamentoScreenState
                                         onPressed: () {
                                           setState(() {
                                             selectedPaymentMethodIndex = index;
+                                          });
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 25),
+                              Text(
+                                'Condição de pagamento',
+                                style: kTestStyleBoldText16.copyWith(
+                                  color: kColorStyleSecondinaryDarkDefault,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                height: 50,
+                                width: double.infinity,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: paymentConditions.length,
+                                  itemBuilder: (context, index) {
+                                    final paymentCondition =
+                                        paymentConditions[index];
+                                    return SizedBox(
+                                      width: 85,
+                                      child: CustomCondicaoPagamentoButton(
+                                        title: paymentCondition.nome,
+                                        selected:
+                                            index ==
+                                            selectedPaymentConditionIndex,
+                                        onPressed: () {
+                                          setState(() {
+                                            selectedPaymentConditionIndex =
+                                                index;
+                                          });
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 25),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Parcelas',
+                                    style: kTestStyleBoldText16.copyWith(
+                                      color: kColorStyleSecondinaryDarkDefault,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 3),
+                                  Text(
+                                    '(Opcional)',
+                                    style: kTestStyleBoldText14.copyWith(
+                                      color: kColorStyleSecondinaryDark400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                height: 50,
+                                width: double.infinity,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: parcelas.length,
+                                  itemBuilder: (context, index) {
+                                    final parcela = parcelas[index];
+                                    return SizedBox(
+                                      width: 55,
+                                      child: CustomCondicaoPagamentoButton(
+                                        title: parcela.nome,
+                                        selected:
+                                            index == selectedParcelasIndex,
+                                        onPressed: () {
+                                          setState(() {
+                                            selectedParcelasIndex = index;
                                           });
                                         },
                                       ),
