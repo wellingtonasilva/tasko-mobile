@@ -112,6 +112,9 @@ flutter:
     - assets/images/pos_icon_directbox_default.png
     - assets/images/pos_icon_document_text.png
     - assets/images/pos_logo512w.png
+    - assets/images/pos_icon_pix.svg
+    - assets/images/pos_icon_money.svg
+    - assets/images/pos_icon_credit_card.svg
 
 
   fonts:

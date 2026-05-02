@@ -7,6 +7,30 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_condicao_pagamento_button.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_forma_pagamento_button.dart';
+
+class FormaPagamento {
+  final String id;
+  final String nome;
+  final String icone;
+
+  FormaPagamento({required this.id, required this.nome, required this.icone});
+}
+
+class CondicaoPagamento {
+  final String id;
+  final String nome;
+
+  CondicaoPagamento({required this.id, required this.nome});
+}
+
+class Parcelas {
+  final String id;
+  final String nome;
+
+  Parcelas({required this.id, required this.nome});
+}
 
 class PedidoCriarPagamentoScreen extends BaseScreen {
   final Function(String cliente) onPrevious;
@@ -25,6 +49,44 @@ class PedidoCriarPagamentoScreen extends BaseScreen {
 
 class _PedidoCriarPagamentoScreenState
     extends BaseScreenState<PedidoCriarPagamentoScreen> {
+  int selectedPaymentMethodIndex = 0;
+  int selectedPaymentConditionIndex = 0;
+  int selectedParcelasIndex = 0;
+
+  final List<FormaPagamento> paymentMethods = [
+    FormaPagamento(
+      id: '1',
+      nome: 'Dinheiro',
+      icone: 'assets/images/pos_icon_money.svg',
+    ),
+    FormaPagamento(
+      id: '2',
+      nome: 'Cartão',
+      icone: 'assets/images/pos_icon_credit_card.svg',
+    ),
+    FormaPagamento(
+      id: '3',
+      nome: 'Pix',
+      icone: 'assets/images/pos_icon_pix.svg',
+    ),
+  ];
+
+  final List<CondicaoPagamento> paymentConditions = [
+    CondicaoPagamento(id: '1', nome: 'À vista'),
+    CondicaoPagamento(id: '2', nome: '30 dias'),
+    CondicaoPagamento(id: '3', nome: '60 dias'),
+    CondicaoPagamento(id: '4', nome: '90 dias'),
+  ];
+
+  final List<Parcelas> parcelas = [
+    Parcelas(id: '1', nome: '1x'),
+    Parcelas(id: '2', nome: '2x'),
+    Parcelas(id: '3', nome: '3x'),
+    Parcelas(id: '4', nome: '4x'),
+    Parcelas(id: '5', nome: '5x'),
+    Parcelas(id: '6', nome: '6x'),
+  ];
+
   @override
   Widget buildContent(BuildContext context) {
     return GestureDetector(
@@ -81,12 +143,12 @@ class _PedidoCriarPagamentoScreenState
                                 children: [
                                   CustomStepperItem(
                                     title: "Cliente",
-                                    active: false,
+                                    active: true,
                                   ),
                                   CustomStepperLine(),
                                   CustomStepperItem(
                                     title: "Produtos",
-                                    active: false,
+                                    active: true,
                                   ),
                                   CustomStepperLine(),
                                   CustomStepperItem(
@@ -100,9 +162,183 @@ class _PedidoCriarPagamentoScreenState
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 20),
-
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 25),
+                              Text(
+                                'Forma de pagamento',
+                                style: kTestStyleBoldText16.copyWith(
+                                  color: kColorStyleSecondinaryDarkDefault,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                height: 100,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: paymentMethods.length,
+                                  itemBuilder: (context, index) {
+                                    final paymentMethod = paymentMethods[index];
+                                    return SizedBox(
+                                      width: 115,
+                                      child: CustomFormaPagamentoButton(
+                                        filename: paymentMethod.icone,
+                                        title: paymentMethod.nome,
+                                        selected:
+                                            index == selectedPaymentMethodIndex,
+                                        onPressed: () {
+                                          setState(() {
+                                            selectedPaymentMethodIndex = index;
+                                          });
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 25),
+                              Text(
+                                'Condição de pagamento',
+                                style: kTestStyleBoldText16.copyWith(
+                                  color: kColorStyleSecondinaryDarkDefault,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                height: 50,
+                                width: double.infinity,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: paymentConditions.length,
+                                  itemBuilder: (context, index) {
+                                    final paymentCondition =
+                                        paymentConditions[index];
+                                    return SizedBox(
+                                      width: 85,
+                                      child: CustomCondicaoPagamentoButton(
+                                        title: paymentCondition.nome,
+                                        selected:
+                                            index ==
+                                            selectedPaymentConditionIndex,
+                                        onPressed: () {
+                                          setState(() {
+                                            selectedPaymentConditionIndex =
+                                                index;
+                                          });
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 25),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Parcelas',
+                                    style: kTestStyleBoldText16.copyWith(
+                                      color: kColorStyleSecondinaryDarkDefault,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 3),
+                                  Text(
+                                    '(Opcional)',
+                                    style: kTestStyleBoldText14.copyWith(
+                                      color: kColorStyleSecondinaryDark400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                height: 50,
+                                width: double.infinity,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: parcelas.length,
+                                  itemBuilder: (context, index) {
+                                    final parcela = parcelas[index];
+                                    return SizedBox(
+                                      width: 55,
+                                      child: CustomCondicaoPagamentoButton(
+                                        title: parcela.nome,
+                                        selected:
+                                            index == selectedParcelasIndex,
+                                        onPressed: () {
+                                          setState(() {
+                                            selectedParcelasIndex = index;
+                                          });
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 150,
+                          width: double.infinity,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              SizedBox(height: 10),
+                              Text(
+                                "Resumo do pedido",
+                                style: kTestStyleMediumText14.copyWith(
+                                  color: kColorStyleSecondinaryDark400,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Subtotal (3 itens)",
+                                      style: kTestStyleMediumText14.copyWith(
+                                        color: kColorStyleSecondinaryDark400,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "R\$ 150,00",
+                                    style: kTestStyleMediumText14.copyWith(
+                                      color: kColorStyleSecondinaryDark400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Divider(color: kColorStyleSecondinaryLight200),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Total do pedido",
+                                      style: kTestStyleMediumText18.copyWith(
+                                        color:
+                                            kColorStyleSecondinaryDarkDefault,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "R\$ 150,00",
+                                    style: kTestStyleBoldText18.copyWith(
+                                      color:
+                                          kColorStylePrimaryNeutralPaletteDark500,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),

@@ -3,10 +3,13 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
+import 'package:tasko_mobile/common/widgets/buttons/custom_action_edit_icon_button.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/produto/widgets/produto_card.dart';
 
 class PedidoCriarResumoScreen extends BaseScreen {
   final Function(String cliente) onPrevious;
@@ -27,6 +30,8 @@ class _PedidoCriarResumoScreenState
     extends BaseScreenState<PedidoCriarResumoScreen> {
   @override
   Widget buildContent(BuildContext context) {
+    final viewProduto = ref.watch(pedidoCriarProdutoViewModelProvider);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -68,43 +73,269 @@ class _PedidoCriarResumoScreenState
                         ),
                       ),
                       Expanded(
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
 
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomStepperItem(
+                                  title: "Cliente",
+                                  active: true,
+                                ),
+                                CustomStepperLine(),
+                                CustomStepperItem(
+                                  title: "Produtos",
+                                  active: true,
+                                ),
+                                CustomStepperLine(),
+                                CustomStepperItem(
+                                  title: "Pagamento",
+                                  active: true,
+                                ),
+                                CustomStepperLine(),
+                                CustomStepperItem(
+                                  title: "Revisão",
+                                  active: true,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            // Cliente
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CustomStepperItem(
-                                    title: "Cliente",
-                                    active: false,
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          'Cliente',
+                                          style: kTestStyleBoldText16,
+                                        ),
+                                      ),
+                                      CustomActionEditIconButton(
+                                        onPressed: () {
+                                          widget.onPrevious("Cliente");
+                                        },
+                                      ),
+                                    ],
                                   ),
-                                  CustomStepperLine(),
-                                  CustomStepperItem(
-                                    title: "Produtos",
-                                    active: false,
+                                  SizedBox(height: 5),
+                                  Text(
+                                    "João da Silva",
+                                    style: kTestStyleBoldText14.copyWith(
+                                      color: kColorStyleSecondinaryDarkDefault,
+                                    ),
                                   ),
-                                  CustomStepperLine(),
-                                  CustomStepperItem(
-                                    title: "Pagamento",
-                                    active: false,
-                                  ),
-                                  CustomStepperLine(),
-                                  CustomStepperItem(
-                                    title: "Revisão",
-                                    active: true,
+                                  Text(
+                                    "Limite disponível: R\$ 5.000",
+                                    style: kTestStyleRegularText14.copyWith(
+                                      color: kColorStyleSecondinaryLight400,
+                                    ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 20),
-
-                              const SizedBox(height: 20),
-                            ],
-                          ),
+                            ),
+                            // Produtos
+                            const SizedBox(height: 10),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              'Produtos',
+                                              style: kTestStyleBoldText16,
+                                            ),
+                                          ),
+                                          CustomActionEditIconButton(
+                                            onPressed: () {
+                                              widget.onPrevious("Cliente");
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 5),
+                                      viewProduto.listarProdutoCommand.running
+                                          ? const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            )
+                                          : Expanded(
+                                              child: ListView.builder(
+                                                itemCount:
+                                                    viewProduto
+                                                        .produtos
+                                                        ?.length ??
+                                                    0,
+                                                itemBuilder: (context, index) {
+                                                  final produto = viewProduto
+                                                      .produtos![index];
+                                                  return Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        produto.nomeProduto,
+                                                        style: kTestStyleMediumText14
+                                                            .copyWith(
+                                                              color:
+                                                                  kColorStyleSecondinaryDarkDefault,
+                                                            ),
+                                                      ),
+                                                      SizedBox(height: 5),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            "Código: ${produto.codigoProduto ?? ''}",
+                                                            style: kTestStyleRegularText14
+                                                                .copyWith(
+                                                                  color:
+                                                                      kColorStyleSecondinaryLight400,
+                                                                ),
+                                                          ),
+                                                          Text(
+                                                            "Qtd: 1",
+                                                            style: kTestStyleRegularText14
+                                                                .copyWith(
+                                                                  color:
+                                                                      kColorStyleSecondinaryLight400,
+                                                                ),
+                                                          ),
+                                                          Text(
+                                                            "R\$ ${produto.precoSugerido?.toStringAsFixed(2) ?? '0.00'}",
+                                                            style: kTestStyleRegularText14
+                                                                .copyWith(
+                                                                  color:
+                                                                      kColorStyleSecondinaryDarkDefault,
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      if (index <
+                                                          (viewProduto
+                                                                  .produtos!
+                                                                  .length -
+                                                              1))
+                                                        Divider(
+                                                          color:
+                                                              kColorStyleSecondinaryLight200,
+                                                        ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Pagamento
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Pagamento',
+                                    style: kTestStyleBoldText16,
+                                  ),
+                                ),
+                                CustomActionEditIconButton(
+                                  onPressed: () {
+                                    widget.onPrevious("Pagamento");
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              "Pix",
+                              style: kTestStyleBoldText14.copyWith(
+                                color: kColorStyleSecondinaryDarkDefault,
+                              ),
+                            ),
+                            Text(
+                              "A Vista",
+                              style: kTestStyleRegularText14.copyWith(
+                                color: kColorStyleSecondinaryLight400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      // Total do pedido
+                      Container(
+                        height: 75,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Total do pedido",
+                                style: kTestStyleMediumText18.copyWith(
+                                  color: kColorStyleSecondinaryDarkDefault,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "R\$ 150,00",
+                              style: kTestStyleBoldText24.copyWith(
+                                color: kColorStylePrimaryNeutralPaletteDark500,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Divider(color: kColorStyleSecondinaryLight200),

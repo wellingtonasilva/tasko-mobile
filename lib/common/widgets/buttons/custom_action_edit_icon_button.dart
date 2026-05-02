@@ -13,9 +13,9 @@ class CustomActionEditIconButton extends StatelessWidget {
       icon: Icon(
         Icons.edit,
         size: 20,
-        color: kColorStylePrimaryNeutralPaletteLightDefault,
+        color: kColorStylePrimaryNeutralPaletteDarkDefault,
       ),
-      color: kColorStyleInformationDarkDefault,
+      color: kColorStylePrimaryNeutralPaletteLightDefault,
       onPressed: onPressed,
     );
   }
