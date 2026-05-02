@@ -170,8 +170,10 @@ class _PedidoCriarClienteScreenState
                                             return ClienteCard(
                                               cliente: cliente,
                                               isSelected:
-                                                  viewModel.selectedCliente ==
-                                                  cliente,
+                                                  viewModel
+                                                      .selectedCliente
+                                                      ?.id ==
+                                                  cliente.id,
                                               onTap: () {
                                                 ref
                                                     .read(

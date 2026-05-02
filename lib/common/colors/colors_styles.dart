@@ -66,6 +66,7 @@ const kColorStyleSecondinaryDark900 = Color(0xFF04070E);
 const kColorStyleSecondinaryDark800 = Color(0xFF080B11);
 const kColorStyleSecondinaryDark700 = Color(0xFF0D1015);
 const kColorStyleSecondinaryDark600 = Color(0xFF131619);
+const kColorStyleSecondinaryDark400 = Color(0xFF6C7278);
 const kColorStyleSecondinaryDark200 = Color(0xFFDCE4E8);
 const kColorStyleSecondinaryDarkDefault = Color(0xFF1A1C1E);
 const kColorStyleSecondinaryLight400 = Color(0xFF6C7278);

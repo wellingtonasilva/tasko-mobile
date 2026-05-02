@@ -168,8 +168,10 @@ class _PedidoCriarProdutoScreenState
                                             return ProdutoCard(
                                               produto: produto,
                                               isSelected:
-                                                  viewModel.selectedProduto ==
-                                                  produto,
+                                                  viewModel
+                                                      .selectedProduto
+                                                      ?.id ==
+                                                  produto.id,
                                               onTap: () {
                                                 ref
                                                     .read(
@@ -181,6 +183,57 @@ class _PedidoCriarProdutoScreenState
                                             );
                                           },
                                         ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 75,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                Icons.shopping_cart_outlined,
+                                size: 30,
+                                color: kColorStyleSecondinaryDark400,
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  "3 itens",
+                                  style: kTestStyleMediumText18.copyWith(
+                                    color: kColorStyleSecondinaryDark400,
+                                  ),
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "Total",
+                                    style: kTestStyleMediumText16.copyWith(
+                                      color: kColorStyleSecondinaryDark400,
+                                    ),
+                                  ),
+                                  Text(
+                                    "R\$ 150,00",
+                                    style: kTestStyleBoldText18.copyWith(
+                                      color:
+                                          kColorStylePrimaryNeutralPaletteDark500,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
