@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
+import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
+import 'package:tasko_mobile/common/widgets/textfield/custom_textfield.dart';
 
 abstract class BaseScreen extends ConsumerStatefulWidget {
   const BaseScreen({super.key});
@@ -142,6 +145,28 @@ abstract class BaseScreenState<T extends BaseScreen> extends ConsumerState<T> {
         child: CircularProgressIndicator(
           color: kColorStylePrimaryNeutralPaletteDarkDefault,
         ),
+      ),
+    );
+  }
+
+  Widget buildTextField(
+    CustomFormFieldData field, {
+    bool isDate = false,
+    bool isReadOnly = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(
+        children: [
+          CustomLabel(labelText: field.labelText),
+          const SizedBox(height: 10),
+          CustomTextfield(
+            controller: field.controller,
+            validator: field.validator,
+            prefixIcon: field.prefixIcon,
+          ),
+          const SizedBox(height: 10),
+        ],
       ),
     );
   }

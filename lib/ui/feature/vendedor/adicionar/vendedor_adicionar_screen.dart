@@ -162,23 +162,6 @@ class _VendedorAdicionarScreenState
     );
   }
 
-  Widget buildTextField(CustomFormFieldData field, {bool isReadOnly = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          CustomLabel(labelText: field.labelText),
-          const SizedBox(height: 10),
-          CustomTextfield(
-            controller: field.controller,
-            validator: field.validator,
-          ),
-          const SizedBox(height: 10),
-        ],
-      ),
-    );
-  }
-
   Widget _buildDropdownSupervisor(VendedorAdicionarUiState viewModel) {
     return switch (ref
         .read(vendedorAdicionarViewModelProvider.notifier)
