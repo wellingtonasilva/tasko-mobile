@@ -1,18 +1,158 @@
 # Tasko Go
 
-Flutter application for the Tasko product line.
+Aplicação móvel Flutter para gerenciamento de vendas e tarefas da linha de produtos Tasko. Permite que vendedores gerenciem clientes, produtos, pedidos e agenda de visitas de forma offline-first, com sincronização via API REST.
+
+## Stack
+
+| Camada | Tecnologia |
+|---|---|
+| Framework | Flutter (Dart SDK `^3.10.3`) |
+| Gerenciamento de estado | Riverpod `^3.1.0` |
+| Navegação | GoRouter `^17.0.1` |
+| HTTP | `http ^1.2.2` com cliente customizado (`AuthHttpClient`) |
+| Banco local | SQLite via `sqflite ^2.4.2` |
+| Variáveis de ambiente | `flutter_dotenv ^6.0.0` (arquivo `.env`) |
+| Deep Links | `app_links ^3.4.0` |
+| Serialização | `json_annotation` + `json_serializable` + `build_runner` |
+
+## Requisitos
+
+- Flutter `>=3.10.3` (inclui Dart SDK compatível)
+- Android SDK (para build Android)
+- Xcode 15+ e CocoaPods (para build iOS/macOS)
+- Node.js não é necessário
+
+Verifique o ambiente:
+
+```bash
+flutter doctor
+```
+
+## Setup
+
+### 1. Dependências
+
+```bash
+flutter pub get
+```
+
+### 2. Geração de código
+
+O projeto usa `json_serializable` para serialização de modelos. Sempre que modificar anotações `@JsonSerializable`, regenere:
+
+```bash
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+Para modo watch durante o desenvolvimento:
+
+```bash
+flutter pub run build_runner watch --delete-conflicting-outputs
+```
+
+### 3. Variáveis de ambiente da aplicação
+
+Crie um arquivo `.env` na raiz do projeto (já listado nos assets em `pubspec.yaml`):
+
+```dotenv
+API_HOST=seu-host-de-api
+API_PORT=8080
+IS_DEVELOPMENT=true
+```
+
+| Variável | Obrigatória | Padrão | Descrição |
+|---|---|---|---|
+| `API_HOST` | Sim | `localhost` | Endereço do servidor de API |
+| `API_PORT` | Não | — | Porta da API (omita para usar sem porta explícita) |
+| `IS_DEVELOPMENT` | Não | `false` | Quando `true`, desabilita verificações SSL no cliente HTTP |
+
+O arquivo `.env` é carregado em `main()` via `dotenv.load()` antes de qualquer inicialização de provider.
+
+### 4. iOS (primeira vez)
+
+```bash
+cd ios && pod install && cd ..
+```
+
+### 5. macOS (primeira vez)
+
+```bash
+cd macos && pod install && cd ..
+```
+
+## Executando a aplicação
+
+```bash
+# Android / iOS / emulador conectado
+flutter run
+
+# Escolher dispositivo específico
+flutter run -d <device-id>
+
+# Listar dispositivos disponíveis
+flutter devices
+```
+
+## Qualidade de código
+
+```bash
+# Análise estática (flutter_lints)
+flutter analyze
+
+# Testes
+flutter test
+```
+
+## Build
+
+### Android (principal)
+
+**APK de debug:**
+```bash
+flutter build apk --debug
+```
+
+**APK de release:**
+```bash
+flutter build apk --release
+# Saída: build/app/outputs/apk/release/app-release.apk
+```
+
+**App Bundle para Google Play:**
+```bash
+flutter build appbundle --release
+# Saída: build/app/outputs/bundle/release/app-release.aab
+# Requer android/key.properties configurado (veja seção de release abaixo)
+```
+
+### Outras plataformas
+
+```bash
+flutter build ios --release       # Requer Xcode + provisioning profiles
+flutter build web --release       # Saída: build/web/
+flutter build macos --release     # Requer CocoaPods
+flutter build linux --release
+flutter build windows --release
+```
 
 ## Android Release Signing
 
-The Android project is prepared to read release signing credentials from `android/key.properties`, which is ignored by Git.
+O projeto Android lê as credenciais de assinatura de `android/key.properties`, que é ignorado pelo Git.
 
-1. Generate an upload keystore:
+**1. Gerar o keystore de upload:**
 
 ```bash
-keytool -genkey -v -keystore android/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+keytool -genkey -v \
+  -keystore android/upload-keystore.jks \
+  -keyalg RSA -keysize 2048 -validity 10000 \
+  -alias upload
 ```
 
-2. Create `android/key.properties` based on `android/key.properties.example`.
+**2. Criar `android/key.properties` a partir do exemplo:**
+
+```bash
+cp android/key.properties.example android/key.properties
+```
 
 ```properties
 storeFile=upload-keystore.jks
@@ -21,72 +161,101 @@ keyAlias=upload
 keyPassword=YOUR_KEY_PASSWORD
 ```
 
-3. Build the Android App Bundle for Google Play:
+**3. Gerar o App Bundle assinado:**
 
 ```bash
-flutter build appbundle
+flutter build appbundle --release
 ```
 
-4. Upload the generated `.aab` from `build/app/outputs/bundle/release/` to the Google Play Console in the desired testing track.
+## Publicação no Google Play (automação local)
 
-## Google Play Upload Automation
+O repositório inclui um script local para build do AAB assinado e upload para o Google Play.
 
-This repository includes a local automation flow to build the signed Android App Bundle and upload it to Google Play internal testing.
+### Pré-requisitos
 
-### Prerequisites
-
-1. The app entry must already exist in Google Play Console for the package `br.com.wsilva.tasko.go`.
-2. `android/key.properties` and the upload keystore must already be configured.
-3. Install fastlane on macOS:
+1. O app já deve existir no Google Play Console para o pacote `br.com.wsilva.tasko.go`.
+2. `android/key.properties` e o keystore devem estar configurados.
+3. Instalar fastlane:
 
 ```bash
 brew install fastlane
 ```
 
-4. Create a Google Cloud service account, enable the Google Play Android Developer API, and link that service account in Google Play Console under API Access.
-5. In Google Play Console, grant the service account permission to upload releases for this app.
+4. Criar uma service account no Google Cloud, habilitar a API **Google Play Android Developer** e vinculá-la ao Google Play Console em **Configuração > Acesso à API**.
+5. Conceder permissão de upload de releases para a service account no Play Console.
 
-### Local Configuration
-
-1. Copy `.env.play.example` to `.env.play`.
-2. Set `FL_SERVICE_ACCOUNT_PATH` to the local path of your Google Play service account JSON.
-3. Review `FL_TRACK`, which defaults to `internal`.
-
-Example:
+### Configuração local
 
 ```bash
 cp .env.play.example .env.play
 ```
 
-### Publish Command
+Edite `.env.play` e defina ao menos `FL_SERVICE_ACCOUNT_PATH`:
 
-Run the local publish script from the repository root:
+```dotenv
+FL_SERVICE_ACCOUNT_PATH=$HOME/.tasko/service-account.json
+FL_PACKAGE_NAME=br.com.wsilva.tasko.go
+FL_TRACK=internal
+FL_AAB_PATH=build/app/outputs/bundle/release/app-release.aab
+FL_SKIP_BUILD=0
+```
+
+### Publicar
 
 ```bash
 ./scripts/publish_android_play.sh
 ```
 
-By default the script:
+O script executa em sequência: carregar `.env.play` → `flutter pub get` → `flutter build appbundle --release` → upload via fastlane.
 
-1. Loads `.env.play` if present.
-2. Runs `flutter pub get`.
-3. Builds the signed release AAB.
-4. Uploads the artifact to the configured Google Play track using fastlane.
-
-To reuse an already built AAB:
+Para reutilizar um AAB já compilado:
 
 ```bash
 FL_SKIP_BUILD=1 ./scripts/publish_android_play.sh
 ```
 
-### Scope Limits
+### O que o script **não** faz
 
-The automation uploads the AAB only. It does not:
+- Criar o app no Play Console
+- Configurar grupos de testadores
+- Preencher formulários de acesso, classificação de conteúdo ou ficha da loja
 
-1. Create the app in Play Console.
-2. Configure tester groups.
-3. Fill App access, Data safety, content rating, or store listing forms.
+## Arquitetura
 
-## Versioning
+O projeto segue uma arquitetura em camadas dentro de `lib/`:
 
-Android `versionName` and `versionCode` come from the `version` field in `pubspec.yaml`.
+```
+lib/
+├── main.dart              # Ponto de entrada (bootstrap, dotenv, DeepLinkService)
+├── config/                # Configuração da API (leitura de variáveis de ambiente)
+├── domain/                # Entidades e contratos de repositório
+├── data/                  # Implementações de repositórios e serviços HTTP/SQLite
+├── ui/feature/            # Telas organizadas por domínio (MVVM com Riverpod)
+│   ├── autenticacao/      # Login, criar conta, recuperar/redefinir senha
+│   ├── cliente/           # Listagem, cadastro e edição de clientes
+│   ├── produto/           # Catálogo de produtos
+│   ├── pedido/            # Criação e listagem de pedidos (multi-step)
+│   ├── agenda_visita/     # Agendamento e detalhe de visitas
+│   └── vendedor/          # Perfil e seleção de vendedor
+├── routing/               # GoRouter (rota inicial: /login; deep link: /reset-password)
+├── common/                # Componentes compartilhados (widgets, cores, exceções)
+└── util/                  # DeepLinkService, extensões, utilitários de data
+```
+
+Cada feature em `ui/feature/` segue o padrão: `*_screen.dart` → `*_view_model.dart` → `*_ui_state.dart` → `*_controllers.dart`.
+
+## Deep Links
+
+O app processa o link `reset-password` via `app_links`. Quando a URI `/reset-password?token=<token>` é recebida, o `DeepLinkService` encaminha para a tela de redefinição de senha.
+
+## Versionamento
+
+`versionName` e `versionCode` no Android (e equivalentes no iOS) são lidos diretamente do campo `version` em `pubspec.yaml`:
+
+```yaml
+version: 1.0.0+13
+#        ^-----^ versionName
+#               ^^ versionCode
+```
+
+Para incrementar, altere esse campo antes de gerar o build de release.
