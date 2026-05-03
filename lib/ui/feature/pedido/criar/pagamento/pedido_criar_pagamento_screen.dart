@@ -118,6 +118,7 @@ class _PedidoCriarPagamentoScreenState
   @override
   Widget buildContent(BuildContext context) {
     final clienteViewModel = ref.watch(pedidoCriarClienteViewModelProvider);
+    final produtoViewModel = ref.watch(pedidoCriarProdutoViewModelProvider);
 
     return GestureDetector(
       onTap: () {
@@ -333,14 +334,14 @@ class _PedidoCriarPagamentoScreenState
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      "Subtotal (3 itens)",
+                                      "Subtotal (${produtoViewModel.totalItens} iten${produtoViewModel.totalItens == 1 ? '' : 's'})",
                                       style: kTestStyleMediumText14.copyWith(
                                         color: kColorStyleSecondinaryDark400,
                                       ),
                                     ),
                                   ),
                                   Text(
-                                    "R\$ 150,00",
+                                    "R\$ ${produtoViewModel.valorTotal.toStringAsFixed(2)}",
                                     style: kTestStyleMediumText14.copyWith(
                                       color: kColorStyleSecondinaryDark400,
                                     ),
@@ -362,7 +363,7 @@ class _PedidoCriarPagamentoScreenState
                                     ),
                                   ),
                                   Text(
-                                    "R\$ 150,00",
+                                    "R\$ ${produtoViewModel.valorTotal.toStringAsFixed(2)}",
                                     style: kTestStyleBoldText18.copyWith(
                                       color:
                                           kColorStylePrimaryNeutralPaletteDark500,
