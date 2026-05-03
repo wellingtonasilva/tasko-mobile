@@ -9,14 +9,14 @@ part 'usuario_response.g.dart';
 class UsuarioResponse {
   final int id;
   final String nomeUsuario;
-  final VendedorResponse vendedor;
+  final VendedorResponse? vendedor;
   final Auditoria auditoria;
   final List<UsuarioPerfilResponse> perfis;
 
   UsuarioResponse({
     required this.id,
     required this.nomeUsuario,
-    required this.vendedor,
+    this.vendedor,
     required this.auditoria,
     required this.perfis,
   });

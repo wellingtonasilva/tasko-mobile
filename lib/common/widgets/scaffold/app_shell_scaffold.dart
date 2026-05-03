@@ -48,6 +48,9 @@ class _AppShellScaffoldState extends ConsumerState<AppShellScaffold> {
       case 'metas':
         context.go('/metas');
         break;
+      case 'usuarios':
+        context.go('/usuarios');
+        break;
       case 'trocar-vendedor':
         ref.read(vendedorSelecionadoProvider.notifier).limpar();
         context.go('/selecao-vendedor');
@@ -65,6 +68,7 @@ class _AppShellScaffoldState extends ConsumerState<AppShellScaffold> {
     if (location.startsWith('/pedidos')) return 'pedidos';
     if (location.startsWith('/agenda')) return 'agenda';
     if (location.startsWith('/metas')) return 'metas';
+    if (location.startsWith('/usuarios')) return 'usuarios';
     return 'home';
   }
 

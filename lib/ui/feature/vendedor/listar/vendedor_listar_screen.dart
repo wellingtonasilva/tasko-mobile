@@ -199,9 +199,10 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                                 */
                                           },
                                           getTitle: (value) =>
-                                              value.nomeVendedor,
+                                              value.nomeVendedor ??
+                                              'Vendedor #${value.id}',
                                           getSubtitle: (value) =>
-                                              value.numeroTelefone,
+                                              value.numeroTelefone ?? '-',
 
                                           onDelete: (vendedor, index) {
                                             _excluirVendedor(
