@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
@@ -8,6 +9,8 @@ import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_client
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/widgets/cliente_card.dart';
 import 'package:tasko_mobile/util/result.dart';
@@ -53,6 +56,29 @@ class _PedidoCriarClienteScreenState
       }
     };
     viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
+
+    final draftViewModel = ref.read(
+      pedidoCriarRascunhoViewModelProvider.notifier,
+    );
+    draftViewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+    draftViewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    draftViewModel.onFinishEvent = () {
       if (mounted) {
         hideLoading();
       }
@@ -229,13 +255,54 @@ class _PedidoCriarClienteScreenState
     );
   }
 
-  void _handleCancelarPressed() {}
+  Future<void> _handleSalvarPressed() async {
+    final clienteState = ref.read(pedidoCriarClienteViewModelProvider);
+    final cliente = clienteState.selectedCliente;
 
-  void _handleSalvarPressed() {
-    //if (_controllers.formKey.currentState?.validate() ?? false) {
-    // Salvar cliente selecionado no controller
-    // _controllers.clienteSelecionado = _controllers.pesquisaCliente.controller.text;
-    widget.onNext(_controllers.pesquisaCliente.controller.text);
-    //}
+    if (cliente == null) {
+      showSnackBar('Selecione um cliente para continuar', isError: true);
+      return;
+    }
+
+    final vendedorId = 2;
+    /*
+        ref.read(vendedorSelecionadoIdProvider) ?? cliente.vendedorId;
+    if (vendedorId == null) {
+      showSnackBar(
+        'Selecione um vendedor antes de criar o pedido',
+        isError: true,
+      );
+      return;
+    }
+    */
+    final request = AdicionarPedidoRequest(
+      clienteId: cliente.id,
+      vendedorId: vendedorId,
+      dataPedido: DateTime.now().toUtc().toIso8601String(),
+      subtotal: 0,
+      valorTotal: 0,
+      latitude: cliente.latitude,
+      longitude: cliente.longitude,
+    );
+
+    final draftState = ref.read(pedidoCriarRascunhoViewModelProvider);
+    if (draftState.pedido == null) {
+      await draftState.criarRascunhoCommand.execute(request);
+    } else {
+      await draftState.atualizarRascunhoCommand.execute((
+        pedidoId: draftState.pedido!.id,
+        request: request,
+        itens: const [],
+        formaPagamentoNome: null,
+        condicaoPagamentoNome: null,
+        pedidoStatusTipoNome: null,
+        substituirItens: false,
+      ));
+    }
+
+    final updatedDraftState = ref.read(pedidoCriarRascunhoViewModelProvider);
+    if (updatedDraftState.pedido != null) {
+      widget.onNext(_controllers.pesquisaCliente.controller.text);
+    }
   }
 }

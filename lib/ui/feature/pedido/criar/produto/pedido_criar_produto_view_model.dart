@@ -32,8 +32,14 @@ class PedidoCriarProdutoViewModel extends Notifier<PedidoCriarProdutoUiState> {
     return result;
   }
 
-  void selectProduto(ProdutoResponse? produto) {
-    state = state.copyWith(selectedProduto: produto);
+  void setQuantidade(int produtoId, double quantidade) {
+    final updated = Map<int, double>.from(state.carrinhoQuantidades);
+    if (quantidade <= 0) {
+      updated.remove(produtoId);
+    } else {
+      updated[produtoId] = quantidade;
+    }
+    state = state.copyWith(carrinhoQuantidades: updated);
   }
 }
 
