@@ -86,13 +86,13 @@ class VendedorRepositoryHybrid implements VendedorRepository {
 
     if (localVendedor.id < 0) {
       final addPayload = AdicionarVendedorRequest(
-        codigoVendedor: localVendedor.codigoVendedor,
-        nomeVendedor: localVendedor.nomeVendedor,
-        numeroCPF: localVendedor.numeroCPF,
-        email: localVendedor.email,
-        numeroTelefone: localVendedor.numeroTelefone,
+        codigoVendedor: localVendedor.codigoVendedor ?? '',
+        nomeVendedor: localVendedor.nomeVendedor ?? '',
+        numeroCPF: localVendedor.numeroCPF ?? '',
+        email: localVendedor.email ?? '',
+        numeroTelefone: localVendedor.numeroTelefone ?? '',
         valorMetaMensal: localVendedor.valorMetaMensal ?? 0,
-        percentualComissao: localVendedor.percentualComissao,
+        percentualComissao: localVendedor.percentualComissao ?? 0,
         supervisorId: localVendedor.supervisor?.id ?? 0,
         territorioId: localVendedor.territorio?.id ?? 0,
       );

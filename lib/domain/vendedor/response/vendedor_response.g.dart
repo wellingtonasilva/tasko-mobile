@@ -9,13 +9,13 @@ part of 'vendedor_response.dart';
 VendedorResponse _$VendedorResponseFromJson(Map<String, dynamic> json) =>
     VendedorResponse(
       id: (json['id'] as num).toInt(),
-      codigoVendedor: json['codigoVendedor'] as String,
-      nomeVendedor: json['nomeVendedor'] as String,
-      numeroCPF: json['numeroCPF'] as String,
-      email: json['email'] as String,
-      numeroTelefone: json['numeroTelefone'] as String,
+      codigoVendedor: json['codigoVendedor'] as String?,
+      nomeVendedor: json['nomeVendedor'] as String?,
+      numeroCPF: json['numeroCPF'] as String?,
+      email: json['email'] as String?,
+      numeroTelefone: json['numeroTelefone'] as String?,
       valorMetaMensal: (json['valorMetaMensal'] as num?)?.toDouble(),
-      percentualComissao: (json['percentualComissao'] as num).toDouble(),
+      percentualComissao: (json['percentualComissao'] as num?)?.toDouble(),
       ultimoSincronismo: json['ultimoSincronismo'] == null
           ? null
           : DateTime.parse(json['ultimoSincronismo'] as String),

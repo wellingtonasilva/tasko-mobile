@@ -79,6 +79,11 @@ class CustomDrawer extends StatelessWidget {
             icon: Icons.calendar_month,
           ),
           _buildMenuItem(keyName: 'metas', label: 'Metas', icon: Icons.flag),
+          _buildMenuItem(
+            keyName: 'usuarios',
+            label: 'Usuários',
+            icon: Icons.person,
+          ),
           const Divider(),
           _buildMenuItem(
             keyName: 'trocar-vendedor',

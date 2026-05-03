@@ -108,15 +108,15 @@ class VendedorManterControllers {
 
   void updateFormFields(VendedorResponse vendedor) {
     id.controller.text = vendedor.id.toString();
-    codigoVendedor.controller.text = vendedor.codigoVendedor;
-    nomeVendedor.controller.text = vendedor.nomeVendedor;
-    numeroCPF.controller.text = vendedor.numeroCPF;
-    email.controller.text = vendedor.email;
-    numeroTelefone.controller.text = vendedor.numeroTelefone;
+    codigoVendedor.controller.text = vendedor.codigoVendedor ?? '';
+    nomeVendedor.controller.text = vendedor.nomeVendedor ?? '';
+    numeroCPF.controller.text = vendedor.numeroCPF ?? '';
+    email.controller.text = vendedor.email ?? '';
+    numeroTelefone.controller.text = vendedor.numeroTelefone ?? '';
     valorMetaMensal.controller.text =
         vendedor.valorMetaMensal?.toStringAsFixed(2) ?? '';
-    percentualComissao.controller.text = vendedor.percentualComissao
-        .toStringAsFixed(2);
+    percentualComissao.controller.text =
+        vendedor.percentualComissao?.toStringAsFixed(2) ?? '';
     ultimoSincronismo.controller.text =
         vendedor.ultimoSincronismo?.toIso8601String() ?? '';
     codigoDispositivo.controller.text = vendedor.codigoDispositivo ?? '';

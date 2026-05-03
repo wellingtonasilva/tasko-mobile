@@ -142,7 +142,7 @@ class _AgendaVisitaCriarScreenState
                     : CustomDropdownButtonFormField<VendedorResponse>(
                         hint: 'Selecione um vendedor',
                         items: viewModel.vendedores,
-                        itemLabelBuilder: (v) => v.nomeVendedor,
+                        itemLabelBuilder: (v) => v.nomeVendedor ?? '-',
                         selectedValue: viewModel.vendedorSelecionado,
                         onChanged: (v) {
                           ref

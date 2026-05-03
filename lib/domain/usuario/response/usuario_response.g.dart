@@ -10,9 +10,9 @@ UsuarioResponse _$UsuarioResponseFromJson(Map<String, dynamic> json) =>
     UsuarioResponse(
       id: (json['id'] as num).toInt(),
       nomeUsuario: json['nomeUsuario'] as String,
-      vendedor: VendedorResponse.fromJson(
-        json['vendedor'] as Map<String, dynamic>,
-      ),
+      vendedor: json['vendedor'] == null
+          ? null
+          : VendedorResponse.fromJson(json['vendedor'] as Map<String, dynamic>),
       auditoria: Auditoria.fromJson(json['auditoria'] as Map<String, dynamic>),
       perfis: (json['perfis'] as List<dynamic>)
           .map((e) => UsuarioPerfilResponse.fromJson(e as Map<String, dynamic>))

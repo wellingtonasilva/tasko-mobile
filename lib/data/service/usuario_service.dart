@@ -5,8 +5,6 @@ import 'package:tasko_mobile/config/config_api.dart';
 import 'package:tasko_mobile/config/http_client_config.dart';
 import 'package:tasko_mobile/domain/usuario/request/adicionar_usuario_request.dart';
 import 'package:tasko_mobile/domain/usuario/request/atualizar_usuario_request.dart';
-import 'package:tasko_mobile/domain/usuario/request/login_request.dart';
-import 'package:tasko_mobile/domain/usuario/response/usuario_login_response.dart';
 import 'package:tasko_mobile/domain/usuario/response/usuario_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
