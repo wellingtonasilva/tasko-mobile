@@ -7,6 +7,7 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_controllers.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/widgets/produto_card.dart';
@@ -72,6 +73,7 @@ class _PedidoCriarProdutoScreenState
   @override
   Widget buildContent(BuildContext context) {
     final viewModel = ref.watch(pedidoCriarProdutoViewModelProvider);
+    final clienteViewModel = ref.watch(pedidoCriarClienteViewModelProvider);
 
     return GestureDetector(
       onTap: () {
@@ -104,7 +106,8 @@ class _PedidoCriarProdutoScreenState
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CustomTituloBarDefault(
-                          title: 'Novo Pedido',
+                          title:
+                              'Pedido - ${clienteViewModel.selectedCliente?.nomeFantasia ?? ''}',
                           child: Text(
                             '(2/4)',
                             style: kTestStyleBoldText14.copyWith(

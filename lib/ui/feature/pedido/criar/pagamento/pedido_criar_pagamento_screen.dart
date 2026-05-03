@@ -7,6 +7,7 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_condicao_pagamento_button.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_forma_pagamento_button.dart';
 
@@ -89,6 +90,8 @@ class _PedidoCriarPagamentoScreenState
 
   @override
   Widget buildContent(BuildContext context) {
+    final clienteViewModel = ref.watch(pedidoCriarClienteViewModelProvider);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -120,7 +123,8 @@ class _PedidoCriarPagamentoScreenState
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CustomTituloBarDefault(
-                          title: 'Novo Pedido',
+                          title:
+                              'Pedido - ${clienteViewModel.selectedCliente?.nomeFantasia ?? ''}',
                           child: Text(
                             '(3/4)',
                             style: kTestStyleBoldText14.copyWith(
