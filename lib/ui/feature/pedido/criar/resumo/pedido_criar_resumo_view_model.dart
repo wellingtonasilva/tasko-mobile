@@ -71,7 +71,7 @@ class PedidoCriarResumoViewModel extends Notifier<PedidoCriarResumoUiState> {
         condicaoPagamentoId: rascunho.condicaoPagamentoId,
         latitude: rascunho.latitude,
         longitude: rascunho.longitude,
-        empresaId: 8,
+        empresaId: await ref.read(authLocalStorageProvider).getEmpresaId() ?? 0,
       );
       result = await ref
           .read(pedidoRepositoryHybridProvider)
