@@ -5,8 +5,15 @@ class PedidoCriarPagamentoViewModel
     extends Notifier<PedidoCriarPagamentoUiState> {
   @override
   PedidoCriarPagamentoUiState build() {
-    // TODO: implement build
-    throw UnimplementedError();
+    return const PedidoCriarPagamentoUiState();
+  }
+
+  void setFormaPagamento(String nome) {
+    state = state.copyWith(formaPagamentoNome: nome);
+  }
+
+  void setCondicaoPagamento(String nome) {
+    state = state.copyWith(condicaoPagamentoNome: nome);
   }
 }
 

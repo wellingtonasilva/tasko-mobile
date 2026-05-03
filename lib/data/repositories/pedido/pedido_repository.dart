@@ -5,6 +5,22 @@ import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 abstract class PedidoRepository {
+  Future<Result<PedidoResponse>> criarRascunho(
+    AdicionarPedidoRequest request, {
+    List<AdicionarPedidoItemRequest> itens = const [],
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+  });
+  Future<Result<PedidoResponse>> atualizarRascunho(
+    int pedidoId,
+    AdicionarPedidoRequest request, {
+    List<AdicionarPedidoItemRequest> itens = const [],
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+    bool substituirItens = false,
+  });
   Future<Result<PedidoResponse>> adicionar(
     AdicionarPedidoRequest request, {
     required List<AdicionarPedidoItemRequest> itens,

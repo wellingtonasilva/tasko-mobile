@@ -7,7 +7,10 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_item_request.dart';
+import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_controllers.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/widgets/produto_card.dart';
@@ -56,6 +59,25 @@ class _PedidoCriarProdutoScreenState
       if (mounted) {
         hideLoading();
       }
+    };
+
+    final draftViewModel = ref.read(
+      pedidoCriarRascunhoViewModelProvider.notifier,
+    );
+    draftViewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+    draftViewModel.onStartEvent = () {
+      if (mounted) showLoading();
+    };
+    draftViewModel.onFinishEvent = () {
+      if (mounted) hideLoading();
     };
 
     ref
@@ -170,18 +192,21 @@ class _PedidoCriarProdutoScreenState
                                                 viewModel.produtos![index];
                                             return ProdutoCard(
                                               produto: produto,
-                                              isSelected:
+                                              quantidade:
                                                   viewModel
-                                                      .selectedProduto
-                                                      ?.id ==
-                                                  produto.id,
-                                              onTap: () {
+                                                      .carrinhoQuantidades[produto
+                                                      .id] ??
+                                                  0,
+                                              onQuantidadeChanged: (q) {
                                                 ref
                                                     .read(
                                                       pedidoCriarProdutoViewModelProvider
                                                           .notifier,
                                                     )
-                                                    .selectProduto(produto);
+                                                    .setQuantidade(
+                                                      produto.id,
+                                                      q,
+                                                    );
                                               },
                                             );
                                           },
@@ -214,7 +239,7 @@ class _PedidoCriarProdutoScreenState
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  "3 itens",
+                                  "${viewModel.totalItens} iten${viewModel.totalItens == 1 ? '' : 's'}",
                                   style: kTestStyleMediumText18.copyWith(
                                     color: kColorStyleSecondinaryDark400,
                                   ),
@@ -231,7 +256,7 @@ class _PedidoCriarProdutoScreenState
                                     ),
                                   ),
                                   Text(
-                                    "R\$ 150,00",
+                                    "R\$ ${viewModel.valorTotal.toStringAsFixed(2)}",
                                     style: kTestStyleBoldText18.copyWith(
                                       color:
                                           kColorStylePrimaryNeutralPaletteDark500,
@@ -261,9 +286,7 @@ class _PedidoCriarProdutoScreenState
                           Expanded(
                             child: CustomButtonPrimary(
                               label: 'Próximo',
-                              onPressed: () {
-                                widget.onNext('Produto');
-                              },
+                              onPressed: () => _handleProximoPressed(),
                             ),
                           ),
                         ],
@@ -277,5 +300,64 @@ class _PedidoCriarProdutoScreenState
         ),
       ),
     );
+  }
+
+  Future<void> _handleProximoPressed() async {
+    final produtoState = ref.read(pedidoCriarProdutoViewModelProvider);
+    final draftState = ref.read(pedidoCriarRascunhoViewModelProvider);
+
+    if (draftState.pedido == null) {
+      showSnackBar('Selecione um cliente primeiro', isError: true);
+      return;
+    }
+    if (produtoState.carrinhoQuantidades.isEmpty) {
+      showSnackBar('Adicione pelo menos um produto', isError: true);
+      return;
+    }
+
+    final pedido = draftState.pedido!;
+    final itens = produtoState.carrinhoQuantidades.entries.map((e) {
+      final produto = produtoState.produtos!.firstWhere((p) => p.id == e.key);
+      final preco = produto.precoSugerido ?? 0;
+      final total = preco * e.value;
+      return AdicionarPedidoItemRequest(
+        pedidoId: pedido.id,
+        produtoId: produto.id,
+        quantidade: e.value,
+        precoUnitario: preco,
+        valorTotal: total,
+      );
+    }).toList();
+
+    final subtotal = itens.fold(0.0, (sum, i) => sum + i.valorTotal);
+    final request = AdicionarPedidoRequest(
+      clienteId: pedido.clienteId,
+      vendedorId: pedido.vendedorId,
+      dataPedido: pedido.dataPedido.toIso8601String(),
+      subtotal: subtotal,
+      valorTotal: subtotal,
+      latitude: pedido.latitude,
+      longitude: pedido.longitude,
+    );
+
+    final args = (
+      pedidoId: pedido.id,
+      request: request,
+      itens: itens,
+      formaPagamentoNome: pedido.formaPagamentoNome,
+      condicaoPagamentoNome: pedido.condicaoPagamentoNome,
+      pedidoStatusTipoNome: pedido.pedidoStatusTipoNome,
+      substituirItens: true,
+    );
+
+    await ref
+        .read(pedidoCriarRascunhoViewModelProvider)
+        .atualizarRascunhoCommand
+        .execute(args);
+
+    final updatedDraft = ref.read(pedidoCriarRascunhoViewModelProvider);
+    if (updatedDraft.pedido != null && mounted) {
+      widget.onNext('Produto');
+    }
   }
 }

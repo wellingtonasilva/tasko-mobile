@@ -19,6 +19,38 @@ class PedidoRepositoryRemote implements PedidoRepository {
        _pedidoItemService = pedidoItemService;
 
   @override
+  Future<Result<PedidoResponse>> criarRascunho(
+    AdicionarPedidoRequest request, {
+    List<AdicionarPedidoItemRequest> itens = const [],
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+  }) {
+    return Future.value(
+      Failure<PedidoResponse>([
+        'Criacao de rascunho nao e suportada pelo repositorio remoto',
+      ]),
+    );
+  }
+
+  @override
+  Future<Result<PedidoResponse>> atualizarRascunho(
+    int pedidoId,
+    AdicionarPedidoRequest request, {
+    List<AdicionarPedidoItemRequest> itens = const [],
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+    bool substituirItens = false,
+  }) {
+    return Future.value(
+      Failure<PedidoResponse>([
+        'Atualizacao de rascunho nao e suportada pelo repositorio remoto',
+      ]),
+    );
+  }
+
+  @override
   Future<Result<PedidoResponse>> adicionar(
     AdicionarPedidoRequest request, {
     required List<AdicionarPedidoItemRequest> itens,

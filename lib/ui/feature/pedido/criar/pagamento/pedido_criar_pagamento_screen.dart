@@ -7,9 +7,13 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_condicao_pagamento_button.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_forma_pagamento_button.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
+import 'package:tasko_mobile/util/result.dart';
 
 class FormaPagamento {
   final String id;
@@ -54,6 +58,29 @@ class _PedidoCriarPagamentoScreenState
   int selectedPaymentConditionIndex = 0;
   int selectedParcelasIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    final draftViewModel = ref.read(
+      pedidoCriarRascunhoViewModelProvider.notifier,
+    );
+    draftViewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+    draftViewModel.onStartEvent = () {
+      if (mounted) showLoading();
+    };
+    draftViewModel.onFinishEvent = () {
+      if (mounted) hideLoading();
+    };
+  }
+
   final List<FormaPagamento> paymentMethods = [
     FormaPagamento(
       id: '1',
@@ -91,6 +118,7 @@ class _PedidoCriarPagamentoScreenState
   @override
   Widget buildContent(BuildContext context) {
     final clienteViewModel = ref.watch(pedidoCriarClienteViewModelProvider);
+    final produtoViewModel = ref.watch(pedidoCriarProdutoViewModelProvider);
 
     return GestureDetector(
       onTap: () {
@@ -306,14 +334,14 @@ class _PedidoCriarPagamentoScreenState
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      "Subtotal (3 itens)",
+                                      "Subtotal (${produtoViewModel.totalItens} iten${produtoViewModel.totalItens == 1 ? '' : 's'})",
                                       style: kTestStyleMediumText14.copyWith(
                                         color: kColorStyleSecondinaryDark400,
                                       ),
                                     ),
                                   ),
                                   Text(
-                                    "R\$ 150,00",
+                                    "R\$ ${produtoViewModel.valorTotal.toStringAsFixed(2)}",
                                     style: kTestStyleMediumText14.copyWith(
                                       color: kColorStyleSecondinaryDark400,
                                     ),
@@ -335,7 +363,7 @@ class _PedidoCriarPagamentoScreenState
                                     ),
                                   ),
                                   Text(
-                                    "R\$ 150,00",
+                                    "R\$ ${produtoViewModel.valorTotal.toStringAsFixed(2)}",
                                     style: kTestStyleBoldText18.copyWith(
                                       color:
                                           kColorStylePrimaryNeutralPaletteDark500,
@@ -365,9 +393,7 @@ class _PedidoCriarPagamentoScreenState
                           Expanded(
                             child: CustomButtonPrimary(
                               label: 'Próximo',
-                              onPressed: () {
-                                widget.onNext("Pagamento");
-                              },
+                              onPressed: () => _handleProximoPressed(),
                             ),
                           ),
                         ],
@@ -381,5 +407,56 @@ class _PedidoCriarPagamentoScreenState
         ),
       ),
     );
+  }
+
+  Future<void> _handleProximoPressed() async {
+    final draftState = ref.read(pedidoCriarRascunhoViewModelProvider);
+    if (draftState.pedido == null) {
+      showSnackBar('Rascunho do pedido não encontrado', isError: true);
+      return;
+    }
+
+    final formaPagamento = paymentMethods[selectedPaymentMethodIndex];
+    final condicao = paymentConditions[selectedPaymentConditionIndex];
+    final pedido = draftState.pedido!;
+
+    final produtoState = ref.read(pedidoCriarProdutoViewModelProvider);
+    final itens = produtoState.carrinhoQuantidades.entries.map((e) {
+      final produto = produtoState.produtos!.firstWhere((p) => p.id == e.key);
+      final preco = produto.precoSugerido ?? 0;
+      return (
+        pedidoId: pedido.id,
+        produtoId: produto.id,
+        quantidade: e.value,
+        preco: preco,
+      );
+    }).toList();
+
+    final subtotal = itens.fold(0.0, (sum, i) => sum + i.preco * i.quantidade);
+
+    final request = AdicionarPedidoRequest(
+      clienteId: pedido.clienteId,
+      vendedorId: pedido.vendedorId,
+      dataPedido: pedido.dataPedido.toIso8601String(),
+      subtotal: subtotal,
+      valorTotal: subtotal,
+      latitude: pedido.latitude,
+      longitude: pedido.longitude,
+    );
+
+    await draftState.atualizarRascunhoCommand.execute((
+      pedidoId: pedido.id,
+      request: request,
+      itens: const [],
+      formaPagamentoNome: formaPagamento.nome,
+      condicaoPagamentoNome: condicao.nome,
+      pedidoStatusTipoNome: null,
+      substituirItens: false,
+    ));
+
+    final updated = ref.read(pedidoCriarRascunhoViewModelProvider);
+    if (updated.pedido != null && mounted) {
+      widget.onNext('Pagamento');
+    }
   }
 }

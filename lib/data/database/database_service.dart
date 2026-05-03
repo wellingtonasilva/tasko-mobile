@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static const _dbName = 'tasko_mobile.db';
-  static const _dbVersion = 4;
+  static const _dbVersion = 5;
 
   static const vendedoresTable = 'vendedores';
   static const syncQueueTable = 'sync_queue';
@@ -67,6 +67,10 @@ class DatabaseService {
     if (oldVersion < 4) {
       await _upgradeToV4(db);
     }
+
+    if (oldVersion < 5) {
+      await _upgradeToV5(db);
+    }
   }
 
   Future<void> _upgradeToV3(Database db) async {
@@ -108,6 +112,21 @@ class DatabaseService {
     await _createPedidoItensTable(db);
     await _createAgendaVisitasTable(db);
     await _createAgendaVisitaCheckinsTable(db);
+  }
+
+  Future<void> _upgradeToV5(Database db) async {
+    await _addColumnIfNotExists(
+      db,
+      pedidosTable,
+      'is_draft',
+      'INTEGER NOT NULL DEFAULT 0',
+    );
+    await _addColumnIfNotExists(
+      db,
+      pedidoItensTable,
+      'is_draft',
+      'INTEGER NOT NULL DEFAULT 0',
+    );
   }
 
   Future<void> _addColumnIfNotExists(
@@ -323,6 +342,7 @@ class DatabaseService {
         longitude REAL,
         sincronizado INTEGER NOT NULL DEFAULT 0,
         criado_offline INTEGER NOT NULL DEFAULT 0,
+        is_draft INTEGER NOT NULL DEFAULT 0,
         uuid_offline TEXT,
         auditoria_criado_em TEXT,
         auditoria_atualizado_em TEXT,
@@ -372,6 +392,7 @@ class DatabaseService {
         local_updated_at TEXT NOT NULL,
         server_updated_at TEXT,
         synced_at TEXT,
+        is_draft INTEGER NOT NULL DEFAULT 0,
         dirty INTEGER NOT NULL DEFAULT 0,
         deleted INTEGER NOT NULL DEFAULT 0,
         sync_error TEXT,

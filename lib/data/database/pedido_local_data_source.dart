@@ -16,6 +16,309 @@ class PedidoLocalDataSource {
 
   // ─── Pedidos ───
 
+  Future<Result<PedidoResponse>> criarRascunho(
+    AdicionarPedidoRequest request, {
+    List<AdicionarPedidoItemRequest> itens = const [],
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+  }) async {
+    try {
+      final db = await _databaseService.database;
+      final now = DateTime.now().toUtc();
+      final localId = -now.microsecondsSinceEpoch;
+      final localUuid = 'ped-draft-${now.microsecondsSinceEpoch}';
+      final uuidOffline = request.uuidOffline ?? localUuid;
+      final nowIso = now.toIso8601String();
+
+      final pedidoRow = {
+        'id': localId,
+        'local_uuid': localUuid,
+        'numero_pedido': null,
+        'cliente_id': request.clienteId,
+        'vendedor_id': request.vendedorId,
+        'pedido_status_tipo_id': request.pedidoStatusTipoId,
+        'pedido_status_tipo_nome': pedidoStatusTipoNome,
+        'data_pedido': request.dataPedido,
+        'data_entrega_prevista': request.dataEntregaPrevista,
+        'observacao': request.observacao,
+        'subtotal': request.subtotal,
+        'percentual_desconto': request.percentualDesconto,
+        'valor_desconto': request.valorDesconto,
+        'valor_frete': request.valorFrete,
+        'valor_total': request.valorTotal,
+        'forma_pagamento_id': request.formaPagamentoId,
+        'forma_pagamento_nome': formaPagamentoNome,
+        'condicao_pagamento_id': request.condicaoPagamentoId,
+        'condicao_pagamento_nome': condicaoPagamentoNome,
+        'latitude': request.latitude,
+        'longitude': request.longitude,
+        'sincronizado': 0,
+        'criado_offline': 1,
+        'is_draft': 1,
+        'uuid_offline': uuidOffline,
+        'auditoria_criado_em': nowIso,
+        'auditoria_atualizado_em': nowIso,
+        'auditoria_indicador_ativo': 1,
+        'local_updated_at': nowIso,
+        'server_updated_at': null,
+        'synced_at': null,
+        'dirty': 0,
+        'deleted': 0,
+        'sync_error': null,
+        'sync_attempt_count': 0,
+      };
+
+      final createdItens = <PedidoItemResponse>[];
+
+      await db.transaction((txn) async {
+        await txn.insert(
+          DatabaseService.pedidosTable,
+          pedidoRow,
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+
+        for (final item in itens) {
+          final itemLocalId = -(DateTime.now().toUtc().microsecondsSinceEpoch);
+          final itemRow = {
+            'id': itemLocalId,
+            'local_uuid': 'ped-draft-item-${-itemLocalId}',
+            'pedido_id': localId,
+            'produto_id': item.produtoId,
+            'quantidade': item.quantidade,
+            'preco_unitario': item.precoUnitario,
+            'percentual_desconto': item.percentualDesconto,
+            'valor_desconto': item.valorDesconto,
+            'valor_total': item.valorTotal,
+            'auditoria_criado_em': nowIso,
+            'auditoria_atualizado_em': nowIso,
+            'auditoria_indicador_ativo': 1,
+            'local_updated_at': nowIso,
+            'server_updated_at': null,
+            'synced_at': null,
+            'is_draft': 1,
+            'dirty': 0,
+            'deleted': 0,
+            'sync_error': null,
+            'sync_attempt_count': 0,
+          };
+
+          await txn.insert(
+            DatabaseService.pedidoItensTable,
+            itemRow,
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+
+          createdItens.add(_itemFromRow(itemRow));
+        }
+      });
+
+      final pedido = _fromRow(pedidoRow);
+      return Result.success(
+        PedidoResponse(
+          id: pedido.id,
+          numeroPedido: pedido.numeroPedido,
+          clienteId: pedido.clienteId,
+          vendedorId: pedido.vendedorId,
+          pedidoStatusTipoId: pedido.pedidoStatusTipoId,
+          pedidoStatusTipoNome: pedido.pedidoStatusTipoNome,
+          dataPedido: pedido.dataPedido,
+          dataEntregaPrevista: pedido.dataEntregaPrevista,
+          observacao: pedido.observacao,
+          subtotal: pedido.subtotal,
+          percentualDesconto: pedido.percentualDesconto,
+          valorDesconto: pedido.valorDesconto,
+          valorFrete: pedido.valorFrete,
+          valorTotal: pedido.valorTotal,
+          formaPagamentoId: pedido.formaPagamentoId,
+          formaPagamentoNome: pedido.formaPagamentoNome,
+          condicaoPagamentoId: pedido.condicaoPagamentoId,
+          condicaoPagamentoNome: pedido.condicaoPagamentoNome,
+          latitude: pedido.latitude,
+          longitude: pedido.longitude,
+          sincronizado: pedido.sincronizado,
+          criadoOffline: pedido.criadoOffline,
+          uuidOffline: pedido.uuidOffline,
+          auditoria: pedido.auditoria,
+          itens: createdItens,
+        ),
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<PedidoResponse>> atualizarRascunho(
+    int pedidoId,
+    AdicionarPedidoRequest request, {
+    List<AdicionarPedidoItemRequest> itens = const [],
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+    bool substituirItens = false,
+  }) async {
+    try {
+      final db = await _databaseService.database;
+      final now = DateTime.now().toUtc();
+      final nowIso = now.toIso8601String();
+
+      PedidoResponse? pedidoAtualizado;
+
+      await db.transaction((txn) async {
+        final existingRows = await txn.query(
+          DatabaseService.pedidosTable,
+          where: 'id = ? AND deleted = 0',
+          whereArgs: [pedidoId],
+          limit: 1,
+        );
+
+        if (existingRows.isEmpty) {
+          throw Exception('Pedido rascunho nao encontrado');
+        }
+
+        final existingRow = existingRows.first;
+        final localUuid = existingRow['local_uuid'] as String?;
+        final uuidOffline =
+            request.uuidOffline ??
+            (existingRow['uuid_offline'] as String?) ??
+            localUuid;
+
+        final pedidoRow = {
+          'id': pedidoId,
+          'local_uuid': localUuid ?? 'ped-draft-$pedidoId',
+          'numero_pedido': existingRow['numero_pedido'],
+          'cliente_id': request.clienteId,
+          'vendedor_id': request.vendedorId,
+          'pedido_status_tipo_id': request.pedidoStatusTipoId,
+          'pedido_status_tipo_nome': pedidoStatusTipoNome,
+          'data_pedido': request.dataPedido,
+          'data_entrega_prevista': request.dataEntregaPrevista,
+          'observacao': request.observacao,
+          'subtotal': request.subtotal,
+          'percentual_desconto': request.percentualDesconto,
+          'valor_desconto': request.valorDesconto,
+          'valor_frete': request.valorFrete,
+          'valor_total': request.valorTotal,
+          'forma_pagamento_id': request.formaPagamentoId,
+          'forma_pagamento_nome': formaPagamentoNome,
+          'condicao_pagamento_id': request.condicaoPagamentoId,
+          'condicao_pagamento_nome': condicaoPagamentoNome,
+          'latitude': request.latitude,
+          'longitude': request.longitude,
+          'sincronizado': 0,
+          'criado_offline': 1,
+          'is_draft': 1,
+          'uuid_offline': uuidOffline,
+          'auditoria_criado_em': existingRow['auditoria_criado_em'] ?? nowIso,
+          'auditoria_atualizado_em': nowIso,
+          'auditoria_indicador_ativo':
+              existingRow['auditoria_indicador_ativo'] ?? 1,
+          'local_updated_at': nowIso,
+          'server_updated_at': null,
+          'synced_at': null,
+          'dirty': 0,
+          'deleted': 0,
+          'sync_error': null,
+          'sync_attempt_count': 0,
+        };
+
+        await txn.update(
+          DatabaseService.pedidosTable,
+          pedidoRow,
+          where: 'id = ?',
+          whereArgs: [pedidoId],
+        );
+
+        if (substituirItens) {
+          await txn.delete(
+            DatabaseService.pedidoItensTable,
+            where: 'pedido_id = ?',
+            whereArgs: [pedidoId],
+          );
+
+          for (final item in itens) {
+            final itemLocalId = -(DateTime.now()
+                .toUtc()
+                .microsecondsSinceEpoch);
+            final itemRow = {
+              'id': itemLocalId,
+              'local_uuid': 'ped-draft-item-${-itemLocalId}',
+              'pedido_id': pedidoId,
+              'produto_id': item.produtoId,
+              'quantidade': item.quantidade,
+              'preco_unitario': item.precoUnitario,
+              'percentual_desconto': item.percentualDesconto,
+              'valor_desconto': item.valorDesconto,
+              'valor_total': item.valorTotal,
+              'auditoria_criado_em': nowIso,
+              'auditoria_atualizado_em': nowIso,
+              'auditoria_indicador_ativo': 1,
+              'local_updated_at': nowIso,
+              'server_updated_at': null,
+              'synced_at': null,
+              'is_draft': 1,
+              'dirty': 0,
+              'deleted': 0,
+              'sync_error': null,
+              'sync_attempt_count': 0,
+            };
+
+            await txn.insert(
+              DatabaseService.pedidoItensTable,
+              itemRow,
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
+          }
+        }
+
+        final itensRows = await txn.query(
+          DatabaseService.pedidoItensTable,
+          where: 'pedido_id = ? AND deleted = 0',
+          whereArgs: [pedidoId],
+        );
+
+        pedidoAtualizado = PedidoResponse(
+          id: pedidoId,
+          numeroPedido: existingRow['numero_pedido'] as String?,
+          clienteId: request.clienteId,
+          vendedorId: request.vendedorId,
+          pedidoStatusTipoId: request.pedidoStatusTipoId,
+          pedidoStatusTipoNome: pedidoStatusTipoNome,
+          dataPedido: DateTime.parse(request.dataPedido).toLocal(),
+          dataEntregaPrevista: request.dataEntregaPrevista == null
+              ? null
+              : DateTime.tryParse(request.dataEntregaPrevista!)?.toLocal(),
+          observacao: request.observacao,
+          subtotal: request.subtotal,
+          percentualDesconto: request.percentualDesconto,
+          valorDesconto: request.valorDesconto,
+          valorFrete: request.valorFrete,
+          valorTotal: request.valorTotal,
+          formaPagamentoId: request.formaPagamentoId,
+          formaPagamentoNome: formaPagamentoNome,
+          condicaoPagamentoId: request.condicaoPagamentoId,
+          condicaoPagamentoNome: condicaoPagamentoNome,
+          latitude: request.latitude,
+          longitude: request.longitude,
+          sincronizado: false,
+          criadoOffline: true,
+          uuidOffline: uuidOffline,
+          auditoria: Auditoria(
+            criadoEm: _toDateTime(existingRow['auditoria_criado_em']),
+            atualizadoEm: DateTime.parse(nowIso).toLocal(),
+            indicadorAtivo:
+                (existingRow['auditoria_indicador_ativo'] as int?) == 1,
+          ),
+          itens: itensRows.map(_itemFromRow).toList(),
+        );
+      });
+
+      return Result.success(pedidoAtualizado!);
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
   Future<Result<List<PedidoResponse>>> listar({int? vendedorId}) async {
     try {
       final db = await _databaseService.database;

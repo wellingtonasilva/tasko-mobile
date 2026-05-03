@@ -10,7 +10,8 @@ import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/produto/widgets/produto_card.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/resumo/pedido_criar_resumo_view_model.dart';
+import 'package:tasko_mobile/util/result.dart';
 
 class PedidoCriarResumoScreen extends BaseScreen {
   final Function(String cliente) onPrevious;
@@ -30,9 +31,35 @@ class PedidoCriarResumoScreen extends BaseScreen {
 class _PedidoCriarResumoScreenState
     extends BaseScreenState<PedidoCriarResumoScreen> {
   @override
+  void initState() {
+    super.initState();
+    final viewModel = ref.read(pedidoCriarResumoViewModelProvider.notifier);
+    viewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+    viewModel.onStartEvent = () {
+      if (mounted) showLoading();
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) hideLoading();
+    };
+    viewModel.onConfirmado = () {
+      if (mounted) widget.onNext('Resumo');
+    };
+  }
+
+  @override
   Widget buildContent(BuildContext context) {
     final viewProduto = ref.watch(pedidoCriarProdutoViewModelProvider);
     final clienteViewModel = ref.watch(pedidoCriarClienteViewModelProvider);
+    final resumoViewModel = ref.watch(pedidoCriarResumoViewModelProvider);
+    final rascunho = resumoViewModel.rascunho;
 
     return GestureDetector(
       onTap: () {
@@ -136,13 +163,19 @@ class _PedidoCriarResumoScreenState
                                   ),
                                   SizedBox(height: 5),
                                   Text(
-                                    "João da Silva",
+                                    clienteViewModel
+                                            .selectedCliente
+                                            ?.nomeFantasia ??
+                                        clienteViewModel
+                                            .selectedCliente
+                                            ?.razaoSocial ??
+                                        '',
                                     style: kTestStyleBoldText14.copyWith(
                                       color: kColorStyleSecondinaryDarkDefault,
                                     ),
                                   ),
                                   Text(
-                                    "Limite disponível: R\$ 5.000",
+                                    'Limite disponível: R\$ ${clienteViewModel.selectedCliente?.limiteCredito?.toStringAsFixed(2) ?? 'N/A'}',
                                     style: kTestStyleRegularText14.copyWith(
                                       color: kColorStyleSecondinaryLight400,
                                     ),
@@ -192,14 +225,30 @@ class _PedidoCriarResumoScreenState
                                             )
                                           : Expanded(
                                               child: ListView.builder(
-                                                itemCount:
-                                                    viewProduto
-                                                        .produtos
-                                                        ?.length ??
-                                                    0,
+                                                itemCount: viewProduto
+                                                    .carrinhoQuantidades
+                                                    .length,
                                                 itemBuilder: (context, index) {
+                                                  final entry = viewProduto
+                                                      .carrinhoQuantidades
+                                                      .entries
+                                                      .elementAt(index);
                                                   final produto = viewProduto
-                                                      .produtos![index];
+                                                      .produtos
+                                                      ?.firstWhere(
+                                                        (p) =>
+                                                            p.id == entry.key,
+                                                        orElse: () =>
+                                                            viewProduto
+                                                                .produtos!
+                                                                .first,
+                                                      );
+                                                  if (produto == null)
+                                                    return const SizedBox();
+                                                  final total =
+                                                      (produto.precoSugerido ??
+                                                          0) *
+                                                      entry.value;
                                                   return Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
@@ -230,7 +279,7 @@ class _PedidoCriarResumoScreenState
                                                                 ),
                                                           ),
                                                           Text(
-                                                            "Qtd: 1",
+                                                            "Qtd: ${entry.value.toInt()}",
                                                             style: kTestStyleRegularText14
                                                                 .copyWith(
                                                                   color:
@@ -238,7 +287,7 @@ class _PedidoCriarResumoScreenState
                                                                 ),
                                                           ),
                                                           Text(
-                                                            "R\$ ${produto.precoSugerido?.toStringAsFixed(2) ?? '0.00'}",
+                                                            "R\$ ${total.toStringAsFixed(2)}",
                                                             style: kTestStyleRegularText14
                                                                 .copyWith(
                                                                   color:
@@ -248,10 +297,10 @@ class _PedidoCriarResumoScreenState
                                                         ],
                                                       ),
                                                       if (index <
-                                                          (viewProduto
-                                                                  .produtos!
+                                                          viewProduto
+                                                                  .carrinhoQuantidades
                                                                   .length -
-                                                              1))
+                                                              1)
                                                         Divider(
                                                           color:
                                                               kColorStyleSecondinaryLight200,
@@ -297,13 +346,13 @@ class _PedidoCriarResumoScreenState
                             ),
                             SizedBox(height: 5),
                             Text(
-                              "Pix",
+                              rascunho?.formaPagamentoNome ?? '',
                               style: kTestStyleBoldText14.copyWith(
                                 color: kColorStyleSecondinaryDarkDefault,
                               ),
                             ),
                             Text(
-                              "A Vista",
+                              rascunho?.condicaoPagamentoNome ?? '',
                               style: kTestStyleRegularText14.copyWith(
                                 color: kColorStyleSecondinaryLight400,
                               ),
@@ -334,7 +383,7 @@ class _PedidoCriarResumoScreenState
                               ),
                             ),
                             Text(
-                              "R\$ 150,00",
+                              "R\$ ${(rascunho?.valorTotal ?? viewProduto.valorTotal).toStringAsFixed(2)}",
                               style: kTestStyleBoldText24.copyWith(
                                 color: kColorStylePrimaryNeutralPaletteDark500,
                               ),
@@ -360,9 +409,8 @@ class _PedidoCriarResumoScreenState
                           Expanded(
                             child: CustomButtonPrimary(
                               label: 'Confirmar Pedido',
-                              onPressed: () {
-                                widget.onNext("Resumo");
-                              },
+                              onPressed: () =>
+                                  resumoViewModel.confirmarCommand.execute(),
                             ),
                           ),
                         ],

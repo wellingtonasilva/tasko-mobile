@@ -5,106 +5,84 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_action_icon_button.da
 import 'package:tasko_mobile/common/widgets/buttons/custom_action_increase_decrease_button.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 
-class ProdutoCard extends StatefulWidget {
+class ProdutoCard extends StatelessWidget {
   final ProdutoResponse produto;
-  final bool isSelected;
-  final Function()? onTap;
+  final double quantidade;
+  final Function(double)? onQuantidadeChanged;
 
   const ProdutoCard({
     super.key,
     required this.produto,
-    this.isSelected = false,
-    this.onTap,
+    this.quantidade = 0,
+    this.onQuantidadeChanged,
   });
 
   @override
-  State<ProdutoCard> createState() => _ProdutoCardState();
-}
-
-class _ProdutoCardState extends State<ProdutoCard> {
-  int quantidade = 0;
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 12.0),
-        child: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: widget.isSelected
-                  ? kColorStylePrimaryNeutralPaletteDark500
-                  : Colors.grey.shade300,
-            ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Container(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: quantidade > 0
+                ? kColorStylePrimaryNeutralPaletteDark500
+                : Colors.grey.shade300,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(widget.produto.nomeProduto, style: kTestStyleBoldText16),
+                  Text(produto.nomeProduto, style: kTestStyleBoldText16),
                   SizedBox(height: 4),
                   Text(
-                    "Código: ${widget.produto.codigoProduto ?? 'N/A'}",
+                    "Código: ${produto.codigoProduto ?? 'N/A'}",
                     style: kTestStyleRegularText14,
                   ),
                   Text(
-                    "Disponível: ${widget.produto.quantidadeDisponivel?.toStringAsFixed(2) ?? 'N/A'}",
+                    "Disponível: ${produto.quantidadeDisponivel?.toStringAsFixed(2) ?? 'N/A'}",
                     style: kTestStyleRegularText14,
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "R\$ ${widget.produto.precoSugerido?.toStringAsFixed(2) ?? 'N/A'}",
+                    "R\$ ${produto.precoSugerido?.toStringAsFixed(2) ?? 'N/A'}",
                     style: kTestStyleBoldText16.copyWith(
                       color: kColorStyleSecondinaryDark400,
                     ),
                   ),
                 ],
               ),
-              if (quantidade > 0)
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomActionIncreaseDecreaseButton(
-                      value: quantidade.toString(),
-                      onIncrease: _addProduto,
-                      onDecrease: _removeProduto,
-                    ),
-                  ],
-                ),
-              if (quantidade == 0)
-                CustomActionIconButton(
-                  icon: Icon(
-                    Icons.add,
-                    size: 20,
-                    color: kColorStylePrimaryNeutralPaletteLightDefault,
+            ),
+            if (quantidade > 0)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomActionIncreaseDecreaseButton(
+                    value: quantidade.toInt().toString(),
+                    onIncrease: () => onQuantidadeChanged?.call(quantidade + 1),
+                    onDecrease: () => onQuantidadeChanged?.call(quantidade - 1),
                   ),
-                  onPressed: _addProduto,
-                  color: kColorStylePrimaryNeutralPaletteDark500,
+                ],
+              ),
+            if (quantidade == 0)
+              CustomActionIconButton(
+                icon: Icon(
+                  Icons.add,
+                  size: 20,
+                  color: kColorStylePrimaryNeutralPaletteLightDefault,
                 ),
-            ],
-          ),
+                onPressed: () => onQuantidadeChanged?.call(1),
+                color: kColorStylePrimaryNeutralPaletteDark500,
+              ),
+          ],
         ),
       ),
     );
-  }
-
-  void _addProduto() {
-    setState(() {
-      quantidade++;
-    });
-  }
-
-  void _removeProduto() {
-    if (quantidade > 0) {
-      setState(() {
-        quantidade--;
-      });
-    }
   }
 }

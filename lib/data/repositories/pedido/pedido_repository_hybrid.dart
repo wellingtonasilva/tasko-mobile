@@ -27,6 +27,44 @@ class PedidoRepositoryHybrid implements PedidoRepository {
   final SyncQueueWorker _syncQueueWorker;
 
   @override
+  Future<Result<PedidoResponse>> criarRascunho(
+    AdicionarPedidoRequest request, {
+    List<AdicionarPedidoItemRequest> itens = const [],
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+  }) {
+    return _local.criarRascunho(
+      request,
+      itens: itens,
+      formaPagamentoNome: formaPagamentoNome,
+      condicaoPagamentoNome: condicaoPagamentoNome,
+      pedidoStatusTipoNome: pedidoStatusTipoNome,
+    );
+  }
+
+  @override
+  Future<Result<PedidoResponse>> atualizarRascunho(
+    int pedidoId,
+    AdicionarPedidoRequest request, {
+    List<AdicionarPedidoItemRequest> itens = const [],
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+    bool substituirItens = false,
+  }) {
+    return _local.atualizarRascunho(
+      pedidoId,
+      request,
+      itens: itens,
+      formaPagamentoNome: formaPagamentoNome,
+      condicaoPagamentoNome: condicaoPagamentoNome,
+      pedidoStatusTipoNome: pedidoStatusTipoNome,
+      substituirItens: substituirItens,
+    );
+  }
+
+  @override
   Future<Result<PedidoResponse>> adicionar(
     AdicionarPedidoRequest request, {
     required List<AdicionarPedidoItemRequest> itens,
