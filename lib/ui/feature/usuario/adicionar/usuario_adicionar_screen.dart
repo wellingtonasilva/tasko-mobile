@@ -49,7 +49,7 @@ class _UsuarioAdicionarScreenState
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CustomTituloBarDefault(
-                          title: 'Manter Template',
+                          title: 'Adicionar Usuário',
                           onClosePressed: () {
                             Navigator.of(context).pop();
                           },

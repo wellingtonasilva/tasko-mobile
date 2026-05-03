@@ -170,7 +170,7 @@ class _UsuarioListarScreenState extends BaseScreenState<UsuarioListarScreen> {
                                           values: viewModel.usuarios,
                                           onTap: (value) {
                                             context.pushNamed(
-                                              'usuarios-detalhe',
+                                              'usuarios-manter',
                                               pathParameters: {
                                                 'id': value.id.toString(),
                                               },

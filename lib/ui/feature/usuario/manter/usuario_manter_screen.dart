@@ -50,7 +50,7 @@ class _UsuarioManterScreenState extends BaseScreenState<UsuarioManterScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CustomTituloBarDefault(
-                          title: 'Manter Template',
+                          title: 'Manter Usuário',
                           onClosePressed: () {
                             Navigator.of(context).pop();
                           },
@@ -63,7 +63,7 @@ class _UsuarioManterScreenState extends BaseScreenState<UsuarioManterScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Selecione o cliente para o pedido',
+                                'Selecione o usuário para o pedido',
                                 style: kTestStyleBoldText18,
                               ),
                               const SizedBox(height: 20),

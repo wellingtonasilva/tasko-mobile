@@ -23,7 +23,9 @@ import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_screen.dart'
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/selecao_vendedor/selecao_vendedor_screen.dart';
+import 'package:tasko_mobile/ui/feature/usuario/adicionar/usuario_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/usuario/listar/usuario_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/usuario/manter/usuario_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_screen.dart';
@@ -232,6 +234,26 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: '/usuarios',
             name: 'usuarios',
             builder: (context, state) => const UsuarioListarScreen(),
+            routes: [
+              GoRoute(
+                path: '/usuarios-adicionar',
+                name: 'usuarios-adicionar',
+                builder: (context, state) => const UsuarioAdicionarScreen(),
+              ),
+              GoRoute(
+                path: '/usuarios-manter/:id',
+                name: 'usuarios-manter',
+                builder: (context, state) {
+                  final usuarioId = int.tryParse(
+                    state.pathParameters['id'] ?? '',
+                  );
+                  if (usuarioId == null) {
+                    return const UsuarioListarScreen();
+                  }
+                  return UsuarioManterScreen(usuarioId: usuarioId);
+                },
+              ),
+            ],
           ),
         ],
       ),
