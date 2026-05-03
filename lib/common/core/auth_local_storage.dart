@@ -1,4 +1,6 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tasko_mobile/data/service/forma_pagamento_service.dart';
 
 class AuthLocalStorage {
   static const _tokenKey = 'auth_token';
@@ -30,3 +32,7 @@ class AuthLocalStorage {
     await prefs.remove(_empresaIdKey);
   }
 }
+
+final authLocalStorageProvider = Provider<AuthLocalStorage>((ref) {
+  return AuthLocalStorage();
+});

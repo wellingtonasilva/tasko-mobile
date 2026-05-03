@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:tasko_mobile/config/config_api.dart';
 import 'package:tasko_mobile/config/http_client_config.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
+import 'package:tasko_mobile/domain/pedido/request/atualizar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -41,7 +42,7 @@ class PedidoService {
 
   Future<Result<PedidoResponse>> atualizar(
     int id,
-    AdicionarPedidoRequest request,
+    AtualizarPedidoRequest request,
   ) async {
     final url = Uri.https(_configApi.baseUrl, '$_path/$id');
 

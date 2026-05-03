@@ -408,7 +408,9 @@ class _PedidoCriarResumoScreenState
                           const SizedBox(width: 20),
                           Expanded(
                             child: CustomButtonPrimary(
-                              label: 'Confirmar Pedido',
+                              label: resumoViewModel.isEdicao
+                                  ? 'Salvar Alterações'
+                                  : 'Confirmar Pedido',
                               onPressed: () =>
                                   resumoViewModel.confirmarCommand.execute(),
                             ),

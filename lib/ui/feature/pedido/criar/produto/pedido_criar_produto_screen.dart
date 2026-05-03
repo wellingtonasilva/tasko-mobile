@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
+import 'package:tasko_mobile/common/core/auth_persistence.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
@@ -331,6 +332,7 @@ class _PedidoCriarProdutoScreenState
 
     final subtotal = itens.fold(0.0, (sum, i) => sum + i.valorTotal);
     final request = AdicionarPedidoRequest(
+      empresaId: await ref.read(authLocalStorageProvider).getEmpresaId() ?? 0,
       clienteId: pedido.clienteId,
       vendedorId: pedido.vendedorId,
       dataPedido: pedido.dataPedido.toIso8601String(),

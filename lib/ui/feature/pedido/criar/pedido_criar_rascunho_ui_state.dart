@@ -18,11 +18,13 @@ class PedidoCriarRascunhoUiState {
   final Command1<PedidoResponse, AtualizarPedidoRascunhoArgs>
   atualizarRascunhoCommand;
   final PedidoResponse? pedido;
+  final bool isEdicao;
 
   const PedidoCriarRascunhoUiState({
     required this.criarRascunhoCommand,
     required this.atualizarRascunhoCommand,
     this.pedido,
+    this.isEdicao = false,
   });
 
   PedidoCriarRascunhoUiState copyWith({
@@ -30,6 +32,7 @@ class PedidoCriarRascunhoUiState {
     Command1<PedidoResponse, AtualizarPedidoRascunhoArgs>?
     atualizarRascunhoCommand,
     PedidoResponse? pedido,
+    bool? isEdicao,
     bool clearPedido = false,
   }) {
     return PedidoCriarRascunhoUiState(
@@ -37,6 +40,7 @@ class PedidoCriarRascunhoUiState {
       atualizarRascunhoCommand:
           atualizarRascunhoCommand ?? this.atualizarRascunhoCommand,
       pedido: clearPedido ? null : pedido ?? this.pedido,
+      isEdicao: isEdicao ?? this.isEdicao,
     );
   }
 }

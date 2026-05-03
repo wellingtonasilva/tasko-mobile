@@ -4,6 +4,7 @@ import 'package:tasko_mobile/data/service/pedido_item_service.dart';
 import 'package:tasko_mobile/data/service/pedido_service.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_item_request.dart';
+import 'package:tasko_mobile/domain/pedido/request/atualizar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 import 'package:tasko_mobile/util/result.dart';
@@ -110,6 +111,82 @@ class PedidoRepositoryRemote implements PedidoRepository {
         uuidOffline: pedido.uuidOffline,
         auditoria: pedido.auditoria,
         itens: createdItens,
+      ),
+    );
+  }
+
+  @override
+  Future<Result<PedidoResponse>> atualizar(
+    int pedidoId,
+    AtualizarPedidoRequest request, {
+    required List<AdicionarPedidoItemRequest> itens,
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+  }) async {
+    final pedidoResult = await _pedidoService.atualizar(pedidoId, request);
+    if (pedidoResult is! Success<PedidoResponse>) {
+      return pedidoResult;
+    }
+
+    final pedido = pedidoResult.value;
+
+    final existingItensResult = await _pedidoItemService.listarPorPedido(
+      pedido.id,
+    );
+    if (existingItensResult is Success<List<PedidoItemResponse>>) {
+      for (final item in existingItensResult.value) {
+        await _pedidoItemService.excluir(item.id);
+      }
+    }
+
+    final updatedItens = <PedidoItemResponse>[];
+    for (final item in itens) {
+      final itemRequest = AdicionarPedidoItemRequest(
+        pedidoId: pedido.id,
+        produtoId: item.produtoId,
+        quantidade: item.quantidade,
+        precoUnitario: item.precoUnitario,
+        percentualDesconto: item.percentualDesconto,
+        valorDesconto: item.valorDesconto,
+        valorTotal: item.valorTotal,
+      );
+
+      final itemResult = await _pedidoItemService.adicionar(itemRequest);
+      if (itemResult is Success<PedidoItemResponse>) {
+        updatedItens.add(itemResult.value);
+      }
+    }
+
+    return Result.success(
+      PedidoResponse(
+        id: pedido.id,
+        numeroPedido: pedido.numeroPedido,
+        clienteId: pedido.clienteId,
+        vendedorId: pedido.vendedorId,
+        pedidoStatusTipoId: pedido.pedidoStatusTipoId,
+        pedidoStatusTipoNome:
+            pedidoStatusTipoNome ?? pedido.pedidoStatusTipoNome,
+        dataPedido: pedido.dataPedido,
+        dataEntregaPrevista: pedido.dataEntregaPrevista,
+        observacao: pedido.observacao,
+        subtotal: pedido.subtotal,
+        percentualDesconto: pedido.percentualDesconto,
+        valorDesconto: pedido.valorDesconto,
+        valorFrete: pedido.valorFrete,
+        valorTotal: pedido.valorTotal,
+        formaPagamentoId: pedido.formaPagamentoId,
+        formaPagamentoNome: formaPagamentoNome ?? pedido.formaPagamentoNome,
+        condicaoPagamentoId: pedido.condicaoPagamentoId,
+        condicaoPagamentoNome:
+            condicaoPagamentoNome ?? pedido.condicaoPagamentoNome,
+        latitude: pedido.latitude,
+        longitude: pedido.longitude,
+        sincronizado: pedido.sincronizado,
+        criadoOffline: pedido.criadoOffline,
+        uuidOffline: pedido.uuidOffline,
+        auditoria: pedido.auditoria,
+        itens: updatedItens,
       ),
     );
   }

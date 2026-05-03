@@ -50,9 +50,11 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
       },
       child: RefreshIndicator(
         onRefresh: () async {
+          debugPrint('Refresh triggered');
           await viewModel.listarPedidosCommand.execute();
         },
         child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Center(
             child: Padding(
               padding: const EdgeInsets.only(top: 15.0),
@@ -118,17 +120,11 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
                                     : CustomListView<PedidoResponse>(
                                         values: viewModel.pedidos,
                                         onTap: (value) {
-                                          /*
                                           context.pushNamed(
                                             'pedidos-detalhe',
                                             pathParameters: {
                                               'id': value.id.toString(),
                                             },
-                                          );
-                                          */
-                                          showSnackBar(
-                                            'Em desenvolvimento',
-                                            isError: false,
                                           );
                                         },
                                         getTitle: (value) =>

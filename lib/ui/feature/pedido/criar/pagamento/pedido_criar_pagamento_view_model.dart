@@ -15,6 +15,13 @@ class PedidoCriarPagamentoViewModel
   void setCondicaoPagamento(String nome) {
     state = state.copyWith(condicaoPagamentoNome: nome);
   }
+
+  void preencherPagamento(String? formaNome, String? condicaoNome) {
+    state = state.copyWith(
+      formaPagamentoNome: formaNome,
+      condicaoPagamentoNome: condicaoNome,
+    );
+  }
 }
 
 final pedidoCriarPagamentoViewModelProvider =

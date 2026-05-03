@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_steps_controllers.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_screen.dart';
@@ -9,7 +10,9 @@ import 'package:tasko_mobile/ui/feature/pedido/criar/resumo/pedido_criar_resumo_
 import 'package:tasko_mobile/ui/feature/pedido/criar/sucesso/pedido_criar_sucesso_screen.dart';
 
 class PedidoCriarStepsScreen extends BaseScreen {
-  const PedidoCriarStepsScreen({super.key});
+  final int? pedidoId;
+
+  const PedidoCriarStepsScreen({super.key, this.pedidoId});
 
   @override
   BaseScreenState<PedidoCriarStepsScreen> createState() =>
@@ -25,6 +28,15 @@ class _PedidoCriarStepsScreenState
   void initState() {
     super.initState();
     _controllers = PedidoCriarStepsControllers();
+
+    if (widget.pedidoId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+        await ref
+            .read(pedidoCriarRascunhoViewModelProvider.notifier)
+            .carregarParaEdicao(widget.pedidoId!);
+      });
+    }
   }
 
   @override

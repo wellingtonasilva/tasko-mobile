@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
+import 'package:tasko_mobile/common/core/auth_persistence.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
@@ -9,6 +10,7 @@ import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/pedido_criar_pagamento_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_condicao_pagamento_button.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_forma_pagamento_button.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
@@ -119,6 +121,25 @@ class _PedidoCriarPagamentoScreenState
   Widget buildContent(BuildContext context) {
     final clienteViewModel = ref.watch(pedidoCriarClienteViewModelProvider);
     final produtoViewModel = ref.watch(pedidoCriarProdutoViewModelProvider);
+    final pagamentoState = ref.watch(pedidoCriarPagamentoViewModelProvider);
+
+    final vmMetodoIndex = pagamentoState.formaPagamentoNome == null
+        ? -1
+        : paymentMethods.indexWhere(
+            (m) => m.nome == pagamentoState.formaPagamentoNome,
+          );
+    final vmCondicaoIndex = pagamentoState.condicaoPagamentoNome == null
+        ? -1
+        : paymentConditions.indexWhere(
+            (c) => c.nome == pagamentoState.condicaoPagamentoNome,
+          );
+
+    final effectivePaymentMethodIndex = vmMetodoIndex >= 0
+        ? vmMetodoIndex
+        : selectedPaymentMethodIndex;
+    final effectivePaymentConditionIndex = vmCondicaoIndex >= 0
+        ? vmCondicaoIndex
+        : selectedPaymentConditionIndex;
 
     return GestureDetector(
       onTap: () {
@@ -215,11 +236,20 @@ class _PedidoCriarPagamentoScreenState
                                         filename: paymentMethod.icone,
                                         title: paymentMethod.nome,
                                         selected:
-                                            index == selectedPaymentMethodIndex,
+                                            index ==
+                                            effectivePaymentMethodIndex,
                                         onPressed: () {
                                           setState(() {
                                             selectedPaymentMethodIndex = index;
                                           });
+                                          ref
+                                              .read(
+                                                pedidoCriarPagamentoViewModelProvider
+                                                    .notifier,
+                                              )
+                                              .setFormaPagamento(
+                                                paymentMethods[index].nome,
+                                              );
                                         },
                                       ),
                                     );
@@ -249,12 +279,20 @@ class _PedidoCriarPagamentoScreenState
                                         title: paymentCondition.nome,
                                         selected:
                                             index ==
-                                            selectedPaymentConditionIndex,
+                                            effectivePaymentConditionIndex,
                                         onPressed: () {
                                           setState(() {
                                             selectedPaymentConditionIndex =
                                                 index;
                                           });
+                                          ref
+                                              .read(
+                                                pedidoCriarPagamentoViewModelProvider
+                                                    .notifier,
+                                              )
+                                              .setCondicaoPagamento(
+                                                paymentConditions[index].nome,
+                                              );
                                         },
                                       ),
                                     );
@@ -416,8 +454,27 @@ class _PedidoCriarPagamentoScreenState
       return;
     }
 
-    final formaPagamento = paymentMethods[selectedPaymentMethodIndex];
-    final condicao = paymentConditions[selectedPaymentConditionIndex];
+    final pagamentoState = ref.read(pedidoCriarPagamentoViewModelProvider);
+    final vmMetodoIndex = pagamentoState.formaPagamentoNome == null
+        ? -1
+        : paymentMethods.indexWhere(
+            (m) => m.nome == pagamentoState.formaPagamentoNome,
+          );
+    final vmCondicaoIndex = pagamentoState.condicaoPagamentoNome == null
+        ? -1
+        : paymentConditions.indexWhere(
+            (c) => c.nome == pagamentoState.condicaoPagamentoNome,
+          );
+
+    final effectivePaymentMethodIndex = vmMetodoIndex >= 0
+        ? vmMetodoIndex
+        : selectedPaymentMethodIndex;
+    final effectivePaymentConditionIndex = vmCondicaoIndex >= 0
+        ? vmCondicaoIndex
+        : selectedPaymentConditionIndex;
+
+    final formaPagamento = paymentMethods[effectivePaymentMethodIndex];
+    final condicao = paymentConditions[effectivePaymentConditionIndex];
     final pedido = draftState.pedido!;
 
     final produtoState = ref.read(pedidoCriarProdutoViewModelProvider);
@@ -435,6 +492,7 @@ class _PedidoCriarPagamentoScreenState
     final subtotal = itens.fold(0.0, (sum, i) => sum + i.preco * i.quantidade);
 
     final request = AdicionarPedidoRequest(
+      empresaId: await ref.read(authLocalStorageProvider).getEmpresaId() ?? 0,
       clienteId: pedido.clienteId,
       vendedorId: pedido.vendedorId,
       dataPedido: pedido.dataPedido.toIso8601String(),

@@ -17,13 +17,14 @@ class PedidoCriarProdutoUiState {
       carrinhoQuantidades.values.fold(0, (sum, q) => sum + q.toInt());
 
   double get valorTotal {
-    if (produtos == null) return 0;
+    if (produtos == null || produtos!.isEmpty) return 0;
     double total = 0;
     for (final entry in carrinhoQuantidades.entries) {
-      final produto = produtos!.firstWhere(
-        (p) => p.id == entry.key,
-        orElse: () => produtos!.first,
-      );
+      final idx = produtos!.indexWhere((p) => p.id == entry.key);
+      if (idx < 0) {
+        continue;
+      }
+      final produto = produtos![idx];
       total += (produto.precoSugerido ?? 0) * entry.value;
     }
     return total;

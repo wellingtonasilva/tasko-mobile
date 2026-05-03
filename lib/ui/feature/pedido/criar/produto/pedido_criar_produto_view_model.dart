@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 import 'package:tasko_mobile/data/repositories/produto/produto_repository_hybrid.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_ui_state.dart';
@@ -40,6 +41,13 @@ class PedidoCriarProdutoViewModel extends Notifier<PedidoCriarProdutoUiState> {
       updated[produtoId] = quantidade;
     }
     state = state.copyWith(carrinhoQuantidades: updated);
+  }
+
+  void preencherCarrinho(List<PedidoItemResponse> itens) {
+    final quantidades = <int, double>{
+      for (final item in itens) item.produtoId: item.quantidade,
+    };
+    state = state.copyWith(carrinhoQuantidades: quantidades);
   }
 }
 

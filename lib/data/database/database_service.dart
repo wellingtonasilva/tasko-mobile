@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static const _dbName = 'tasko_mobile.db';
-  static const _dbVersion = 5;
+  static const _dbVersion = 6;
 
   static const vendedoresTable = 'vendedores';
   static const syncQueueTable = 'sync_queue';
@@ -71,6 +71,10 @@ class DatabaseService {
     if (oldVersion < 5) {
       await _upgradeToV5(db);
     }
+
+    if (oldVersion < 6) {
+      await _upgradeToV6(db);
+    }
   }
 
   Future<void> _upgradeToV3(Database db) async {
@@ -126,6 +130,13 @@ class DatabaseService {
       pedidoItensTable,
       'is_draft',
       'INTEGER NOT NULL DEFAULT 0',
+    );
+  }
+
+  Future<void> _upgradeToV6(Database db) async {
+    await _addColumnIfNotExists(db, pedidosTable, 'empresa_id', 'INTEGER');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedidos_empresa_id ON $pedidosTable (empresa_id)',
     );
   }
 
@@ -322,6 +333,7 @@ class DatabaseService {
         id INTEGER PRIMARY KEY,
         local_uuid TEXT,
         numero_pedido TEXT,
+        empresa_id INTEGER,
         cliente_id INTEGER NOT NULL,
         vendedor_id INTEGER NOT NULL,
         pedido_status_tipo_id INTEGER,

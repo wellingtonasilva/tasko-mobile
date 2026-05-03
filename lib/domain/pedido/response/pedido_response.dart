@@ -3,6 +3,7 @@ import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 
 class PedidoResponse {
   final int id;
+  final int? empresaId;
   final String? numeroPedido;
   final int clienteId;
   final int vendedorId;
@@ -30,6 +31,7 @@ class PedidoResponse {
 
   PedidoResponse({
     required this.id,
+    this.empresaId,
     this.numeroPedido,
     required this.clienteId,
     required this.vendedorId,
@@ -59,6 +61,7 @@ class PedidoResponse {
   factory PedidoResponse.fromJson(Map<String, dynamic> json) {
     return PedidoResponse(
       id: (json['id'] as int?) ?? 0,
+      empresaId: (json['empresaId'] as int?) ?? 0,
       numeroPedido: json['numeroPedido'] as String?,
       clienteId: (json['clienteId'] as int?) ?? 0,
       vendedorId: (json['vendedorId'] as int?) ?? 0,
@@ -89,6 +92,7 @@ class PedidoResponse {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'empresaId': empresaId,
       'numeroPedido': numeroPedido,
       'clienteId': clienteId,
       'vendedorId': vendedorId,
