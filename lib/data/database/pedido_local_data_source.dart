@@ -35,6 +35,7 @@ class PedidoLocalDataSource {
         'id': localId,
         'local_uuid': localUuid,
         'numero_pedido': null,
+        'empresa_id': request.empresaId,
         'cliente_id': request.clienteId,
         'vendedor_id': request.vendedorId,
         'pedido_status_tipo_id': request.pedidoStatusTipoId,
@@ -117,6 +118,7 @@ class PedidoLocalDataSource {
       return Result.success(
         PedidoResponse(
           id: pedido.id,
+          empresaId: pedido.empresaId,
           numeroPedido: pedido.numeroPedido,
           clienteId: pedido.clienteId,
           vendedorId: pedido.vendedorId,
@@ -769,6 +771,7 @@ class PedidoLocalDataSource {
   PedidoResponse _fromRow(Map<String, Object?> row) {
     return PedidoResponse(
       id: row['id'] as int,
+      empresaId: (row['empresa_id'] as int?) ?? 0,
       numeroPedido: row['numero_pedido'] as String?,
       clienteId: (row['cliente_id'] as int?) ?? 0,
       vendedorId: (row['vendedor_id'] as int?) ?? 0,

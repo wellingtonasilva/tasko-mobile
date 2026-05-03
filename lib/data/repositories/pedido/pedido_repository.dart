@@ -1,5 +1,6 @@
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_item_request.dart';
+import 'package:tasko_mobile/domain/pedido/request/atualizar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 import 'package:tasko_mobile/util/result.dart';
@@ -23,6 +24,14 @@ abstract class PedidoRepository {
   });
   Future<Result<PedidoResponse>> adicionar(
     AdicionarPedidoRequest request, {
+    required List<AdicionarPedidoItemRequest> itens,
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+  });
+  Future<Result<PedidoResponse>> atualizar(
+    int pedidoId,
+    AtualizarPedidoRequest request, {
     required List<AdicionarPedidoItemRequest> itens,
     String? formaPagamentoNome,
     String? condicaoPagamentoNome,

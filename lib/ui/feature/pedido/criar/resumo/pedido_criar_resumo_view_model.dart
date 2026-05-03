@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/common/core/auth_persistence.dart';
 import 'package:tasko_mobile/data/repositories/pedido/pedido_repository_hybrid.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_item_request.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
+import 'package:tasko_mobile/domain/pedido/request/atualizar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
@@ -17,10 +19,11 @@ class PedidoCriarResumoViewModel extends Notifier<PedidoCriarResumoUiState> {
 
   @override
   PedidoCriarResumoUiState build() {
-    final rascunho = ref.watch(pedidoCriarRascunhoViewModelProvider).pedido;
+    final rascunhoState = ref.watch(pedidoCriarRascunhoViewModelProvider);
     return PedidoCriarResumoUiState(
       confirmarCommand: Command0<void>(_confirmar),
-      rascunho: rascunho,
+      rascunho: rascunhoState.pedido,
+      isEdicao: rascunhoState.isEdicao,
     );
   }
 
@@ -35,39 +38,72 @@ class PedidoCriarResumoViewModel extends Notifier<PedidoCriarResumoUiState> {
     }
 
     final produtoState = ref.read(pedidoCriarProdutoViewModelProvider);
-    final itens = produtoState.carrinhoQuantidades.entries.map((e) {
-      final produto = produtoState.produtos!.firstWhere((p) => p.id == e.key);
-      final preco = produto.precoSugerido ?? 0;
-      return AdicionarPedidoItemRequest(
-        pedidoId: rascunho.id,
-        produtoId: produto.id,
-        quantidade: e.value,
-        precoUnitario: preco,
-        valorTotal: preco * e.value,
-      );
-    }).toList();
+    final List<AdicionarPedidoItemRequest> itens = produtoState
+        .carrinhoQuantidades
+        .entries
+        .map((e) {
+          final produto = produtoState.produtos!.firstWhere(
+            (p) => p.id == e.key,
+          );
+          final preco = produto.precoSugerido ?? 0;
+          return AdicionarPedidoItemRequest(
+            pedidoId: rascunho.id,
+            produtoId: produto.id,
+            quantidade: e.value,
+            precoUnitario: preco,
+            valorTotal: preco * e.value,
+          );
+        })
+        .toList();
 
     final subtotal = itens.fold(0.0, (s, i) => s + i.valorTotal);
-    final request = AdicionarPedidoRequest(
-      clienteId: rascunho.clienteId,
-      vendedorId: rascunho.vendedorId,
-      dataPedido: rascunho.dataPedido.toIso8601String(),
-      subtotal: subtotal,
-      valorTotal: subtotal,
-      formaPagamentoId: rascunho.formaPagamentoId,
-      condicaoPagamentoId: rascunho.condicaoPagamentoId,
-      latitude: rascunho.latitude,
-      longitude: rascunho.longitude,
-    );
 
-    final result = await ref
-        .read(pedidoRepositoryHybridProvider)
-        .adicionar(
-          request,
-          itens: itens,
-          formaPagamentoNome: rascunho.formaPagamentoNome,
-          condicaoPagamentoNome: rascunho.condicaoPagamentoNome,
-        );
+    final Result<PedidoResponse> result;
+    if (state.isEdicao) {
+      final request = AtualizarPedidoRequest(
+        id: rascunho.id,
+        clienteId: rascunho.clienteId,
+        vendedorId: rascunho.vendedorId,
+        dataPedido: rascunho.dataPedido.toIso8601String(),
+        subtotal: subtotal,
+        valorTotal: subtotal,
+        formaPagamentoId: rascunho.formaPagamentoId,
+        condicaoPagamentoId: rascunho.condicaoPagamentoId,
+        latitude: rascunho.latitude,
+        longitude: rascunho.longitude,
+        empresaId: 8,
+      );
+      result = await ref
+          .read(pedidoRepositoryHybridProvider)
+          .atualizar(
+            rascunho.id,
+            request,
+            itens: itens,
+            formaPagamentoNome: rascunho.formaPagamentoNome,
+            condicaoPagamentoNome: rascunho.condicaoPagamentoNome,
+          );
+    } else {
+      final request = AdicionarPedidoRequest(
+        clienteId: rascunho.clienteId,
+        vendedorId: rascunho.vendedorId,
+        dataPedido: rascunho.dataPedido.toIso8601String(),
+        subtotal: subtotal,
+        valorTotal: subtotal,
+        formaPagamentoId: rascunho.formaPagamentoId,
+        condicaoPagamentoId: rascunho.condicaoPagamentoId,
+        latitude: rascunho.latitude,
+        longitude: rascunho.longitude,
+        empresaId: await ref.read(authLocalStorageProvider).getEmpresaId() ?? 0,
+      );
+      result = await ref
+          .read(pedidoRepositoryHybridProvider)
+          .adicionar(
+            request,
+            itens: itens,
+            formaPagamentoNome: rascunho.formaPagamentoNome,
+            condicaoPagamentoNome: rascunho.condicaoPagamentoNome,
+          );
+    }
 
     if (result is Failure<PedidoResponse>) {
       showSnackBar?.call(

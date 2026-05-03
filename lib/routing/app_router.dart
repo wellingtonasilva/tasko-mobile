@@ -28,7 +28,7 @@ import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_screen.d
 import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final vendedorSelecionado = ref.watch(vendedorSelecionadoProvider);
+  ref.watch(vendedorSelecionadoProvider);
 
   return GoRouter(
     // initialLocation: '/selecao-vendedor',
@@ -195,7 +195,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               if (pedidoId == null) {
                 return const PedidoListarScreen();
               }
-              return const PedidoListarScreen();
+              return PedidoCriarStepsScreen(pedidoId: pedidoId);
             },
           ),
           GoRoute(

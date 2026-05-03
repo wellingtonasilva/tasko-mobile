@@ -6,6 +6,7 @@ import 'package:tasko_mobile/data/repositories/pedido/pedido_repository.dart';
 import 'package:tasko_mobile/data/repositories/pedido/pedido_repository_remote.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_item_request.dart';
+import 'package:tasko_mobile/domain/pedido/request/atualizar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 import 'package:tasko_mobile/util/result.dart';
@@ -121,6 +122,35 @@ class PedidoRepositoryHybrid implements PedidoRepository {
   }
 
   @override
+  Future<Result<PedidoResponse>> atualizar(
+    int pedidoId,
+    AtualizarPedidoRequest request, {
+    required List<AdicionarPedidoItemRequest> itens,
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    String? pedidoStatusTipoNome,
+  }) async {
+    final remoteResult = await _remote.atualizar(
+      pedidoId,
+      request,
+      itens: itens,
+      formaPagamentoNome: formaPagamentoNome,
+      condicaoPagamentoNome: condicaoPagamentoNome,
+      pedidoStatusTipoNome: pedidoStatusTipoNome,
+    );
+
+    if (remoteResult is Success<PedidoResponse>) {
+      await _local.upsert(remoteResult.value);
+      for (final item in remoteResult.value.itens) {
+        await _local.upsertItem(item);
+      }
+      return remoteResult;
+    }
+
+    return remoteResult;
+  }
+
+  @override
   Future<Result<List<PedidoResponse>>> listar({int? vendedorId}) async {
     final localResult = await _local.listar(vendedorId: vendedorId);
     if (localResult is Success<List<PedidoResponse>> &&
@@ -193,8 +223,26 @@ class PedidoRepositoryHybrid implements PedidoRepository {
   }
 
   @override
-  Future<Result<List<PedidoItemResponse>>> listarItens(int pedidoId) {
-    return _remote.listarItens(pedidoId);
+  Future<Result<List<PedidoItemResponse>>> listarItens(int pedidoId) async {
+    final localResult = await _local.listarItensPorPedidoId(pedidoId);
+    if (localResult is Success<List<PedidoItemResponse>> &&
+        localResult.value.isNotEmpty) {
+      return localResult;
+    }
+
+    final remoteResult = await _remote.listarItens(pedidoId);
+    if (remoteResult is Success<List<PedidoItemResponse>>) {
+      for (final item in remoteResult.value) {
+        await _local.upsertItem(item);
+      }
+      return remoteResult;
+    }
+
+    if (localResult is Success<List<PedidoItemResponse>>) {
+      return localResult;
+    }
+
+    return remoteResult;
   }
 
   @override

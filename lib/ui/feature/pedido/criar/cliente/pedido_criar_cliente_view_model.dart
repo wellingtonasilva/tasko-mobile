@@ -35,6 +35,10 @@ class PedidoCriarClienteViewModel extends Notifier<PedidoCriarClienteUiState> {
   void selectCliente(ClienteResponse? cliente) {
     state = state.copyWith(selectedCliente: cliente);
   }
+
+  void preencherCliente(ClienteResponse cliente) {
+    state = state.copyWith(selectedCliente: cliente);
+  }
 }
 
 final pedidoCriarClienteViewModelProvider =

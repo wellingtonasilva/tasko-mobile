@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:tasko_mobile/config/config_api.dart';
 import 'package:tasko_mobile/config/http_client_config.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_item_request.dart';
+import 'package:tasko_mobile/domain/pedido/request/atualizar_pedido_item_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -22,6 +23,28 @@ class PedidoItemService {
     AdicionarPedidoItemRequest request,
   ) async {
     final url = Uri.https(_configApi.baseUrl, _path);
+
+    try {
+      final response = await _client.post(
+        url,
+        headers: _headers,
+        body: jsonEncode(request.toJson()),
+      );
+
+      return convertToResult<PedidoItemResponse>(
+        (decodedJson) => PedidoItemResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<PedidoItemResponse>> atualizar(
+    AtualizarPedidoItemRequest request,
+    int id,
+  ) async {
+    final url = Uri.https(_configApi.baseUrl, '$_path/$id');
 
     try {
       final response = await _client.post(
