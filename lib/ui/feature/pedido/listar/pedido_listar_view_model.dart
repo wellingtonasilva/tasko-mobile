@@ -10,6 +10,8 @@ import 'package:tasko_mobile/util/result.dart';
 
 class PedidoListarViewModel extends Notifier<PedidoListarUiState> {
   void Function(String, Result result)? showSnackBar;
+  void Function()? onStartEvent;
+  void Function()? onFinishEvent;
 
   @override
   PedidoListarUiState build() {
@@ -23,6 +25,7 @@ class PedidoListarViewModel extends Notifier<PedidoListarUiState> {
   int? get _vendedorSelecionadoId => ref.read(vendedorSelecionadoIdProvider);
 
   Future<Result<void>> _listarPedidos() async {
+    onStartEvent?.call();
     final repository = ref.read(pedidoRepositoryHybridProvider);
     final result = await repository.listar(vendedorId: _vendedorSelecionadoId);
 
@@ -44,7 +47,7 @@ class PedidoListarViewModel extends Notifier<PedidoListarUiState> {
         result,
       );
     }
-
+    onFinishEvent?.call();
     return result;
   }
 
@@ -52,15 +55,18 @@ class PedidoListarViewModel extends Notifier<PedidoListarUiState> {
     PedidoRepositoryHybrid repository, {
     int? vendedorId,
   }) async {
+    onStartEvent?.call();
     final syncResult = await repository.sincronizarListaComServidor(
       vendedorId: vendedorId,
     );
     if (syncResult is Success<List<PedidoResponse>>) {
       state = state.copyWith(pedidos: syncResult.value);
     }
+    onFinishEvent?.call();
   }
 
   Future<Result<void>> _excluirPedido(int id) async {
+    onStartEvent?.call();
     final repository = ref.read(pedidoRepositoryHybridProvider);
     final result = await repository.excluir(id);
     if (result is Success<void>) {
@@ -72,7 +78,7 @@ class PedidoListarViewModel extends Notifier<PedidoListarUiState> {
         result,
       );
     }
-
+    onFinishEvent?.call();
     return result;
   }
 }
