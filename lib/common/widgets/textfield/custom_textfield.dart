@@ -9,6 +9,7 @@ class CustomTextfield extends StatelessWidget {
   final bool disabled;
   final String? Function(BuildContext, String?)? validator;
   final Widget? prefixIcon;
+  final bool readOnly;
 
   const CustomTextfield({
     super.key,
@@ -17,6 +18,7 @@ class CustomTextfield extends StatelessWidget {
     this.disabled = false,
     this.validator,
     this.prefixIcon,
+    this.readOnly = false,
   });
 
   @override
@@ -26,6 +28,7 @@ class CustomTextfield extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         autofocus: true,
+        readOnly: readOnly,
         autofillHints: const [AutofillHints.email],
         obscureText: false,
         decoration: InputDecoration(

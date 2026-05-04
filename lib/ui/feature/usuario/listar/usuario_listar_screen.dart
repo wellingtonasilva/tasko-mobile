@@ -85,47 +85,7 @@ class _UsuarioListarScreenState extends BaseScreenState<UsuarioListarScreen> {
                           trailingIcon: Icons.add,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Total Usuários',
-                          value: '10',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_box.png',
-                            //color: kColorStylePrimaryNeutralPaletteDark500,
-                            width: 35,
-                          ),
-                          iconBackgroundColor:
-                              kColorStylePrimaryNeutralPaletteLight100,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Usuários Ativos',
-                          value: '12',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_document_text.png',
-                            //color: kColorStyleInformationDarkDefault,
-                            width: 35,
-                          ),
-                          iconBackgroundColor:
-                              kColorStyleInformationLightDefault,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Template Mensal',
-                          value: 'R\$ 1.412',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_money_tick.png',
-                            //color: kColorStyleSuccessDark500,
-                            width: 35,
-                          ),
-                          iconBackgroundColor: kColorStyleSuccessLightefault,
-                        ),
-                      ),
+
                       //Lista de Usuários
                       Padding(
                         padding: const EdgeInsets.all(8.0),

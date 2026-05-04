@@ -164,6 +164,7 @@ abstract class BaseScreenState<T extends BaseScreen> extends ConsumerState<T> {
             controller: field.controller,
             validator: field.validator,
             prefixIcon: field.prefixIcon,
+            readOnly: isReadOnly,
           ),
           const SizedBox(height: 10),
         ],
