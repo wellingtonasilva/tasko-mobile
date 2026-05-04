@@ -4,14 +4,18 @@ part 'adicionar_usuario_request.g.dart';
 
 @JsonSerializable()
 class AdicionarUsuarioRequest {
+  final String? nomeCompleto;
+  final String? numeroTelefone;
   final String nomeUsuario;
   final String senha;
-  final int vendedorId;
+  final int? vendedorId;
 
   AdicionarUsuarioRequest({
+    this.nomeCompleto,
+    this.numeroTelefone,
     required this.nomeUsuario,
     required this.senha,
-    required this.vendedorId,
+    this.vendedorId,
   });
 
   factory AdicionarUsuarioRequest.fromJson(Map<String, dynamic> json) =>
