@@ -47,7 +47,7 @@ class _AppShellScaffoldState extends ConsumerState<AppShellScaffold> {
         context.go('/agenda');
         break;
       case 'metas':
-        context.go('/metas');
+        context.go('/vendedor-metas/1');
         break;
       case 'usuarios':
         context.go('/usuarios');

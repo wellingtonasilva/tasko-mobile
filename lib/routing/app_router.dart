@@ -29,6 +29,7 @@ import 'package:tasko_mobile/ui/feature/usuario/manter/usuario_manter_screen.dar
 import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_screen.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/metas/vendedor_metas_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   ref.watch(vendedorSelecionadoProvider);
@@ -254,6 +255,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 },
               ),
             ],
+          ),
+          GoRoute(
+            path: '/vendedor-metas/:id',
+            name: 'vendedor-metas',
+            builder: (context, state) {
+              final vendedorId = int.tryParse(state.pathParameters['id'] ?? '');
+              if (vendedorId == null) {
+                return const VendedorListarScreen();
+              }
+              return VendedorMetasScreen(vendedorId: vendedorId);
+            },
           ),
         ],
       ),
