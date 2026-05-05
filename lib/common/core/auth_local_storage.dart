@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tasko_mobile/data/service/forma_pagamento_service.dart';
 
 class AuthLocalStorage {
   static const _tokenKey = 'auth_token';
   static const _empresaIdKey = 'empresa_id';
+  static const _vendedorIdKey = 'vendedor_id';
 
   Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,6 +21,16 @@ class AuthLocalStorage {
     await prefs.setInt(_empresaIdKey, empresaId);
   }
 
+  Future<void> saveVendedorId(int vendedorId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_vendedorIdKey, vendedorId);
+  }
+
+  Future<int?> getVendedorId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_vendedorIdKey);
+  }
+
   Future<int?> getEmpresaId() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_empresaIdKey);
@@ -30,6 +40,7 @@ class AuthLocalStorage {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_tokenKey);
     await prefs.remove(_empresaIdKey);
+    await prefs.remove(_vendedorIdKey);
   }
 }
 
