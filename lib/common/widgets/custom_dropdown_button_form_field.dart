@@ -11,6 +11,7 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
   final void Function(T?)? onChanged;
   final void Function(T?)? onSaved;
   final T? selectedValue;
+  final Widget? prefixIcon;
 
   const CustomDropdownButtonFormField({
     super.key,
@@ -21,6 +22,7 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
     this.onChanged,
     this.onSaved,
     this.selectedValue,
+    this.prefixIcon,
   });
 
   @override
@@ -39,6 +41,10 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
           borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 2),
           borderRadius: BorderRadius.circular(12),
         ),
+        prefixIcon: prefixIcon,
+        prefixIconConstraints: prefixIcon != null
+            ? const BoxConstraints(minWidth: 30, minHeight: 30)
+            : null,
       ),
       hint: hint != null
           ? Text(

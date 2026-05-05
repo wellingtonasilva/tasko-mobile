@@ -11,7 +11,7 @@ Future<void> persistLoginData(
   AuthLocalStorage storage,
 ) async {
   await storage.saveToken(response.token);
-  // Seleciona a primeira empresa como padrão (ajuste conforme regra de negócio)
+
   if (response.empresas.isNotEmpty) {
     await storage.saveEmpresaId(response.empresas.first.empresaId);
   }

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
-import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
+import 'package:tasko_mobile/common/core/auth_local_storage.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_app_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/drawer/custom_drawer.dart';
+import 'package:tasko_mobile/util/confirmation_dialog_util.dart';
 
 class AppShellScaffold extends ConsumerStatefulWidget {
   const AppShellScaffold({
@@ -46,14 +47,23 @@ class _AppShellScaffoldState extends ConsumerState<AppShellScaffold> {
         context.go('/agenda');
         break;
       case 'metas':
-        context.go('/metas');
+        context.go('/vendedor-metas/1');
         break;
       case 'usuarios':
         context.go('/usuarios');
         break;
-      case 'trocar-vendedor':
-        ref.read(vendedorSelecionadoProvider.notifier).limpar();
-        context.go('/selecao-vendedor');
+      case 'trocar-usuario':
+        ConfirmationDialogUtil().showConfirmationDialog(
+          context: context,
+          title: 'Sair',
+          message: 'Tem certeza que deseja sair do aplicativo?',
+          confirmLabel: 'Sair',
+          cancelLabel: 'Cancelar',
+          onConfirm: () {
+            ref.read(authLocalStorageProvider).clear();
+            context.go('/login');
+          },
+        );
         break;
       default:
         break;

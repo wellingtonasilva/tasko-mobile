@@ -86,9 +86,9 @@ class CustomDrawer extends StatelessWidget {
           ),
           const Divider(),
           _buildMenuItem(
-            keyName: 'trocar-vendedor',
-            label: 'Trocar Vendedor',
-            icon: Icons.switch_account,
+            keyName: 'trocar-usuario',
+            label: 'Sair',
+            icon: Icons.logout_outlined,
           ),
         ],
       ),
