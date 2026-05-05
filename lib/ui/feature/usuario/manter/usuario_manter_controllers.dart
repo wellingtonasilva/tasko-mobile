@@ -46,6 +46,8 @@ class UsuarioManterControllers {
   void updateFormFields(UsuarioResponse usuario) {
     id.controller.text = usuario.id.toString();
     nomeUsuario.controller.text = usuario.nomeUsuario;
+    nomeCompleto.controller.text = usuario.nomeCompleto ?? '';
+    numeroTelefone.controller.text = usuario.numeroTelefone ?? '';
   }
 
   void dispose() {
@@ -53,5 +55,9 @@ class UsuarioManterControllers {
     id.focusNode.dispose();
     nomeUsuario.controller.dispose();
     nomeUsuario.focusNode.dispose();
+    nomeCompleto.controller.dispose();
+    nomeCompleto.focusNode.dispose();
+    numeroTelefone.controller.dispose();
+    numeroTelefone.focusNode.dispose();
   }
 }

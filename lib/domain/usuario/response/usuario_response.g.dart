@@ -10,6 +10,8 @@ UsuarioResponse _$UsuarioResponseFromJson(Map<String, dynamic> json) =>
     UsuarioResponse(
       id: (json['id'] as num).toInt(),
       nomeUsuario: json['nomeUsuario'] as String,
+      nomeCompleto: json['nomeCompleto'] as String?,
+      numeroTelefone: json['numeroTelefone'] as String?,
       vendedor: json['vendedor'] == null
           ? null
           : VendedorResponse.fromJson(json['vendedor'] as Map<String, dynamic>),
@@ -23,6 +25,8 @@ Map<String, dynamic> _$UsuarioResponseToJson(UsuarioResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
       'nomeUsuario': instance.nomeUsuario,
+      'nomeCompleto': instance.nomeCompleto,
+      'numeroTelefone': instance.numeroTelefone,
       'vendedor': instance.vendedor,
       'auditoria': instance.auditoria,
       'perfis': instance.perfis,

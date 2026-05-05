@@ -128,13 +128,19 @@ class _UsuarioListarScreenState extends BaseScreenState<UsuarioListarScreen> {
                                         )
                                       : CustomListView<UsuarioResponse>(
                                           values: viewModel.usuarios,
-                                          onTap: (value) {
-                                            context.pushNamed(
-                                              'usuarios-manter',
-                                              pathParameters: {
-                                                'id': value.id.toString(),
-                                              },
-                                            );
+                                          onTap: (value) async {
+                                            final atualizado = await context
+                                                .pushNamed(
+                                                  'usuarios-manter',
+                                                  pathParameters: {
+                                                    'id': value.id.toString(),
+                                                  },
+                                                );
+                                            if (atualizado == true) {
+                                              await viewModel
+                                                  .listarUsuariosCommand
+                                                  .execute();
+                                            }
                                           },
                                           getTitle: (value) =>
                                               value.nomeUsuario,

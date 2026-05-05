@@ -6,14 +6,18 @@ part 'atualizar_usuario_request.g.dart';
 class AtualizarUsuarioRequest {
   final int id;
   final String nomeUsuario;
-  final String senha;
-  final int vendedorId;
+  final String? nomeCompleto;
+  final String? numeroTelefone;
+  final int? vendedorId;
+  final bool? indicadorAtivo;
 
   AtualizarUsuarioRequest({
     required this.id,
     required this.nomeUsuario,
-    required this.senha,
-    required this.vendedorId,
+    this.nomeCompleto,
+    this.numeroTelefone,
+    this.vendedorId,
+    this.indicadorAtivo,
   });
 
   factory AtualizarUsuarioRequest.fromJson(Map<String, dynamic> json) =>

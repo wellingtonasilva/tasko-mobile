@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
@@ -6,6 +7,7 @@ import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dar
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
+import 'package:tasko_mobile/domain/usuario/request/atualizar_usuario_request.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/usuario/manter/usuario_manter_controllers.dart';
 import 'package:tasko_mobile/ui/feature/usuario/manter/usuario_manter_ui_state.dart';
@@ -53,6 +55,11 @@ class _UsuarioManterScreenState extends BaseScreenState<UsuarioManterScreen> {
         hideLoading();
       }
     };
+    viewModel.onAdicionarSucesso = () {
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    };
 
     ref.read(usuarioManterViewModelProvider).listarVendedoresCommand.execute();
 
@@ -98,6 +105,7 @@ class _UsuarioManterScreenState extends BaseScreenState<UsuarioManterScreen> {
                   color: kColorStylePrimary0,
                 ),
                 child: Form(
+                  key: _controllers.formKey,
                   autovalidateMode: AutovalidateMode.disabled,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -172,7 +180,7 @@ class _UsuarioManterScreenState extends BaseScreenState<UsuarioManterScreen> {
                             child: CustomButtonSecondary(
                               label: 'Cancelar',
                               onPressed: () {
-                                debugPrint('Cancelar pressed');
+                                context.pop();
                               },
                             ),
                           ),
@@ -181,7 +189,7 @@ class _UsuarioManterScreenState extends BaseScreenState<UsuarioManterScreen> {
                             child: CustomButtonPrimary(
                               label: 'Salvar',
                               onPressed: () {
-                                debugPrint('Salvar pressed');
+                                _handleSalvarPressed(viewModel);
                               },
                             ),
                           ),
@@ -244,5 +252,27 @@ class _UsuarioManterScreenState extends BaseScreenState<UsuarioManterScreen> {
         viewModel.selectedVendedor = value;
       },
     );
+  }
+
+  void _handleSalvarPressed(UsuarioManterUiState viewModel) {
+    if (_controllers.formKey.currentState?.validate() ?? false) {
+      _controllers.formKey.currentState?.save();
+
+      final viewModel = ref.read(usuarioManterViewModelProvider);
+
+      final request = AtualizarUsuarioRequest(
+        id: viewModel.usuario?.id ?? 0,
+        nomeUsuario: _controllers.nomeUsuario.controller.text,
+        vendedorId: viewModel.selectedVendedor?.id,
+        nomeCompleto: _controllers.nomeCompleto.controller.text,
+        numeroTelefone: _controllers.numeroTelefone.controller.text,
+        indicadorAtivo: viewModel.indicadorAtivo,
+      );
+
+      ref.read(usuarioManterViewModelProvider).atualizarUsuarioCommand.execute((
+        viewModel.usuario?.id ?? 0,
+        request,
+      ));
+    }
   }
 }

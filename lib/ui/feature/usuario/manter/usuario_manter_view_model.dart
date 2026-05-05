@@ -10,6 +10,7 @@ import 'package:tasko_mobile/util/result.dart';
 
 class UsuarioManterViewModel extends Notifier<UsuarioManterUiState> {
   void Function(String, Result result)? showSnackBar;
+  void Function()? onAdicionarSucesso;
   void Function()? onStartEvent;
   void Function()? onFinishEvent;
 
@@ -73,6 +74,7 @@ class UsuarioManterViewModel extends Notifier<UsuarioManterUiState> {
         usuario: result.value,
         indicadorAtivo: result.value.auditoria.indicadorAtivo,
       );
+      onAdicionarSucesso?.call();
     } else if (result is Failure<UsuarioResponse>) {
       showSnackBar?.call(
         (result).errors?[0] ?? 'An unknown error occurred',
