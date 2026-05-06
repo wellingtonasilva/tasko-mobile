@@ -10,9 +10,5 @@ Future<void> persistLoginData(
   UsuarioLoginResponse response,
   AuthLocalStorage storage,
 ) async {
-  await storage.saveToken(response.token);
-
-  if (response.empresas.isNotEmpty) {
-    await storage.saveEmpresaId(response.empresas.first.empresaId);
-  }
+  await storage.saveLoginData(response);
 }

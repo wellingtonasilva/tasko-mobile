@@ -25,4 +25,6 @@ class UsuarioLoginResponse {
 
   factory UsuarioLoginResponse.fromJson(Map<String, dynamic> json) =>
       _$UsuarioLoginResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UsuarioLoginResponseToJson(this);
 }

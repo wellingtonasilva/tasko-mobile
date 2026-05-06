@@ -119,7 +119,8 @@ class _UsuarioAdicionarScreenState
                               const SizedBox(height: 10),
                               CustomTextFormField(
                                 controller: _controllers.senha.controller,
-                                labelText: _controllers.senha.labelText,
+                                labelText:
+                                    _controllers.senha.labelText ?? 'Senha',
                                 autofillHints: [AutofillHints.password],
                                 validator: _controllers.senha.validator,
                               ),
@@ -129,7 +130,9 @@ class _UsuarioAdicionarScreenState
                               CustomTextFormField(
                                 controller:
                                     _controllers.repetirSenha.controller,
-                                labelText: _controllers.repetirSenha.labelText,
+                                labelText:
+                                    _controllers.repetirSenha.labelText ??
+                                    'Repetir Senha',
                                 autofillHints: [AutofillHints.password],
                                 validator: (context, val) {
                                   final senhaVal =

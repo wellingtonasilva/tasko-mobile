@@ -492,7 +492,12 @@ class _PedidoCriarPagamentoScreenState
     final subtotal = itens.fold(0.0, (sum, i) => sum + i.preco * i.quantidade);
 
     final request = AdicionarPedidoRequest(
-      empresaId: await ref.read(authLocalStorageProvider).getEmpresaId() ?? 0,
+      empresaId:
+          (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
+              ?.empresas
+              .firstOrNull
+              ?.empresaId ??
+          0,
       clienteId: pedido.clienteId,
       vendedorId: pedido.vendedorId,
       dataPedido: pedido.dataPedido.toIso8601String(),

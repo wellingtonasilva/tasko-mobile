@@ -9,14 +9,8 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart
 import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
-
-class MesAno {
-  final int mes;
-  final int ano;
-  final String descricaoMes;
-
-  MesAno(this.mes, this.ano, this.descricaoMes);
-}
+import 'package:tasko_mobile/domain/common/mes_ano.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/metas/vendedor_metas_view_model.dart';
 
 class VendedorMetasResumoScreen extends BaseScreen {
   final Function(String value) onPrevious;
@@ -35,53 +29,6 @@ class VendedorMetasResumoScreen extends BaseScreen {
 
 class _VendedorMetasResumoScreenState
     extends BaseScreenState<VendedorMetasResumoScreen> {
-  List<MesAno> get mesesAnos {
-    final List<MesAno> list = [];
-    final DateTime now = DateTime.now();
-    for (int i = 0; i < 12; i++) {
-      final DateTime date = DateTime(now.year, now.month - i, 1);
-      list.add(
-        MesAno(
-          date.month,
-          date.year,
-          '${_descricaoMes(date.month)} / ${date.year}',
-        ),
-      );
-    }
-    return list;
-  }
-
-  String _descricaoMes(int mes) {
-    switch (mes) {
-      case 1:
-        return 'Janeiro';
-      case 2:
-        return 'Fevereiro';
-      case 3:
-        return 'Março';
-      case 4:
-        return 'Abril';
-      case 5:
-        return 'Maio';
-      case 6:
-        return 'Junho';
-      case 7:
-        return 'Julho';
-      case 8:
-        return 'Agosto';
-      case 9:
-        return 'Setembro';
-      case 10:
-        return 'Outubro';
-      case 11:
-        return 'Novembro';
-      case 12:
-        return 'Dezembro';
-      default:
-        return '';
-    }
-  }
-
   @override
   Widget buildContent(BuildContext context) {
     return GestureDetector(
@@ -442,9 +389,11 @@ class _VendedorMetasResumoScreenState
   }
 
   Widget _buildDropdownFieldGrupo() {
+    final viewModel = ref.read(vendedorMetasViewModelProvider.notifier);
+
     return CustomDropdownButtonFormField<MesAno>(
       hint: 'Selecione um Mês/Ano',
-      items: mesesAnos ?? [],
+      items: viewModel.mesesAnos,
       itemLabelBuilder: (item) => item.descricaoMes,
       prefixIcon: Padding(
         padding: const EdgeInsetsDirectional.only(start: 12, end: 8),
@@ -458,10 +407,10 @@ class _VendedorMetasResumoScreenState
         return null;
       },
       onChanged: (value) {
-        //viewModel.selectedGrupo = value;
+        viewModel.mesAnoSelecionado = value;
       },
       onSaved: (value) {
-        //viewModel.selectedGrupo = value;
+        viewModel.mesAnoSelecionado = value;
       },
     );
   }

@@ -11,4 +11,6 @@ class UsuarioEmpresaResponse {
 
   factory UsuarioEmpresaResponse.fromJson(Map<String, dynamic> json) =>
       _$UsuarioEmpresaResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UsuarioEmpresaResponseToJson(this);
 }

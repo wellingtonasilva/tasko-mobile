@@ -10,4 +10,6 @@ class UsuarioPerfilResponse {
 
   factory UsuarioPerfilResponse.fromJson(Map<String, dynamic> json) =>
       _$UsuarioPerfilResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UsuarioPerfilResponseToJson(this);
 }

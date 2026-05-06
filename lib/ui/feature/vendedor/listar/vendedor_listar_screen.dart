@@ -9,7 +9,9 @@ import 'package:tasko_mobile/common/widgets/container/custom_container_default.d
 import 'package:tasko_mobile/common/widgets/dashboard/custom_dashboard_card_default.dart';
 import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_controllers.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_view_model.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/listar/widgets/vendedor_list_card.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class VendedorListarScreen extends BaseScreen {
@@ -21,6 +23,8 @@ class VendedorListarScreen extends BaseScreen {
 }
 
 class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
+  late final VendedorListarControllers _controllers;
+
   List<Color> gradientColors = [
     kColorStyleErrorLight100,
     kColorStylePrimaryNeutralPaletteDark500,
@@ -29,6 +33,7 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
   @override
   void initState() {
     super.initState();
+    _controllers = VendedorListarControllers();
 
     final viewModel = ref.read(vendedorListarViewModelProvider.notifier);
     viewModel.showSnackBar = (String message, Result result) {
@@ -81,7 +86,7 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('Vendedor', style: kTestStyleBoldText24),
+                        child: Text('Vendedores', style: kTestStyleBoldText24),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -101,121 +106,59 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                           trailingIcon: Icons.add,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Total Sales',
-                          value: '\$121,412',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_moneys.png',
-                            color: kColorStylePrimaryNeutralPaletteDark500,
-                            width: 35,
-                          ),
-                          iconBackgroundColor:
-                              kColorStylePrimaryNeutralPaletteLight100,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Purchase Invoice',
-                          value: '543',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_document_text.png',
-                            color: kColorStyleInformationDarkDefault,
-                            width: 35,
-                          ),
-                          iconBackgroundColor:
-                              kColorStyleInformationLightDefault,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Total Tip',
-                          value: '\$1,412',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_money_tick.png',
-                            color: kColorStyleSuccessDark500,
-                            width: 35,
-                          ),
-                          iconBackgroundColor: kColorStyleSuccessLightefault,
-                        ),
-                      ),
-                      CustomContainerDefault(child: LineChart(avgData())),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(minHeight: 200),
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: kColorStyleSecondinaryDark200,
-                                width: 1,
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x1F000000),
-                                  blurRadius: 4,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10, left: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Lista de Vendedores',
-                                    style: kTestStyleBoldText16,
-                                  ),
-                                  const SizedBox(height: 20),
-                                  viewModel.listarVendedoresCommand.running
-                                      ? const Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : CustomListView<VendedorResponse>(
-                                          values: viewModel.vendedores,
-                                          onTap: (value) {
-                                            context.pushNamed(
-                                              'vendedores-manter',
-                                              pathParameters: {
-                                                'id': value.id.toString(),
-                                              },
-                                            );
-                                            /*
-                                context.pushNamed(
-                                  Routes.vendedorManter,
-                                  pathParameters: {'id': value.id.toString()},
-                                );
-                                */
-                                          },
-                                          getTitle: (value) =>
-                                              value.nomeVendedor ??
-                                              'Vendedor #${value.id}',
-                                          getSubtitle: (value) =>
-                                              value.numeroTelefone ?? '-',
 
-                                          onDelete: (vendedor, index) {
-                                            _excluirVendedor(
-                                              vendedor.id,
-                                              index,
-                                              vendedor,
-                                            );
-                                          },
-                                        ),
-                                ],
-                              ),
-                            ),
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: buildTextField(
+                          _controllers.pesquisarVendedor,
+                          isShowHint: true,
+                          topPadding: 0,
+                        ),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            viewModel.listarVendedoresCommand.running
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.zero,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: viewModel.vendedores.length,
+                                    itemBuilder: (context, index) {
+                                      final vendedor =
+                                          viewModel.vendedores[index];
+                                      return VendedorListCard(
+                                        vendedor: vendedor,
+                                        onTap: () async {
+                                          final atualizado = await context
+                                              .pushNamed<bool>(
+                                                'vendedores-editar',
+                                                pathParameters: {
+                                                  'id': vendedor.id.toString(),
+                                                },
+                                              );
+                                          if (atualizado == true) {
+                                            ref
+                                                .read(
+                                                  vendedorListarViewModelProvider,
+                                                )
+                                                .listarVendedoresCommand
+                                                .execute();
+                                          }
+                                        },
+                                      );
+                                    },
+                                  ),
+                          ],
                         ),
                       ),
                     ],

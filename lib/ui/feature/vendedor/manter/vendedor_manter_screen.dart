@@ -6,9 +6,6 @@ import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dar
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_textfield.dart';
 import 'package:tasko_mobile/domain/vendedor/request/atualizar_vendedor.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_supervisor_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_territorio_response.dart';
@@ -182,27 +179,6 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget buildTextField(
-    CustomFormFieldData field, {
-    bool isDate = false,
-    bool isReadOnly = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          CustomLabel(labelText: field.labelText),
-          const SizedBox(height: 10),
-          CustomTextfield(
-            controller: field.controller,
-            validator: field.validator,
-          ),
-          const SizedBox(height: 10),
-        ],
       ),
     );
   }

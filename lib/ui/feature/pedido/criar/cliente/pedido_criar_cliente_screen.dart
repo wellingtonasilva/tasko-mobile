@@ -276,7 +276,12 @@ class _PedidoCriarClienteScreenState
     }
     */
     final request = AdicionarPedidoRequest(
-      empresaId: await ref.read(authLocalStorageProvider).getEmpresaId() ?? 0,
+      empresaId:
+          (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
+              ?.empresas
+              .firstOrNull
+              ?.empresaId ??
+          0,
       clienteId: cliente.id,
       vendedorId: vendedorId,
       dataPedido: DateTime.now().toUtc().toIso8601String(),
