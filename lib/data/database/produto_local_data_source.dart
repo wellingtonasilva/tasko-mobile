@@ -125,6 +125,7 @@ class ProdutoLocalDataSource {
   Map<String, Object?> _toRow(ProdutoResponse produto, String nowIso) {
     return {
       'id': produto.id,
+      'empresa_id': produto.empresaId,
       'local_uuid': 'pro-${produto.id}',
       'codigo_produto': produto.codigoProduto,
       'nome_produto': produto.nomeProduto,
@@ -175,6 +176,7 @@ class ProdutoLocalDataSource {
   ProdutoResponse _fromRow(Map<String, Object?> row) {
     return ProdutoResponse(
       id: row['id'] as int,
+      empresaId: row['empresa_id'] as int,
       codigoProduto: row['codigo_produto'] as String?,
       nomeProduto: (row['nome_produto'] as String?) ?? '',
       descricaoProduto: row['descricao_produto'] as String?,

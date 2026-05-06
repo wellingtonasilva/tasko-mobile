@@ -8,6 +8,7 @@ part 'vendedor_response.g.dart';
 @JsonSerializable()
 class VendedorResponse {
   final int id;
+  final int empresaId;
   final String? codigoVendedor;
   final String? nomeVendedor;
   final String? numeroCPF;
@@ -23,6 +24,7 @@ class VendedorResponse {
 
   VendedorResponse({
     required this.id,
+    required this.empresaId,
     this.codigoVendedor,
     this.nomeVendedor,
     this.numeroCPF,

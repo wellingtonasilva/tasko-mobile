@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static const _dbName = 'tasko_mobile.db';
-  static const _dbVersion = 6;
+  static const _dbVersion = 7;
 
   static const vendedoresTable = 'vendedores';
   static const syncQueueTable = 'sync_queue';
@@ -74,6 +74,10 @@ class DatabaseService {
 
     if (oldVersion < 6) {
       await _upgradeToV6(db);
+    }
+
+    if (oldVersion < 7) {
+      await _upgradeToV7(db);
     }
   }
 
@@ -516,6 +520,38 @@ class DatabaseService {
     );
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_agenda_checkins_deleted ON $agendaVisitaCheckinsTable (deleted)',
+    );
+  }
+
+  Future<void> _upgradeToV7(Database db) async {
+    await _addColumnIfNotExists(db, vendedoresTable, 'empresa_id', 'INTEGER');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_vendedores_empresa_id ON $vendedoresTable (empresa_id)',
+    );
+
+    await _addColumnIfNotExists(db, pedidosTable, 'empresa_id', 'INTEGER');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedidos_empresa_id ON $pedidosTable (empresa_id)',
+    );
+
+    await _addColumnIfNotExists(db, clientesTable, 'empresa_id', 'INTEGER');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_clientes_empresa_id ON $clientesTable (empresa_id)',
+    );
+
+    await _addColumnIfNotExists(db, produtosTable, 'empresa_id', 'INTEGER');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_produtos_empresa_id ON $produtosTable (empresa_id)',
+    );
+
+    await _addColumnIfNotExists(
+      db,
+      agendaVisitasTable,
+      'empresa_id',
+      'INTEGER',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_agenda_visitas_empresa_id ON $agendaVisitasTable (empresa_id)',
     );
   }
 }

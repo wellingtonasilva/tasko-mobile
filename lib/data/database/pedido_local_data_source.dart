@@ -33,9 +33,9 @@ class PedidoLocalDataSource {
 
       final pedidoRow = {
         'id': localId,
+        'empresa_id': request.empresaId,
         'local_uuid': localUuid,
         'numero_pedido': null,
-        'empresa_id': request.empresaId,
         'cliente_id': request.clienteId,
         'vendedor_id': request.vendedorId,
         'pedido_status_tipo_id': request.pedidoStatusTipoId,
@@ -281,6 +281,7 @@ class PedidoLocalDataSource {
 
         pedidoAtualizado = PedidoResponse(
           id: pedidoId,
+          empresaId: request.empresaId,
           numeroPedido: existingRow['numero_pedido'] as String?,
           clienteId: request.clienteId,
           vendedorId: request.vendedorId,
@@ -343,6 +344,7 @@ class PedidoLocalDataSource {
         pedidos.add(
           PedidoResponse(
             id: pedido.id,
+            empresaId: pedido.empresaId,
             numeroPedido: pedido.numeroPedido,
             clienteId: pedido.clienteId,
             vendedorId: pedido.vendedorId,
@@ -400,6 +402,7 @@ class PedidoLocalDataSource {
       return Result.success(
         PedidoResponse(
           id: pedido.id,
+          empresaId: pedido.empresaId,
           numeroPedido: pedido.numeroPedido,
           clienteId: pedido.clienteId,
           vendedorId: pedido.vendedorId,
@@ -547,6 +550,7 @@ class PedidoLocalDataSource {
       return Result.success(
         PedidoResponse(
           id: pedido.id,
+          empresaId: request.empresaId,
           numeroPedido: pedido.numeroPedido,
           clienteId: pedido.clienteId,
           vendedorId: pedido.vendedorId,

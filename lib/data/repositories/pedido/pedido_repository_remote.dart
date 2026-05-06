@@ -87,6 +87,7 @@ class PedidoRepositoryRemote implements PedidoRepository {
     return Result.success(
       PedidoResponse(
         id: pedido.id,
+        empresaId: pedido.empresaId,
         numeroPedido: pedido.numeroPedido,
         clienteId: pedido.clienteId,
         vendedorId: pedido.vendedorId,
@@ -161,6 +162,7 @@ class PedidoRepositoryRemote implements PedidoRepository {
     return Result.success(
       PedidoResponse(
         id: pedido.id,
+        empresaId: pedido.empresaId,
         numeroPedido: pedido.numeroPedido,
         clienteId: pedido.clienteId,
         vendedorId: pedido.vendedorId,

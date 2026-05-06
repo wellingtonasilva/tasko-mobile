@@ -180,6 +180,7 @@ class AgendaVisitaLocalDataSource {
 
       final merged = AgendaVisitaResponse(
         id: existing.id,
+        empresaId: existing.empresaId,
         dataAgendada: existing.dataAgendada,
         dataRealizada: request.dataRealizada != null
             ? DateTime.tryParse(request.dataRealizada!)
@@ -351,6 +352,7 @@ class AgendaVisitaLocalDataSource {
   AgendaVisitaResponse _fromRow(Map<String, Object?> row) {
     return AgendaVisitaResponse(
       id: row['id'] as int,
+      empresaId: row['empresa_id'] as int,
       dataAgendada: _toDateTime(row['data_agendada']) ?? DateTime.now(),
       dataRealizada: _toDateTime(row['data_realizada']),
       duracaoPrevista: row['duracao_prevista'] as int?,

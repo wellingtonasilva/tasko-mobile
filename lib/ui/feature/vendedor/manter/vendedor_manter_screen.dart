@@ -278,6 +278,8 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
             0.0,
         supervisorId: viewModel.selectedSupervisor?.id ?? 0,
         territorioId: viewModel.selectedTerritorio?.id ?? 0,
+        indicadorAtivo: true,
+        empresaId: viewModel.vendedor?.empresaId ?? 0,
       );
 
       ref.read(vendedorManterViewModelProvider).atualizarCommand.execute((

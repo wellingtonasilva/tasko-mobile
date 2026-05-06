@@ -145,6 +145,7 @@ class VendedorLocalDataSource {
 
       final merged = VendedorResponse(
         id: request.id,
+        empresaId: request.empresaId,
         codigoVendedor: request.codigoVendedor,
         nomeVendedor: request.nomeVendedor,
         numeroCPF: request.numeroCPF,
@@ -152,7 +153,6 @@ class VendedorLocalDataSource {
         numeroTelefone: request.numeroTelefone,
         valorMetaMensal: request.valorMetaMensal,
         percentualComissao: request.percentualComissao,
-        ultimoSincronismo: request.ultimoSincronismo,
         codigoDispositivo: request.codigoDispositivo,
         supervisor: request.supervisorId == null
             ? existing?.supervisor
@@ -171,7 +171,7 @@ class VendedorLocalDataSource {
             Auditoria(
               criadoEm: DateTime.now().toUtc(),
               atualizadoEm: DateTime.now().toUtc(),
-              indicadorAtivo: true,
+              indicadorAtivo: request.indicadorAtivo,
             ),
       );
 
@@ -320,6 +320,7 @@ class VendedorLocalDataSource {
 
     return VendedorResponse(
       id: row['id'] as int,
+      empresaId: row['empresa_id'] as int,
       codigoVendedor: row['codigo_vendedor'] as String,
       nomeVendedor: row['nome_vendedor'] as String,
       numeroCPF: row['numero_cpf'] as String,

@@ -92,6 +92,7 @@ class ClienteLocalDataSource {
 
       final row = {
         'id': localId,
+        'empresa_id': request.empresaId,
         'local_uuid': localUuid,
         'vendedor_id': request.vendedorId,
         'codigo_cliente': request.codigoCliente,
@@ -147,6 +148,7 @@ class ClienteLocalDataSource {
       final now = DateTime.now().toUtc().toIso8601String();
       final merged = ClienteResponse(
         id: request.id,
+        empresaId: request.empresaId,
         vendedorId: request.vendedorId,
         codigoCliente: request.codigoCliente,
         razaoSocial: request.razaoSocial,
@@ -325,6 +327,7 @@ class ClienteLocalDataSource {
   ClienteResponse _fromRow(Map<String, Object?> row) {
     return ClienteResponse(
       id: row['id'] as int,
+      empresaId: row['empresa_id'] as int,
       vendedorId: row['vendedor_id'] as int?,
       codigoCliente: row['codigo_cliente'] as String?,
       razaoSocial: (row['razao_social'] as String?) ?? '',

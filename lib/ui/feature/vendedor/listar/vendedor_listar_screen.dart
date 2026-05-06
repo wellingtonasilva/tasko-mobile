@@ -141,7 +141,7 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                                         onTap: () async {
                                           final atualizado = await context
                                               .pushNamed<bool>(
-                                                'vendedores-editar',
+                                                'vendedores-manter',
                                                 pathParameters: {
                                                   'id': vendedor.id.toString(),
                                                 },

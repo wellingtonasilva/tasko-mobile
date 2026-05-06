@@ -3,7 +3,7 @@ import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 
 class PedidoResponse {
   final int id;
-  final int? empresaId;
+  final int empresaId;
   final String? numeroPedido;
   final int clienteId;
   final int vendedorId;
@@ -31,7 +31,7 @@ class PedidoResponse {
 
   PedidoResponse({
     required this.id,
-    this.empresaId,
+    required this.empresaId,
     this.numeroPedido,
     required this.clienteId,
     required this.vendedorId,

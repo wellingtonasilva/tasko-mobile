@@ -2,6 +2,7 @@ import 'package:tasko_mobile/common/domain/auditoria.dart';
 
 class AgendaVisitaResponse {
   final int id;
+  final int empresaId;
   final DateTime dataAgendada;
   final DateTime? dataRealizada;
   final int? duracaoPrevista;
@@ -25,6 +26,7 @@ class AgendaVisitaResponse {
 
   AgendaVisitaResponse({
     required this.id,
+    required this.empresaId,
     required this.dataAgendada,
     this.dataRealizada,
     this.duracaoPrevista,
@@ -50,6 +52,7 @@ class AgendaVisitaResponse {
   factory AgendaVisitaResponse.fromJson(Map<String, dynamic> json) {
     return AgendaVisitaResponse(
       id: (json['id'] as int?) ?? 0,
+      empresaId: (json['empresaId'] as int?) ?? 0,
       dataAgendada: _toDate(json['dataAgendada']) ?? DateTime.now(),
       dataRealizada: _toDate(json['dataRealizada']),
       duracaoPrevista: json['duracaoPrevista'] as int?,
@@ -76,6 +79,7 @@ class AgendaVisitaResponse {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'empresaId': empresaId,
       'dataAgendada': dataAgendada.toIso8601String(),
       'dataRealizada': dataRealizada?.toIso8601String(),
       'duracaoPrevista': duracaoPrevista,
