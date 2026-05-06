@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
@@ -100,13 +99,15 @@ class _LoginScreenState extends BaseScreenState<LoginScreen> {
                         SizedBox(height: 30),
                         CustomTextFormField(
                           controller: _controllers.nomeUsuario.controller,
-                          labelText: _controllers.nomeUsuario.labelText,
+                          labelText:
+                              _controllers.nomeUsuario.labelText ??
+                              'Nome de usuário ou email',
                           autofillHints: [AutofillHints.email],
                         ),
                         SizedBox(height: 10),
                         CustomTextFormField(
                           controller: _controllers.senha.controller,
-                          labelText: _controllers.senha.labelText,
+                          labelText: _controllers.senha.labelText ?? 'Senha',
                           autofillHints: [AutofillHints.password],
                         ),
                         SizedBox(height: 22),

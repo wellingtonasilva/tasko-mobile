@@ -5,9 +5,6 @@ import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_textfield.dart';
 import 'package:tasko_mobile/domain/cliente/request/atualizar_cliente_request.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_controllers.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_ui_state.dart';
@@ -112,13 +109,13 @@ class _ClienteManterScreenState extends BaseScreenState<ClienteManterScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            _buildTextField(_controllers.codigoCliente),
-                            _buildTextField(_controllers.razaoSocial),
-                            _buildTextField(_controllers.nomeFantasia),
-                            _buildTextField(_controllers.cnpjCpf),
-                            _buildTextField(_controllers.cidade),
-                            _buildTextField(_controllers.estado),
-                            _buildTextField(_controllers.limiteCredito),
+                            buildTextField(_controllers.codigoCliente),
+                            buildTextField(_controllers.razaoSocial),
+                            buildTextField(_controllers.nomeFantasia),
+                            buildTextField(_controllers.cnpjCpf),
+                            buildTextField(_controllers.cidade),
+                            buildTextField(_controllers.estado),
+                            buildTextField(_controllers.limiteCredito),
                           ],
                         ),
                       ),
@@ -148,23 +145,6 @@ class _ClienteManterScreenState extends BaseScreenState<ClienteManterScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(CustomFormFieldData field) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          CustomLabel(labelText: field.labelText),
-          const SizedBox(height: 10),
-          CustomTextfield(
-            controller: field.controller,
-            validator: field.validator,
-          ),
-          const SizedBox(height: 10),
-        ],
       ),
     );
   }

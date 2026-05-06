@@ -10,6 +10,7 @@ class CustomTextfield extends StatelessWidget {
   final String? Function(BuildContext, String?)? validator;
   final Widget? prefixIcon;
   final bool readOnly;
+  final String? hintText;
 
   const CustomTextfield({
     super.key,
@@ -19,6 +20,7 @@ class CustomTextfield extends StatelessWidget {
     this.validator,
     this.prefixIcon,
     this.readOnly = false,
+    this.hintText,
   });
 
   @override
@@ -61,6 +63,10 @@ class CustomTextfield extends StatelessWidget {
               : kColorStylePrimary0,
           contentPadding: const EdgeInsetsDirectional.fromSTEB(18, 18, 0, 18),
           prefixIcon: prefixIcon,
+          hintText: hintText,
+          hintStyle: kTestStyleMediumText16.copyWith(
+            color: kColorStyleSecondinaryLight300,
+          ),
         ),
         style: kTestStyleMediumText16.copyWith(
           color: disabled

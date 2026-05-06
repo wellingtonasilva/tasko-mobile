@@ -4,9 +4,10 @@ import 'package:flutter/widgets.dart';
 class CustomFormFieldData {
   final TextEditingController controller;
   final FocusNode focusNode;
-  final String labelText;
+  final String? labelText;
   final String? Function(BuildContext, String?)? validator;
   final Widget? prefixIcon;
+  final String? hintText;
 
   CustomFormFieldData({
     required this.controller,
@@ -14,6 +15,7 @@ class CustomFormFieldData {
     required this.labelText,
     this.validator,
     this.prefixIcon,
+    this.hintText,
   });
 }
 
@@ -30,5 +32,5 @@ Widget customFormFieldDataPreview() {
       return null;
     },
   );
-  return Text(formFieldData.labelText);
+  return Text(formFieldData.labelText ?? '');
 }

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
-import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/dashboard/custom_dashboard_card_default.dart';
+import 'package:tasko_mobile/ui/feature/home/home_screen_view_model.dart';
 
 class HomeScreen extends BaseScreen {
   const HomeScreen({super.key});
@@ -17,9 +17,16 @@ class _HomeScreenState extends BaseScreenState<HomeScreen> {
   @override
   bool get useScaffold => false;
 
+  initState() {
+    super.initState();
+
+    ref.read(homeScreenViewModelProvider).lastLoginCommand.execute();
+  }
+
   @override
   Widget buildContent(BuildContext context) {
-    final vendedor = ref.watch(vendedorSelecionadoProvider);
+    final viewModel = ref.watch(homeScreenViewModelProvider);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -42,7 +49,9 @@ class _HomeScreenState extends BaseScreenState<HomeScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        'Bem-vindo, ${vendedor?.nomeVendedor ?? ''}',
+                        ref
+                            .watch(homeScreenViewModelProvider.notifier)
+                            .welcomeMessage,
                         style: kTestStyleBoldText24,
                       ),
                     ),

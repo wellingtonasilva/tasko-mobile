@@ -153,20 +153,23 @@ abstract class BaseScreenState<T extends BaseScreen> extends ConsumerState<T> {
     CustomFormFieldData field, {
     bool isDate = false,
     bool isReadOnly = false,
+    bool isShowHint = false,
+    double topPadding = 10,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
+      padding: EdgeInsets.only(top: topPadding),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          CustomLabel(labelText: field.labelText),
-          const SizedBox(height: 10),
+          if (field.labelText != null) CustomLabel(labelText: field.labelText!),
+          if (field.labelText != null) const SizedBox(height: 10),
           CustomTextfield(
             controller: field.controller,
             validator: field.validator,
             prefixIcon: field.prefixIcon,
             readOnly: isReadOnly,
+            hintText: isShowHint ? field.hintText : null,
           ),
-          const SizedBox(height: 10),
         ],
       ),
     );
