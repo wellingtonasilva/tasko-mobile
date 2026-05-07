@@ -139,6 +139,7 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
 }
 
 final vendedorManterViewModelProvider =
-    NotifierProvider<VendedorManterViewModel, VendedorManterUiState>(
-      () => VendedorManterViewModel(),
-    );
+    NotifierProvider.autoDispose<
+      VendedorManterViewModel,
+      VendedorManterUiState
+    >(() => VendedorManterViewModel());

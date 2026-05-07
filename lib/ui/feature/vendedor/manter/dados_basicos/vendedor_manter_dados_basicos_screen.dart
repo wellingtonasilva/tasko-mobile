@@ -52,18 +52,21 @@ class _VendedorManterDadosBasicosScreenState
   }
 
   @override
+  void dispose() {
+    _controllers.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget buildContent(BuildContext context) {
-    final viewModel = ref.watch(vendedorManterViewModelProvider);
     ref.listen<VendedorManterUiState>(vendedorManterViewModelProvider, (
       previous,
       next,
     ) {
-      final nextVendedor = next.vendedor;
-      final previousVendedorId = previous?.vendedor?.id;
-
-      if (nextVendedor != null && previousVendedorId != nextVendedor.id) {
-        _controllers.updateFormFields(nextVendedor);
-        setState(() {});
+      // With autoDispose the provider always starts fresh (vendedor == null).
+      // Populate the form exactly once, on the first null → non-null transition.
+      if (previous?.vendedor == null && next.vendedor != null) {
+        _controllers.updateFormFields(next.vendedor!);
       }
     });
 

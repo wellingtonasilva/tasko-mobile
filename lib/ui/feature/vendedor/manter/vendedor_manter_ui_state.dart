@@ -5,6 +5,8 @@ import 'package:tasko_mobile/domain/vendedor/response/vendedor_territorio_respon
 import 'package:tasko_mobile/util/command.dart';
 
 class VendedorManterUiState {
+  static const Object _unset = Object();
+
   VendedorResponse? vendedor;
   final Command1<VendedorResponse, (int id,)> obterPorIdCommand;
   final Command1<VendedorResponse, (int id, AtualizarVendedorRequest request)>
@@ -31,29 +33,35 @@ class VendedorManterUiState {
   });
 
   VendedorManterUiState copyWith({
-    VendedorResponse? vendedor,
+    Object? vendedor = _unset,
     Command1<VendedorResponse, (int id,)>? obterPorIdCommand,
     Command1<VendedorResponse, (int id, AtualizarVendedorRequest request)>?
     atualizarCommand,
     Command0<void>? listarSupervisorCommand,
     List<VendedorSupervisorResponse>? supervisores,
-    VendedorSupervisorResponse? selectedSupervisor,
+    Object? selectedSupervisor = _unset,
     Command0<void>? listarTerritorioCommand,
     List<VendedorTerritorioResponse>? territorios,
-    VendedorTerritorioResponse? selectedTerritorio,
+    Object? selectedTerritorio = _unset,
   }) {
     return VendedorManterUiState(
-      vendedor: vendedor ?? this.vendedor,
+      vendedor: identical(vendedor, _unset)
+          ? this.vendedor
+          : vendedor as VendedorResponse?,
       obterPorIdCommand: obterPorIdCommand ?? this.obterPorIdCommand,
       atualizarCommand: atualizarCommand ?? this.atualizarCommand,
       listarSupervisorCommand:
           listarSupervisorCommand ?? this.listarSupervisorCommand,
       supervisores: supervisores ?? this.supervisores,
-      selectedSupervisor: selectedSupervisor ?? this.selectedSupervisor,
+      selectedSupervisor: identical(selectedSupervisor, _unset)
+          ? this.selectedSupervisor
+          : selectedSupervisor as VendedorSupervisorResponse?,
       listarTerritorioCommand:
           listarTerritorioCommand ?? this.listarTerritorioCommand,
       territorios: territorios ?? this.territorios,
-      selectedTerritorio: selectedTerritorio ?? this.selectedTerritorio,
+      selectedTerritorio: identical(selectedTerritorio, _unset)
+          ? this.selectedTerritorio
+          : selectedTerritorio as VendedorTerritorioResponse?,
     );
   }
 }
