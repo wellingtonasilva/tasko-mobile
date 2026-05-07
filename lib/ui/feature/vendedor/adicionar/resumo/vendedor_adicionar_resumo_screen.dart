@@ -16,11 +16,13 @@ import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_vi
 class VendedorAdicionarResumoScreen extends BaseScreen {
   final Function(String value) onPrevious;
   final Function(String value) onNext;
+  final Function(int value) gotoStep;
 
   const VendedorAdicionarResumoScreen({
     super.key,
     required this.onPrevious,
     required this.onNext,
+    required this.gotoStep,
   });
 
   @override
@@ -199,7 +201,7 @@ class _VendedorAdicionarResumoScreenState
     return CustomReviewContainer(
       label: 'Dados Básicos',
       onEdit: () {
-        widget.onPrevious("Dados Básicos");
+        widget.gotoStep(0);
       },
       children: [
         CustomReviewDados(label: 'Código', value: draft?.codigoVendedor ?? '-'),
@@ -222,7 +224,8 @@ class _VendedorAdicionarResumoScreenState
     return CustomReviewContainer(
       label: 'Contato',
       onEdit: () {
-        widget.onPrevious("Contato");
+        debugPrint('### Editar Contato');
+        widget.gotoStep(1);
       },
       children: [
         CustomReviewDados(label: 'E-mail', value: draft?.email ?? '-'),
@@ -241,7 +244,8 @@ class _VendedorAdicionarResumoScreenState
     return CustomReviewContainer(
       label: 'Meta e Comissão',
       onEdit: () {
-        widget.onPrevious("Meta e Comissão");
+        debugPrint('### Editar Meta e Comissão');
+        widget.gotoStep(2);
       },
       children: [
         CustomReviewDados(

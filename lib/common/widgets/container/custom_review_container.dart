@@ -29,7 +29,13 @@ class CustomReviewContainer extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Text(label, style: kTestStyleBoldText16)),
-              if (onEdit != null) CustomActionEditIconButton(onPressed: onEdit),
+              if (onEdit != null)
+                CustomActionEditIconButton(
+                  onPressed: () {
+                    debugPrint('Editar $label');
+                    onEdit!.call();
+                  },
+                ),
             ],
           ),
           SizedBox(height: 5),

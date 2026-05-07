@@ -89,6 +89,9 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
             onNext: (value) {
               // Handle final submission or navigation
             },
+            gotoStep: (value) {
+              _goToStep(value);
+            },
           ),
         ],
       ),
@@ -113,5 +116,13 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
         curve: Curves.ease,
       );
     }
+  }
+
+  void _goToStep(int value) {
+    final target = value.clamp(0, 2);
+    if (!_controllers.pageController.hasClients) return;
+
+    _controllers.pageController.jumpToPage(target);
+    setState(() => currentStep = target);
   }
 }

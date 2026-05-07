@@ -16,11 +16,13 @@ import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_view_mod
 class VendedorManterDadosResumo extends BaseScreen {
   final Function(String value) onPrevious;
   final Function(String value) onNext;
+  final Function(int value) gotoStep;
 
   const VendedorManterDadosResumo({
     super.key,
     required this.onPrevious,
     required this.onNext,
+    required this.gotoStep,
   });
 
   @override
@@ -199,7 +201,7 @@ class _VendedorManterDadosResumoState
     return CustomReviewContainer(
       label: 'Dados Básicos',
       onEdit: () {
-        widget.onPrevious("Dados Básicos");
+        widget.gotoStep(0);
       },
       children: [
         CustomReviewDados(label: 'Código', value: draft?.codigoVendedor ?? '-'),
@@ -222,7 +224,7 @@ class _VendedorManterDadosResumoState
     return CustomReviewContainer(
       label: 'Contato',
       onEdit: () {
-        widget.onPrevious("Contato");
+        widget.gotoStep(1);
       },
       children: [
         CustomReviewDados(label: 'E-mail', value: draft?.email ?? '-'),
@@ -241,7 +243,7 @@ class _VendedorManterDadosResumoState
     return CustomReviewContainer(
       label: 'Meta e Comissão',
       onEdit: () {
-        widget.onPrevious("Meta e Comissão");
+        widget.gotoStep(1);
       },
       children: [
         CustomReviewDados(
