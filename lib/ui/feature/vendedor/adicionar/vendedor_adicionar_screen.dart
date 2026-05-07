@@ -41,6 +41,17 @@ class _VendedorAdicionarScreenState
         Navigator.of(context).pop(true);
       }
     };
+
+    viewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
   }
 
   @override

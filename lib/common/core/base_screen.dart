@@ -54,13 +54,13 @@ abstract class BaseScreenState<T extends BaseScreen> extends ConsumerState<T> {
           message,
           style: TextStyle(
             color: isError
-                ? kColorStyleErrorLight400
-                : kColorStyleSuccessDark600,
+                ? kColorStyleErrorLight300
+                : kColorStylePrimaryBasePalette600,
           ),
         ),
         backgroundColor: isError
-            ? kColorStyleErrorDark700
-            : kColorStyleSuccessLight200,
+            ? kColorStyleErrorLight100
+            : kColorStylePrimaryBasePalette200,
         duration: const Duration(seconds: 3),
       ),
     );

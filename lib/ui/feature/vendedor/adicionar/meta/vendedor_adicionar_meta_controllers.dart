@@ -4,6 +4,7 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/widgets/textfield/br_phone_input_formatter.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
 import 'package:tasko_mobile/common/widgets/textfield/decimal_text_input_formatter.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 
 class VendedorAdicionarMetaControllers {
   final formKey = GlobalKey<FormState>();
@@ -98,5 +99,32 @@ class VendedorAdicionarMetaControllers {
       focusNode: FocusNode(),
       labelText: 'Código Dispositivo',
     );
+  }
+
+  void dispose() {
+    email.controller.dispose();
+    email.focusNode.dispose();
+    numeroTelefone.controller.dispose();
+    numeroTelefone.focusNode.dispose();
+    numeroTelefoneAlternativo.controller.dispose();
+    numeroTelefoneAlternativo.focusNode.dispose();
+    valorMetaMensal.controller.dispose();
+    valorMetaMensal.focusNode.dispose();
+    percentualComissao.controller.dispose();
+    percentualComissao.focusNode.dispose();
+    ultimoSincronismo.controller.dispose();
+    ultimoSincronismo.focusNode.dispose();
+    codigoDispositivo.controller.dispose();
+    codigoDispositivo.focusNode.dispose();
+  }
+
+  void updateFormFields(VendedorResponse? vendedor) {
+    email.controller.text = vendedor?.email ?? '';
+    numeroTelefone.controller.text = vendedor?.numeroTelefone ?? '';
+    valorMetaMensal.controller.text =
+        vendedor?.valorMetaMensal?.toStringAsFixed(2) ?? '';
+    percentualComissao.controller.text =
+        vendedor?.percentualComissao?.toStringAsFixed(2) ?? '';
+    codigoDispositivo.controller.text = vendedor?.codigoDispositivo ?? '';
   }
 }

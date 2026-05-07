@@ -224,7 +224,6 @@ class _VendedorAdicionarResumoScreenState
     return CustomReviewContainer(
       label: 'Contato',
       onEdit: () {
-        debugPrint('### Editar Contato');
         widget.gotoStep(1);
       },
       children: [
@@ -244,8 +243,7 @@ class _VendedorAdicionarResumoScreenState
     return CustomReviewContainer(
       label: 'Meta e Comissão',
       onEdit: () {
-        debugPrint('### Editar Meta e Comissão');
-        widget.gotoStep(2);
+        widget.gotoStep(1);
       },
       children: [
         CustomReviewDados(
