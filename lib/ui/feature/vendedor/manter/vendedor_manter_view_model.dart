@@ -36,6 +36,10 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
     state = state.copyWith(selectedSupervisor: supervisor);
   }
 
+  void selectTerritorio(VendedorTerritorioResponse? territorio) {
+    state = state.copyWith(selectedTerritorio: territorio);
+  }
+
   void salvarDadosBasicos({
     required String codigoVendedor,
     required String nomeVendedor,
@@ -108,8 +112,10 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
       valorMetaMensal: draft.valorMetaMensal ?? 0,
       percentualComissao: draft.percentualComissao ?? 0,
       codigoDispositivo: draft.codigoDispositivo,
-      supervisorId: draft.supervisor?.id,
-      territorioId: draft.territorio?.id,
+      supervisorId:
+          (state.selectedSupervisor ?? computedSelectedSupervisor)?.id,
+      territorioId:
+          (state.selectedTerritorio ?? computedSelectedTerritorio)?.id,
       indicadorAtivo: draft.auditoria?.indicadorAtivo ?? true,
     );
 
@@ -117,14 +123,27 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
   }
 
   VendedorSupervisorResponse? get computedSelectedSupervisor {
-    if (state.vendedor?.supervisor == null || state.supervisores == null) {
-      return null;
-    }
+    final supervisorId =
+        (state.vendedorDraft ?? state.vendedor)?.supervisor?.id;
+    if (supervisorId == null || state.supervisores == null) return null;
 
-    return state.supervisores!.firstWhere(
-      (s) => s.id == state.vendedor?.supervisor!.id,
+    final found = state.supervisores!.firstWhere(
+      (s) => s.id == supervisorId,
       orElse: () => VendedorSupervisorResponse(id: -1),
     );
+    return found.id == -1 ? null : found;
+  }
+
+  VendedorTerritorioResponse? get computedSelectedTerritorio {
+    final territorioId =
+        (state.vendedorDraft ?? state.vendedor)?.territorio?.id;
+    if (territorioId == null || state.territorios == null) return null;
+
+    final found = state.territorios!.firstWhere(
+      (t) => t.id == territorioId,
+      orElse: () => VendedorTerritorioResponse(id: -1),
+    );
+    return found.id == -1 ? null : found;
   }
 
   DropdownLoadingState get supervisorDropdownState {

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
+import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
@@ -10,7 +11,10 @@ import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.da
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_supervisor_response.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_territorio_response.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/dados_basicos/vendedor_manter_dados_basicos_controllers.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_ui_state.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -59,6 +63,7 @@ class _VendedorManterDadosBasicosScreenState
 
   @override
   Widget buildContent(BuildContext context) {
+    final viewModel = ref.watch(vendedorManterViewModelProvider);
     final viewState = ref.watch(vendedorManterViewModelProvider);
     final vendedorAtual = viewState.vendedorDraft ?? viewState.vendedor;
     final vendedorId = vendedorAtual?.id;
@@ -209,6 +214,21 @@ class _VendedorManterDadosBasicosScreenState
                                   mandatory: true,
                                 ),
                                 _buildDropdownStatus(),
+                                const SizedBox(height: 10),
+                                const Text('Supervisor'),
+                                const SizedBox(height: 10),
+                                _buildLoadingDropdownFieldSupervisor(viewModel),
+                                const SizedBox(height: 15),
+                                const Text('Território'),
+                                const SizedBox(height: 5),
+                                viewModel.listarTerritorioCommand.running
+                                    ? buildLoadingIndicator()
+                                    : viewModel.obterPorIdCommand.completed &&
+                                          viewModel
+                                              .listarTerritorioCommand
+                                              .completed
+                                    ? buildDropdownFieldTerritorio(viewModel)
+                                    : buildLoadingIndicator(),
                               ],
                             ),
                           ),
@@ -321,6 +341,71 @@ class _VendedorManterDadosBasicosScreenState
         ref
             .read(vendedorManterViewModelProvider.notifier)
             .setIndicadorAtivo(value == 'Ativo');
+      },
+    );
+  }
+
+  Widget _buildLoadingDropdownFieldSupervisor(VendedorManterUiState viewModel) {
+    final notifier = ref.read(vendedorManterViewModelProvider.notifier);
+    return switch (notifier.supervisorDropdownState) {
+      DropdownLoadingState.loading => buildLoadingIndicator(),
+      DropdownLoadingState.ready => buildDropdownFieldSupervisor(viewModel),
+      DropdownLoadingState.error => buildDropdownFieldSupervisor(viewModel),
+    };
+  }
+
+  Widget buildDropdownFieldSupervisor(VendedorManterUiState viewModel) {
+    final notifier = ref.read(vendedorManterViewModelProvider.notifier);
+    final selectedSupervisor =
+        viewModel.selectedSupervisor ?? notifier.computedSelectedSupervisor;
+
+    return CustomDropdownButtonFormField<VendedorSupervisorResponse>(
+      prefixIcon: Padding(
+        padding: const EdgeInsetsDirectional.only(start: 12, end: 8),
+        child: Icon(
+          Icons.supervisor_account,
+          color: kColorStyleSecondinaryLight300,
+          size: 20,
+        ),
+      ),
+      hint: 'Selecione um Supervisor',
+      items: viewModel.supervisores ?? [],
+      itemLabelBuilder: (item) => item.nomeSupervisor ?? '',
+      selectedValue: selectedSupervisor,
+      validator: (value) {
+        if (value == null) {
+          return 'Por favor selecione um Responsável.';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        notifier.selectSupervisor(value);
+      },
+    );
+  }
+
+  Widget buildDropdownFieldTerritorio(VendedorManterUiState viewModel) {
+    final notifier = ref.read(vendedorManterViewModelProvider.notifier);
+    final selectedTerritorio =
+        viewModel.selectedTerritorio ?? notifier.computedSelectedTerritorio;
+
+    return CustomDropdownButtonFormField<VendedorTerritorioResponse>(
+      prefixIcon: Padding(
+        padding: const EdgeInsetsDirectional.only(start: 12, end: 8),
+        child: Icon(Icons.map, color: kColorStyleSecondinaryLight300, size: 20),
+      ),
+      hint: 'Selecione um Território',
+      items: viewModel.territorios ?? [],
+      itemLabelBuilder: (item) => item.nomeTerritorio ?? '',
+      selectedValue: selectedTerritorio,
+      validator: (value) {
+        if (value == null) {
+          return 'Por favor selecione um Território.';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        notifier.selectTerritorio(value);
       },
     );
   }
