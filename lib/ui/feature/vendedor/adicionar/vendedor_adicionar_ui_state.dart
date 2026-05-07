@@ -5,15 +5,21 @@ import 'package:tasko_mobile/domain/vendedor/response/vendedor_territorio_respon
 import 'package:tasko_mobile/util/command.dart';
 
 class VendedorAdicionarUiState {
+  static const Object _unset = Object();
+
+  VendedorResponse? vendedorDraft;
   final Command1<VendedorResponse, AdicionarVendedorRequest> adicionarCommand;
+  // Supervisor
   final Command0<void> listarSupervisorCommand;
   List<VendedorSupervisorResponse>? supervisores;
   VendedorSupervisorResponse? selectedSupervisor;
+  // Territorio
   final Command0<void> listarTerritorioCommand;
   List<VendedorTerritorioResponse>? territorios;
   VendedorTerritorioResponse? selectedTerritorio;
 
   VendedorAdicionarUiState({
+    this.vendedorDraft,
     required this.adicionarCommand,
     required this.listarSupervisorCommand,
     this.supervisores,
@@ -24,24 +30,32 @@ class VendedorAdicionarUiState {
   });
 
   VendedorAdicionarUiState copyWith({
+    Object? vendedorDraft = _unset,
     Command1<VendedorResponse, AdicionarVendedorRequest>? adicionarCommand,
     Command0<void>? listarSupervisorCommand,
     List<VendedorSupervisorResponse>? supervisores,
-    VendedorSupervisorResponse? selectedSupervisor,
+    Object? selectedSupervisor = _unset,
     Command0<void>? listarTerritorioCommand,
     List<VendedorTerritorioResponse>? territorios,
-    VendedorTerritorioResponse? selectedTerritorio,
+    Object? selectedTerritorio = _unset,
   }) {
     return VendedorAdicionarUiState(
+      vendedorDraft: identical(vendedorDraft, _unset)
+          ? this.vendedorDraft
+          : vendedorDraft as VendedorResponse?,
       adicionarCommand: adicionarCommand ?? this.adicionarCommand,
       listarSupervisorCommand:
           listarSupervisorCommand ?? this.listarSupervisorCommand,
       supervisores: supervisores ?? this.supervisores,
-      selectedSupervisor: selectedSupervisor ?? this.selectedSupervisor,
+      selectedSupervisor: identical(selectedSupervisor, _unset)
+          ? this.selectedSupervisor
+          : selectedSupervisor as VendedorSupervisorResponse?,
       listarTerritorioCommand:
           listarTerritorioCommand ?? this.listarTerritorioCommand,
       territorios: territorios ?? this.territorios,
-      selectedTerritorio: selectedTerritorio ?? this.selectedTerritorio,
+      selectedTerritorio: identical(selectedTerritorio, _unset)
+          ? this.selectedTerritorio
+          : selectedTerritorio as VendedorTerritorioResponse?,
     );
   }
 }
