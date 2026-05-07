@@ -32,14 +32,14 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
       decoration: InputDecoration(
         fillColor: kColorStylePrimary0,
         filled: true,
-        contentPadding: const EdgeInsetsDirectional.fromSTEB(5, 20, 16, 20),
+        contentPadding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: Colors.white, width: 2),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 2),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
         ),
         prefixIcon: prefixIcon,
         prefixIconConstraints: prefixIcon != null
@@ -84,7 +84,7 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
         iconSize: 24,
       ),
       dropdownStyleData: DropdownStyleData(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
       ),
       menuItemStyleData: const MenuItemStyleData(
         padding: EdgeInsets.symmetric(horizontal: 16),

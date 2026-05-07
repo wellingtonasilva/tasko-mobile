@@ -279,6 +279,7 @@ class ClienteLocalDataSource {
   }) {
     return {
       'id': cliente.id,
+      'empresa_id': cliente.empresaId,
       'local_uuid': localUuid ?? 'cli-${cliente.id}',
       'vendedor_id': cliente.vendedorId,
       'codigo_cliente': cliente.codigoCliente,

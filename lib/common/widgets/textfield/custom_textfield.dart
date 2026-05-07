@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widget_previews.dart';
+import 'package:flutter/services.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 
@@ -11,8 +11,10 @@ class CustomTextfield extends StatelessWidget {
   final Widget? prefixIcon;
   final bool readOnly;
   final String? hintText;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextInputType? keyboardType;
 
-  const CustomTextfield({
+  CustomTextfield({
     super.key,
     this.labelText,
     this.controller,
@@ -21,12 +23,15 @@ class CustomTextfield extends StatelessWidget {
     this.prefixIcon,
     this.readOnly = false,
     this.hintText,
+    this.inputFormatters,
+    this.keyboardType,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
+      height: 50,
       child: TextFormField(
         controller: controller,
         autofocus: true,
@@ -40,28 +45,28 @@ class CustomTextfield extends StatelessWidget {
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Color(0xFFE0E3E7), width: 2),
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
               color: kColorStyleSecondinaryLight200,
               width: 2,
             ),
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(8),
           ),
           errorBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Color(0xFFFF5963), width: 2),
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(8),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Color(0xFFFF5963), width: 2),
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(8),
           ),
           filled: true,
           fillColor: disabled
               ? kColorStyleSecondinaryLight200
               : kColorStylePrimary0,
-          contentPadding: const EdgeInsetsDirectional.fromSTEB(18, 18, 0, 18),
+          contentPadding: const EdgeInsetsDirectional.fromSTEB(10, 10, 0, 10),
           prefixIcon: prefixIcon,
           hintText: hintText,
           hintStyle: kTestStyleMediumText16.copyWith(
@@ -73,18 +78,11 @@ class CustomTextfield extends StatelessWidget {
               ? kColorStyleSecondinaryLight400
               : kColorStyleSecondinaryDarkDefault,
         ),
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
         validator: (value) =>
             validator != null ? validator!(context, value) : null,
       ),
     );
   }
-}
-
-@Preview(name: 'Custom TextField Preview')
-Widget customListItemPreview() {
-  return const Padding(
-    padding: EdgeInsets.all(16.0),
-    child: CustomTextfield(labelText: 'Email'),
-  );
 }

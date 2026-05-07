@@ -320,7 +320,7 @@ class VendedorLocalDataSource {
 
     return VendedorResponse(
       id: row['id'] as int,
-      empresaId: row['empresa_id'] as int,
+      empresaId: row['empresa_id'] != null ? row['empresa_id'] as int : 0,
       codigoVendedor: row['codigo_vendedor'] as String,
       nomeVendedor: row['nome_vendedor'] as String,
       numeroCPF: row['numero_cpf'] as String,

@@ -1,4 +1,4 @@
-import 'package:flutter/widget_previews.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class CustomFormFieldData {
@@ -8,6 +8,8 @@ class CustomFormFieldData {
   final String? Function(BuildContext, String?)? validator;
   final Widget? prefixIcon;
   final String? hintText;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextInputType? keyboardType;
 
   CustomFormFieldData({
     required this.controller,
@@ -16,21 +18,7 @@ class CustomFormFieldData {
     this.validator,
     this.prefixIcon,
     this.hintText,
+    this.inputFormatters,
+    this.keyboardType,
   });
-}
-
-@Preview(name: 'Custom Form Field Data Example')
-Widget customFormFieldDataPreview() {
-  final formFieldData = CustomFormFieldData(
-    controller: TextEditingController(),
-    focusNode: FocusNode(),
-    labelText: 'Example Label',
-    validator: (context, value) {
-      if (value == null || value.isEmpty) {
-        return 'This field cannot be empty';
-      }
-      return null;
-    },
-  );
-  return Text(formFieldData.labelText ?? '');
 }

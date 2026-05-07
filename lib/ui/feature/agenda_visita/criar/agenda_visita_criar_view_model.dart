@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/common/core/auth_local_storage.dart';
 import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
 import 'package:tasko_mobile/data/repositories/agenda_visita/agenda_visita_repository_hybrid.dart';
 import 'package:tasko_mobile/data/repositories/cliente/cliente_repository_hybrid.dart';
@@ -118,6 +119,10 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
     final uuidOffline = 'av-${now.toUtc().microsecondsSinceEpoch}';
 
     final request = AdicionarAgendaVisitaRequest(
+      empresaId: await ref
+          .read(authLocalStorageProvider)
+          .getUsuarioLoginResponse()
+          .then((value) => value?.empresas.first.empresaId ?? 0),
       dataAgendada: state.dataAgendada.toUtc().toIso8601String(),
       duracaoPrevista: state.duracaoPrevista,
       objetivo: state.objetivo,

@@ -13,6 +13,9 @@ import 'package:tasko_mobile/util/result.dart';
 
 class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
   void Function(String, Result result)? showSnackBar;
+  void Function()? onAdicionarSucesso;
+  void Function()? onStartEvent;
+  void Function()? onFinishEvent;
 
   @override
   VendedorManterUiState build() {
@@ -56,6 +59,7 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
   }
 
   Future<Result<VendedorResponse>> _obterPorId((int id,) parameters) async {
+    onStartEvent?.call();
     final (id,) = parameters;
     final result = await ref
         .read(vendedorRepositoryHybridProvider)
@@ -68,28 +72,38 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 
   Future<Result<VendedorResponse>> _atualizar(
     (int id, AtualizarVendedorRequest request) parameters,
   ) async {
+    onStartEvent?.call();
     final (id, request) = parameters;
     final result = await ref
         .read(vendedorRepositoryHybridProvider)
         .atualizar(id, request);
     if (result is Success<VendedorResponse>) {
-      state = state.copyWith(vendedor: null);
+      state = state.copyWith(
+        vendedor: null,
+        selectedSupervisor: null,
+        selectedTerritorio: null,
+      );
+      onAdicionarSucesso?.call();
     } else if (result is Failure<VendedorResponse>) {
       showSnackBar?.call(
         (result).errors?[0] ?? 'An unknown error occurred',
         result,
       );
     }
+    onFinishEvent?.call();
+
     return result;
   }
 
   Future<Result<List<VendedorSupervisorResponse>>> _listarSupervisor() async {
+    onStartEvent?.call();
     final result = await ref
         .read(vendedorSupervisorRepositoryRemoteProvider)
         .listar();
@@ -101,10 +115,13 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
+
     return result;
   }
 
   Future<Result<List<VendedorTerritorioResponse>>> _listarTerritorio() async {
+    onStartEvent?.call();
     final result = await ref
         .read(vendedorTerritorioRepositoryRemoteProvider)
         .listar();
@@ -116,6 +133,7 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 }

@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
-import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
-import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
-import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
-import 'package:tasko_mobile/domain/vendedor/request/atualizar_vendedor.dart';
-import 'package:tasko_mobile/domain/vendedor/response/vendedor_supervisor_response.dart';
-import 'package:tasko_mobile/domain/vendedor/response/vendedor_territorio_response.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/manter/dados_basicos/vendedor_manter_dados_basicos_screen.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/manter/meta/vendedor_manter_meta_screen.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/manter/resumo/vendedor_manter_dados_resumo.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_controllers.dart';
-import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_ui_state.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -24,6 +17,99 @@ class VendedorManterScreen extends BaseScreen {
       _VendedorManterScreenState();
 }
 
+class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
+  late final VendedorManterControllers _controllers;
+  int currentStep = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controllers = VendedorManterControllers();
+
+    final viewModel = ref.read(vendedorManterViewModelProvider.notifier);
+    viewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+
+    viewModel.onAdicionarSucesso = () {
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    };
+
+    ref.read(vendedorManterViewModelProvider).obterPorIdCommand.execute((
+      widget.vendedorId,
+    ));
+  }
+
+  @override
+  Widget buildContent(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: PageView(
+        controller: _controllers.pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: [
+          VendedorManterDadosBasicosScreen(
+            onPrevious: (value) {
+              prevStep();
+            },
+            onNext: (value) {
+              nextStep();
+            },
+          ),
+          VendedorManterMetaScreen(
+            onPrevious: (value) {
+              prevStep();
+            },
+            onNext: (value) {
+              nextStep();
+            },
+          ),
+          VendedorManterDadosResumo(
+            onPrevious: (value) {
+              prevStep();
+            },
+            onNext: (value) {
+              // Handle final submission or navigation
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void nextStep() {
+    if (currentStep < 2) {
+      setState(() => currentStep++);
+      _controllers.pageController.nextPage(
+        duration: Duration(milliseconds: 5),
+        curve: Curves.ease,
+      );
+    }
+  }
+
+  void prevStep() {
+    if (currentStep > 0) {
+      setState(() => currentStep--);
+      _controllers.pageController.previousPage(
+        duration: Duration(milliseconds: 5),
+        curve: Curves.ease,
+      );
+    }
+  }
+}
+/*
 class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
   late final VendedorManterControllers _controllers;
 
@@ -41,6 +127,12 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
         } else if (result is Failure) {
           showSnackBar(message, isError: true);
         }
+      }
+    };
+
+    viewModel.onAdicionarSucesso = () {
+      if (mounted) {
+        Navigator.of(context).pop(true);
       }
     };
 
@@ -62,8 +154,11 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
       previous,
       next,
     ) {
-      if (next.vendedor != null) {
-        _controllers.updateFormFields(next.vendedor!);
+      final nextVendedor = next.vendedor;
+      final previousVendedorId = previous?.vendedor?.id;
+
+      if (nextVendedor != null && previousVendedorId != nextVendedor.id) {
+        _controllers.updateFormFields(nextVendedor);
         setState(() {});
       }
     });
@@ -289,3 +384,5 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
     }
   }
 }
+
+*/

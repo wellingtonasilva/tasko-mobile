@@ -92,6 +92,7 @@ class AgendaVisitaRepositoryHybrid implements AgendaVisitaRepository {
 
     if (localVisita.id < 0) {
       final addPayload = AdicionarAgendaVisitaRequest(
+        empresaId: localVisita.empresaId,
         dataAgendada: localVisita.dataAgendada.toIso8601String(),
         duracaoPrevista: localVisita.duracaoPrevista,
         objetivo: localVisita.objetivo,

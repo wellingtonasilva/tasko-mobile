@@ -113,6 +113,7 @@ class AgendaVisitaLocalDataSource {
       final row = {
         'id': localId,
         'local_uuid': localUuid,
+        'empresa_id': request.empresaId,
         'data_agendada': request.dataAgendada,
         'data_realizada': null,
         'duracao_prevista': request.duracaoPrevista,
@@ -310,6 +311,7 @@ class AgendaVisitaLocalDataSource {
 
     return {
       'id': visita.id,
+      'empresa_id': visita.empresaId,
       'local_uuid': localUuid ?? visita.uuidOffline ?? 'av-${visita.id}',
       'data_agendada': visita.dataAgendada.toUtc().toIso8601String(),
       'data_realizada': visita.dataRealizada?.toUtc().toIso8601String(),
