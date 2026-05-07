@@ -16,8 +16,23 @@ class CustomDrawer extends StatelessWidget {
     return Builder(
       builder: (context) {
         return ListTile(
-          leading: Icon(icon),
-          title: Text(label),
+          selectedColor: kColorStylePrimaryNeutralPaletteLight200,
+          selectedTileColor: kColorStylePrimaryNeutralPaletteLight100,
+          leading: Icon(
+            icon,
+            color: currentMenu == keyName
+                ? kColorStylePrimaryNeutralPaletteDarkDefault
+                : null,
+            size: 20,
+          ),
+          title: Text(
+            label,
+            style: TextStyle(
+              color: currentMenu == keyName
+                  ? kColorStylePrimaryNeutralPaletteDarkDefault
+                  : null,
+            ),
+          ),
           selected: currentMenu == keyName,
           onTap: () {
             onTap(keyName);
@@ -52,21 +67,13 @@ class CustomDrawer extends StatelessWidget {
               height: 40,
             ),
           ),
+
           _buildMenuItem(keyName: 'home', label: 'Home', icon: Icons.home),
-          _buildMenuItem(
-            keyName: 'vendedores',
-            label: 'Vendedores',
-            icon: Icons.badge,
-          ),
-          _buildMenuItem(
-            keyName: 'clientes',
-            label: 'Clientes',
-            icon: Icons.groups,
-          ),
-          _buildMenuItem(
-            keyName: 'produtos',
-            label: 'Produtos',
-            icon: Icons.inventory_2,
+          Divider(
+            color: Colors.grey.withOpacity(0.15),
+            thickness: 1,
+            indent: 16,
+            endIndent: 16,
           ),
           _buildMenuItem(
             keyName: 'pedidos',
@@ -74,17 +81,55 @@ class CustomDrawer extends StatelessWidget {
             icon: Icons.shopping_cart,
           ),
           _buildMenuItem(
+            keyName: 'clientes',
+            label: 'Clientes',
+            icon: Icons.groups,
+          ),
+          _buildMenuItem(
             keyName: 'agenda',
             label: 'Agenda',
             icon: Icons.calendar_month,
           ),
           _buildMenuItem(keyName: 'metas', label: 'Metas', icon: Icons.flag),
+          Divider(
+            color: Colors.grey.withOpacity(0.15),
+            thickness: 1,
+            indent: 16,
+            endIndent: 16,
+          ),
+
+          _buildMenuItem(
+            keyName: 'produtos',
+            label: 'Produtos',
+            icon: Icons.inventory_2,
+          ),
+          _buildMenuItem(
+            keyName: 'vendedores',
+            label: 'Vendedores',
+            icon: Icons.badge,
+          ),
+          Divider(
+            color: Colors.grey.withOpacity(0.15),
+            thickness: 1,
+            indent: 16,
+            endIndent: 16,
+          ),
           _buildMenuItem(
             keyName: 'usuarios',
             label: 'Usuários',
             icon: Icons.person,
           ),
-          const Divider(),
+          _buildMenuItem(
+            keyName: 'configuracoes',
+            label: 'Configurações',
+            icon: Icons.settings,
+          ),
+          Divider(
+            color: Colors.grey.withOpacity(0.15),
+            thickness: 1,
+            indent: 16,
+            endIndent: 16,
+          ),
           _buildMenuItem(
             keyName: 'trocar-usuario',
             label: 'Sair',

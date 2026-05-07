@@ -43,6 +43,16 @@ class _VendedorManterScreenState extends BaseScreenState<VendedorManterScreen> {
         Navigator.of(context).pop(true);
       }
     };
+    viewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
 
     ref.read(vendedorManterViewModelProvider).obterPorIdCommand.execute((
       widget.vendedorId,
