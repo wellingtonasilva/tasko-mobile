@@ -2,6 +2,118 @@
 
 Aplicação móvel Flutter para gerenciamento de vendas e tarefas da linha de produtos Tasko. Permite que vendedores gerenciem clientes, produtos, pedidos e agenda de visitas de forma offline-first, com sincronização via API REST.
 
+## Funcionalidades
+
+### Login
+
+Tela de autenticação com e-mail e senha. Suporta visualização da senha e exibe mensagens de erro de credenciais inválidas diretamente na tela. Acesso ao fluxo de recuperação de senha e criação de conta disponível na mesma tela.
+
+<p align="center">
+  <img src="readme/images/Screenshot_20260507_234259.png" width="220" alt="Login"/>
+
+</p>
+
+---
+
+### Recuperar Senha
+
+Fluxo de recuperação de acesso via e-mail cadastrado. O usuário informa o e-mail e recebe as instruções para redefinição da senha.
+
+<p align="center">
+  <img src="readme/images/Screenshot_20260507_234308.png" width="220" alt="Recuperar senha"/>
+</p>
+
+---
+
+### Criar Conta
+
+Cadastro de novo usuário com campos de nome, e-mail e senha. Validações em tempo real garantem que os dados informados estejam no formato correto antes do envio.
+
+<p align="center">
+  <img src="readme/images/Screenshot_20260507_234335.png" width="220" alt="Criar conta"/>
+</p>
+
+---
+
+### Menu Principal (Drawer)
+
+Menu lateral com acesso rápido às principais seções do aplicativo: Pedidos, Clientes, Vendedores, Agenda de Visitas e configurações. Exibe informações do usuário autenticado no cabeçalho.
+
+<p align="center">
+  <img src="readme/images/Screenshot_20260507_234357.png" width="220" alt="Criar conta"/>
+  
+</p>
+
+---
+
+### Criação de Pedido
+
+Fluxo guiado em 4 etapas para criação de um novo pedido:
+
+1. **Cliente** — busca e seleção do cliente com exibição do limite disponível e histórico de pedidos.
+2. **Produtos** — pesquisa e adição de produtos ao carrinho com controle de quantidade e total em tempo real.
+3. **Pagamento** — escolha da forma de pagamento (PIX, Boleto, Cartão), condição (à vista, 30/60/90 dias) e número de parcelas.
+4. **Revisão** — resumo completo do pedido com possibilidade de editar cada seção antes de confirmar.
+
+<p align="center">
+<img src="readme/images/Screenshot_20260507_234413.png" width="220" alt="Pedido - Cliente"/>
+  <img src="readme/images/Screenshot_20260507_234424.png" width="220" alt="Pedido - Produto"/>
+  <img src="readme/images/Screenshot_20260507_234431.png" width="220" alt="Pedido - Pagamento"/>
+  <img src="readme/images/Screenshot_20260507_234438.png" width="220" alt="Pedido - Revisao"/>
+
+</p>
+
+---
+
+### Listagem de Vendedores
+
+Tela com a lista de vendedores cadastrados, incluindo código, nome, status (ativo/inativo) e indicadores resumidos. Permite busca por nome ou código e acesso rápido ao cadastro de um novo vendedor.
+
+<p align="center">
+  <img src="readme/images/Screenshot_20260507_234448.png" width="220" alt="Listagem de Vendedores"/>
+
+</p>
+
+---
+
+### Manter Vendedor
+
+Cadastro e edição de vendedor organizado em 3 etapas:
+
+1. **Dados Básicos** — código, nome, CPF, status, supervisor e território.
+2. **Contato e Meta** — e-mail, telefone, valor da meta mensal e percentual de comissão.
+3. **Revisão** — conferência de todos os dados antes de salvar, com atalhos de edição por seção.
+
+<p align="center">
+  <img src="readme/images/Screenshot_20260507_234454.png" width="220" alt="Listagem de Vendedores"/>
+  <img src="readme/images/Screenshot_20260507_234459.png" width="220" alt="Listagem de Vendedores - busca"/>
+  <img src="readme/images/Screenshot_20260507_234505.png" width="220" alt="Manter Vendedor - Dados Básicos"/>
+  <img src="readme/images/Screenshot_20260507_234518.png" width="220" alt="Manter Vendedor - Contato e Meta"/>
+
+</p>
+
+
+
+---
+
+### Metas do Vendedor
+
+Painel de acompanhamento de metas com visão mensal em 4 abas:
+
+1. **Resumo** — visão consolidada de meta financeira, pedidos e clientes novos, além da comissão estimada.
+2. **Financeiro** — evolução diária do faturamento no mês com gráfico de linha e comparativo com mês anterior e mesmo mês do ano anterior.
+3. **Pedidos e Clientes** — progresso de pedidos realizados, em andamento e clientes novos cadastrados.
+4. **Comissão** — cálculo detalhado da comissão com percentual aplicado, base de cálculo e previsão de fechamento do mês.
+
+<p align="center">
+  <img src="readme/images/Screenshot_20260507_234531.png" width="220" alt="Manter Vendedor - Revisão"/>
+  <img src="readme/images/Screenshot_20260507_234553.png" width="220" alt="Manter Vendedor - detalhe"/>
+  <img src="readme/images/Screenshot_20260507_234609.png" width="220" alt="Manter Vendedor - edição"/>
+  <img src="readme/images/Screenshot_20260507_234625.png" width="220" alt="Manter Vendedor - confirmação"/>
+</p>
+
+---
+
 ## Stack
 
 | Camada | Tecnologia |
