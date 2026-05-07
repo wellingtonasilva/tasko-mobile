@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
+import 'package:tasko_mobile/common/widgets/tags/custom_tag_ativo.dart';
+import 'package:tasko_mobile/common/widgets/tags/custom_tag_inativo.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 
 class VendedorListCard extends StatelessWidget {
@@ -55,11 +57,22 @@ class VendedorListCard extends StatelessWidget {
                       style: kTestStyleRegularText14,
                     ),
                     SizedBox(height: 4),
-                    Text(
-                      vendedor.numeroTelefone ?? '-',
-                      style: kTestStyleRegularText14.copyWith(
-                        color: kColorStyleSecondinaryLight400,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            vendedor.numeroTelefone ?? '-',
+                            style: kTestStyleRegularText14.copyWith(
+                              color: kColorStyleSecondinaryLight400,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        vendedor.auditoria?.indicadorAtivo == true
+                            ? CustomTagAtivo()
+                            : CustomTagInativo(),
+                        SizedBox(width: 16),
+                      ],
                     ),
                   ],
                 ),

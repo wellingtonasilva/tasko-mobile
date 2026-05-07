@@ -112,6 +112,7 @@ class PedidoCriarRascunhoViewModel
 
     final pedidoComItens = PedidoResponse(
       id: pedido.id,
+      empresaId: pedido.empresaId,
       numeroPedido: pedido.numeroPedido,
       clienteId: pedido.clienteId,
       vendedorId: pedido.vendedorId,

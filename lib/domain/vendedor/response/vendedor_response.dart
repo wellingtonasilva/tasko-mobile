@@ -8,6 +8,7 @@ part 'vendedor_response.g.dart';
 @JsonSerializable()
 class VendedorResponse {
   final int id;
+  final int empresaId;
   final String? codigoVendedor;
   final String? nomeVendedor;
   final String? numeroCPF;
@@ -23,6 +24,7 @@ class VendedorResponse {
 
   VendedorResponse({
     required this.id,
+    required this.empresaId,
     this.codigoVendedor,
     this.nomeVendedor,
     this.numeroCPF,
@@ -36,6 +38,40 @@ class VendedorResponse {
     this.territorio,
     this.auditoria,
   });
+
+  VendedorResponse copyWith({
+    int? id,
+    int? empresaId,
+    String? codigoVendedor,
+    String? nomeVendedor,
+    String? numeroCPF,
+    String? email,
+    String? numeroTelefone,
+    double? valorMetaMensal,
+    double? percentualComissao,
+    DateTime? ultimoSincronismo,
+    String? codigoDispositivo,
+    VendedorSupervisorResponse? supervisor,
+    VendedorTerritorioResponse? territorio,
+    Auditoria? auditoria,
+  }) {
+    return VendedorResponse(
+      id: id ?? this.id,
+      empresaId: empresaId ?? this.empresaId,
+      codigoVendedor: codigoVendedor ?? this.codigoVendedor,
+      nomeVendedor: nomeVendedor ?? this.nomeVendedor,
+      numeroCPF: numeroCPF ?? this.numeroCPF,
+      email: email ?? this.email,
+      numeroTelefone: numeroTelefone ?? this.numeroTelefone,
+      valorMetaMensal: valorMetaMensal ?? this.valorMetaMensal,
+      percentualComissao: percentualComissao ?? this.percentualComissao,
+      ultimoSincronismo: ultimoSincronismo ?? this.ultimoSincronismo,
+      codigoDispositivo: codigoDispositivo ?? this.codigoDispositivo,
+      supervisor: supervisor ?? this.supervisor,
+      territorio: territorio ?? this.territorio,
+      auditoria: auditoria ?? this.auditoria,
+    );
+  }
 
   factory VendedorResponse.fromJson(Map<String, dynamic> json) =>
       _$VendedorResponseFromJson(json);

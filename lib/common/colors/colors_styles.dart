@@ -38,6 +38,8 @@ const kColorStyleErrorLight200 = Color(0xFFF9C6BF);
 const kColorStyleErrorLight100 = Color(0xFFFCE4DF);
 const kColorStyleErrorLightDefault = Color(0xFFF9C6BF);
 
+const kColorStyleError600 = Color(0xFFBE3F4A);
+
 // Warning
 const kColorStyleWarningDark900 = Color(0xFF713F09);
 const kColorStyleWarningDark800 = Color(0xFF88520F);
@@ -50,6 +52,8 @@ const kColorStyleWarningLight300 = Color(0xFFF9D982);
 const kColorStyleWarningLight200 = Color(0xFFFDEAAC);
 const kColorStyleWarningLightDefault = Color(0xFFFEF5D5);
 
+const kColorStyleWarning600 = Color(0xFFDBAA00);
+
 // Information
 const kColorStyleInformationDark900 = Color(0xFF0E216E);
 const kColorStyleInformationDark800 = Color(0xFF183285);
@@ -60,6 +64,9 @@ const kColorStyleInformationLight400 = Color(0xFF78A5F0);
 const kColorStyleInformationLight300 = Color(0xFF94BDF7);
 const kColorStyleInformationLight200 = Color(0xFFB9D6FC);
 const kColorStyleInformationLightDefault = Color(0xFFDBECFD);
+
+const kColorStyleInformation100 = Color(0xFFDCF3FF);
+const kColorStyleInformation600 = Color(0xFF3D81DB);
 
 // Secondinary
 const kColorStyleSecondinaryDark900 = Color(0xFF04070E);
@@ -77,3 +84,9 @@ const kColorStyleSecondinaryLightDefault = Color(0xFFEDF1F3);
 
 const kColorStylePrimary0 = Color(0xFFFFFFFF);
 const kColorStylePrimary100 = Color(0xFFF6F8F9);
+const kColorStylePrimary200 = Color(0xFFFBF4E4);
+
+const kColorStylePrimaryBasePalette600 = Color(0xFF1C8C6E);
+const kColorStylePrimaryBasePalette200 = Color(0xFFCEEFDF);
+const kColorStylePrimaryBasePalette80 = Color(0xFFECF8F0);
+const kColorStylePrimaryBasePalette = Color(0xFF27A376);

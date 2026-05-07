@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
-import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
-import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
-import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_textfield.dart';
-import 'package:tasko_mobile/domain/vendedor/request/adicionar_vendedor_request.dart';
-import 'package:tasko_mobile/domain/vendedor/response/vendedor_supervisor_response.dart';
-import 'package:tasko_mobile/domain/vendedor/response/vendedor_territorio_response.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/adicionar/dados_basicos/vendedor_adicionar_dados_basicos_screen.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/adicionar/meta/vendedor_adicionar_meta_screen.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/adicionar/resumo/vendedor_adicionar_resumo_screen.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_controllers.dart';
-import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_ui_state.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/adicionar/vendedor_adicionar_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -28,7 +18,100 @@ class VendedorAdicionarScreen extends BaseScreen {
 class _VendedorAdicionarScreenState
     extends BaseScreenState<VendedorAdicionarScreen> {
   late final VendedorAdicionarControllers _controllers;
+  int currentStep = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    _controllers = VendedorAdicionarControllers();
+
+    final viewModel = ref.read(vendedorAdicionarViewModelProvider.notifier);
+    viewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+
+    viewModel.onAdicionarSucesso = () {
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    };
+  }
+
+  @override
+  void dispose() {
+    _controllers.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget buildContent(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: PageView(
+        controller: _controllers.pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: [
+          VendedorAdicionarDadosBasicosScreen(
+            onPrevious: (value) {
+              prevStep();
+            },
+            onNext: (value) {
+              nextStep();
+            },
+          ),
+          VendedorAdicionarMetaScreen(
+            onPrevious: (value) {
+              prevStep();
+            },
+            onNext: (value) {
+              nextStep();
+            },
+          ),
+          VendedorAdicionarResumoScreen(
+            onPrevious: (value) {
+              prevStep();
+            },
+            onNext: (value) {
+              // Handle final submission or navigation
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void nextStep() {
+    if (currentStep < 2) {
+      setState(() => currentStep++);
+      _controllers.pageController.nextPage(
+        duration: Duration(milliseconds: 5),
+        curve: Curves.ease,
+      );
+    }
+  }
+
+  void prevStep() {
+    if (currentStep > 0) {
+      setState(() => currentStep--);
+      _controllers.pageController.previousPage(
+        duration: Duration(milliseconds: 5),
+        curve: Curves.ease,
+      );
+    }
+  }
+}
+
+
+/*
   @override
   void initState() {
     super.initState();
@@ -265,3 +348,5 @@ class _VendedorAdicionarScreenState
     }
   }
 }
+
+*/

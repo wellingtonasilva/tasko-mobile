@@ -3,6 +3,7 @@ import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dar
 
 class VendedorAdicionarControllers {
   final formKey = GlobalKey<FormState>();
+  late final PageController pageController;
   late final CustomFormFieldData codigoVendedor;
   late final CustomFormFieldData nomeVendedor;
   late final CustomFormFieldData numeroCPF;
@@ -12,6 +13,7 @@ class VendedorAdicionarControllers {
   late final CustomFormFieldData percentualComissao;
 
   VendedorAdicionarControllers() {
+    pageController = PageController();
     codigoVendedor = CustomFormFieldData(
       controller: TextEditingController(),
       focusNode: FocusNode(),
@@ -77,5 +79,6 @@ class VendedorAdicionarControllers {
     valorMetaMensal.focusNode.dispose();
     percentualComissao.controller.dispose();
     percentualComissao.focusNode.dispose();
+    pageController.dispose();
   }
 }

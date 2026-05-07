@@ -2,6 +2,7 @@ import 'package:tasko_mobile/common/domain/auditoria.dart';
 
 class ClienteResponse {
   final int id;
+  final int empresaId;
   final int? vendedorId;
   final String? codigoCliente;
   final String razaoSocial;
@@ -29,6 +30,7 @@ class ClienteResponse {
 
   ClienteResponse({
     required this.id,
+    required this.empresaId,
     this.vendedorId,
     this.codigoCliente,
     required this.razaoSocial,
@@ -58,6 +60,7 @@ class ClienteResponse {
   factory ClienteResponse.fromJson(Map<String, dynamic> json) {
     return ClienteResponse(
       id: (json['id'] as int?) ?? 0,
+      empresaId: (json['empresaId'] as int?) ?? 0,
       vendedorId: json['vendedorId'] as int?,
       codigoCliente: json['codigoCliente'] as String?,
       razaoSocial: (json['razaoSocial'] as String?) ?? '',
@@ -88,6 +91,7 @@ class ClienteResponse {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'empresaId': empresaId,
       'vendedorId': vendedorId,
       'codigoCliente': codigoCliente,
       'razaoSocial': razaoSocial,

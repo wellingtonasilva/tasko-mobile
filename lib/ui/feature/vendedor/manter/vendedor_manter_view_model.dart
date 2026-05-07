@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/common/domain/auditoria.dart';
 import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/data/repositories/vendedor/supervisor/vendedor_supervisor_repository_remote.dart';
 import 'package:tasko_mobile/data/repositories/vendedor/territorio/vendedor_territorio_repository_remote.dart';
@@ -13,6 +14,9 @@ import 'package:tasko_mobile/util/result.dart';
 
 class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
   void Function(String, Result result)? showSnackBar;
+  void Function()? onAdicionarSucesso;
+  void Function()? onStartEvent;
+  void Function()? onFinishEvent;
 
   @override
   VendedorManterUiState build() {
@@ -32,15 +36,114 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
     state = state.copyWith(selectedSupervisor: supervisor);
   }
 
-  VendedorSupervisorResponse? get computedSelectedSupervisor {
-    if (state.vendedor?.supervisor == null || state.supervisores == null) {
-      return null;
-    }
+  void selectTerritorio(VendedorTerritorioResponse? territorio) {
+    state = state.copyWith(selectedTerritorio: territorio);
+  }
 
-    return state.supervisores!.firstWhere(
-      (s) => s.id == state.vendedor?.supervisor!.id,
+  void salvarDadosBasicos({
+    required String codigoVendedor,
+    required String nomeVendedor,
+    required String numeroCPF,
+    required bool indicadorAtivo,
+  }) {
+    final draft = state.vendedorDraft ?? state.vendedor;
+    if (draft == null) return;
+
+    state = state.copyWith(
+      vendedorDraft: draft.copyWith(
+        codigoVendedor: codigoVendedor,
+        nomeVendedor: nomeVendedor,
+        numeroCPF: numeroCPF,
+        auditoria: (draft.auditoria ?? Auditoria()).copyWith(
+          indicadorAtivo: indicadorAtivo,
+        ),
+      ),
+    );
+  }
+
+  void setIndicadorAtivo(bool? indicadorAtivo) {
+    if (indicadorAtivo == null) return;
+
+    final draft = state.vendedorDraft ?? state.vendedor;
+    if (draft == null) return;
+
+    state = state.copyWith(
+      vendedorDraft: draft.copyWith(
+        auditoria: (draft.auditoria ?? Auditoria()).copyWith(
+          indicadorAtivo: indicadorAtivo,
+        ),
+      ),
+    );
+  }
+
+  void salvarContatoEMeta({
+    required String email,
+    required String numeroTelefone,
+    required String valorMetaMensal,
+    required String percentualComissao,
+    required String? codigoDispositivo,
+  }) {
+    final draft = state.vendedorDraft ?? state.vendedor;
+    if (draft == null) return;
+
+    state = state.copyWith(
+      vendedorDraft: draft.copyWith(
+        email: email,
+        numeroTelefone: numeroTelefone,
+        valorMetaMensal: _parseDouble(valorMetaMensal),
+        percentualComissao: _parseDouble(percentualComissao),
+        codigoDispositivo: _normalizeNullable(codigoDispositivo),
+      ),
+    );
+  }
+
+  Future<void> enviarResumo() async {
+    final draft = state.vendedorDraft ?? state.vendedor;
+    if (draft == null) return;
+
+    final request = AtualizarVendedorRequest(
+      id: draft.id,
+      empresaId: draft.empresaId,
+      codigoVendedor: draft.codigoVendedor ?? '',
+      nomeVendedor: draft.nomeVendedor ?? '',
+      numeroCPF: draft.numeroCPF ?? '',
+      email: draft.email ?? '',
+      numeroTelefone: draft.numeroTelefone ?? '',
+      valorMetaMensal: draft.valorMetaMensal ?? 0,
+      percentualComissao: draft.percentualComissao ?? 0,
+      codigoDispositivo: draft.codigoDispositivo,
+      supervisorId:
+          (state.selectedSupervisor ?? computedSelectedSupervisor)?.id,
+      territorioId:
+          (state.selectedTerritorio ?? computedSelectedTerritorio)?.id,
+      indicadorAtivo: draft.auditoria?.indicadorAtivo ?? true,
+    );
+
+    await state.atualizarCommand.execute((draft.id, request));
+  }
+
+  VendedorSupervisorResponse? get computedSelectedSupervisor {
+    final supervisorId =
+        (state.vendedorDraft ?? state.vendedor)?.supervisor?.id;
+    if (supervisorId == null || state.supervisores == null) return null;
+
+    final found = state.supervisores!.firstWhere(
+      (s) => s.id == supervisorId,
       orElse: () => VendedorSupervisorResponse(id: -1),
     );
+    return found.id == -1 ? null : found;
+  }
+
+  VendedorTerritorioResponse? get computedSelectedTerritorio {
+    final territorioId =
+        (state.vendedorDraft ?? state.vendedor)?.territorio?.id;
+    if (territorioId == null || state.territorios == null) return null;
+
+    final found = state.territorios!.firstWhere(
+      (t) => t.id == territorioId,
+      orElse: () => VendedorTerritorioResponse(id: -1),
+    );
+    return found.id == -1 ? null : found;
   }
 
   DropdownLoadingState get supervisorDropdownState {
@@ -56,40 +159,55 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
   }
 
   Future<Result<VendedorResponse>> _obterPorId((int id,) parameters) async {
+    onStartEvent?.call();
     final (id,) = parameters;
     final result = await ref
         .read(vendedorRepositoryHybridProvider)
         .obterPorId(id);
     if (result is Success<VendedorResponse>) {
-      state = state.copyWith(vendedor: result.value);
+      state = state.copyWith(
+        vendedor: result.value,
+        vendedorDraft: result.value,
+      );
     } else if (result is Failure<VendedorResponse>) {
       showSnackBar?.call(
         (result).errors?[0] ?? 'An unknown error occurred',
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
   }
 
   Future<Result<VendedorResponse>> _atualizar(
     (int id, AtualizarVendedorRequest request) parameters,
   ) async {
+    onStartEvent?.call();
     final (id, request) = parameters;
     final result = await ref
         .read(vendedorRepositoryHybridProvider)
         .atualizar(id, request);
     if (result is Success<VendedorResponse>) {
-      state = state.copyWith(vendedor: null);
+      state = state.copyWith(
+        vendedor: null,
+        vendedorDraft: null,
+        selectedSupervisor: null,
+        selectedTerritorio: null,
+      );
+      onAdicionarSucesso?.call();
     } else if (result is Failure<VendedorResponse>) {
       showSnackBar?.call(
         (result).errors?[0] ?? 'An unknown error occurred',
         result,
       );
     }
+    onFinishEvent?.call();
+
     return result;
   }
 
   Future<Result<List<VendedorSupervisorResponse>>> _listarSupervisor() async {
+    onStartEvent?.call();
     final result = await ref
         .read(vendedorSupervisorRepositoryRemoteProvider)
         .listar();
@@ -101,10 +219,13 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
+
     return result;
   }
 
   Future<Result<List<VendedorTerritorioResponse>>> _listarTerritorio() async {
+    onStartEvent?.call();
     final result = await ref
         .read(vendedorTerritorioRepositoryRemoteProvider)
         .listar();
@@ -116,11 +237,28 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
         result,
       );
     }
+    onFinishEvent?.call();
     return result;
+  }
+
+  static double _parseDouble(String? value) {
+    if (value == null || value.trim().isEmpty) return 0;
+    final sanitized = value.replaceAll(RegExp(r'[^0-9,\.]'), '').trim();
+    final normalized = sanitized.contains(',') && sanitized.contains('.')
+        ? sanitized.replaceAll('.', '').replaceAll(',', '.')
+        : sanitized.replaceAll(',', '.');
+    return double.tryParse(normalized) ?? 0;
+  }
+
+  static String? _normalizeNullable(String? value) {
+    final trimmed = value?.trim();
+    if (trimmed == null || trimmed.isEmpty) return null;
+    return trimmed;
   }
 }
 
 final vendedorManterViewModelProvider =
-    NotifierProvider<VendedorManterViewModel, VendedorManterUiState>(
-      () => VendedorManterViewModel(),
-    );
+    NotifierProvider.autoDispose<
+      VendedorManterViewModel,
+      VendedorManterUiState
+    >(() => VendedorManterViewModel());

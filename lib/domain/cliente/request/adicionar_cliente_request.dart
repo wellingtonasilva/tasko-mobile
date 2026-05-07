@@ -1,5 +1,6 @@
 class AdicionarClienteRequest {
   final int? vendedorId;
+  final int? empresaId;
   final String? codigoCliente;
   final String razaoSocial;
   final String? nomeFantasia;
@@ -23,6 +24,7 @@ class AdicionarClienteRequest {
 
   AdicionarClienteRequest({
     this.vendedorId,
+    this.empresaId,
     this.codigoCliente,
     required this.razaoSocial,
     this.nomeFantasia,
@@ -48,6 +50,7 @@ class AdicionarClienteRequest {
   factory AdicionarClienteRequest.fromJson(Map<String, dynamic> json) {
     return AdicionarClienteRequest(
       vendedorId: json['vendedorId'] as int?,
+      empresaId: json['empresaId'] as int?,
       codigoCliente: json['codigoCliente'] as String?,
       razaoSocial: (json['razaoSocial'] as String?) ?? '',
       nomeFantasia: json['nomeFantasia'] as String?,
@@ -74,6 +77,7 @@ class AdicionarClienteRequest {
   Map<String, dynamic> toJson() {
     return {
       'vendedorId': vendedorId,
+      'empresaId': empresaId,
       'codigoCliente': codigoCliente,
       'razaoSocial': razaoSocial,
       'nomeFantasia': nomeFantasia,

@@ -33,9 +33,9 @@ class PedidoLocalDataSource {
 
       final pedidoRow = {
         'id': localId,
+        'empresa_id': request.empresaId,
         'local_uuid': localUuid,
         'numero_pedido': null,
-        'empresa_id': request.empresaId,
         'cliente_id': request.clienteId,
         'vendedor_id': request.vendedorId,
         'pedido_status_tipo_id': request.pedidoStatusTipoId,
@@ -187,6 +187,7 @@ class PedidoLocalDataSource {
 
         final pedidoRow = {
           'id': pedidoId,
+          'empresa_id': request.empresaId,
           'local_uuid': localUuid ?? 'ped-draft-$pedidoId',
           'numero_pedido': existingRow['numero_pedido'],
           'cliente_id': request.clienteId,
@@ -281,6 +282,7 @@ class PedidoLocalDataSource {
 
         pedidoAtualizado = PedidoResponse(
           id: pedidoId,
+          empresaId: request.empresaId,
           numeroPedido: existingRow['numero_pedido'] as String?,
           clienteId: request.clienteId,
           vendedorId: request.vendedorId,
@@ -343,6 +345,7 @@ class PedidoLocalDataSource {
         pedidos.add(
           PedidoResponse(
             id: pedido.id,
+            empresaId: pedido.empresaId,
             numeroPedido: pedido.numeroPedido,
             clienteId: pedido.clienteId,
             vendedorId: pedido.vendedorId,
@@ -400,6 +403,7 @@ class PedidoLocalDataSource {
       return Result.success(
         PedidoResponse(
           id: pedido.id,
+          empresaId: pedido.empresaId,
           numeroPedido: pedido.numeroPedido,
           clienteId: pedido.clienteId,
           vendedorId: pedido.vendedorId,
@@ -465,6 +469,7 @@ class PedidoLocalDataSource {
 
       final pedidoRow = {
         'id': localId,
+        'empresa_id': request.empresaId,
         'local_uuid': localUuid,
         'numero_pedido': null,
         'cliente_id': request.clienteId,
@@ -547,6 +552,7 @@ class PedidoLocalDataSource {
       return Result.success(
         PedidoResponse(
           id: pedido.id,
+          empresaId: request.empresaId,
           numeroPedido: pedido.numeroPedido,
           clienteId: pedido.clienteId,
           vendedorId: pedido.vendedorId,
@@ -722,6 +728,7 @@ class PedidoLocalDataSource {
   }) {
     return {
       'id': pedido.id,
+      'empresa_id': pedido.empresaId,
       'local_uuid': localUuid ?? 'ped-${pedido.id}',
       'numero_pedido': pedido.numeroPedido,
       'cliente_id': pedido.clienteId,

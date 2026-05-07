@@ -4,6 +4,7 @@ class AdicionarAgendaVisitaRequest {
   final String? objetivo;
   final String? observacao;
   final int vendedorId;
+  final int empresaId;
   final int? clienteId;
   final int? agendaVisitaStatusId;
   final double? latitude;
@@ -13,6 +14,7 @@ class AdicionarAgendaVisitaRequest {
 
   AdicionarAgendaVisitaRequest({
     required this.dataAgendada,
+    required this.empresaId,
     this.duracaoPrevista,
     this.objetivo,
     this.observacao,
@@ -28,6 +30,7 @@ class AdicionarAgendaVisitaRequest {
   factory AdicionarAgendaVisitaRequest.fromJson(Map<String, dynamic> json) {
     return AdicionarAgendaVisitaRequest(
       dataAgendada: (json['dataAgendada'] as String?) ?? '',
+      empresaId: (json['empresaId'] as int?) ?? 0,
       duracaoPrevista: json['duracaoPrevista'] as int?,
       objetivo: json['objetivo'] as String?,
       observacao: json['observacao'] as String?,
@@ -44,6 +47,7 @@ class AdicionarAgendaVisitaRequest {
   Map<String, dynamic> toJson() {
     return {
       'dataAgendada': dataAgendada,
+      'empresaId': empresaId,
       'duracaoPrevista': duracaoPrevista,
       'objetivo': objetivo,
       'observacao': observacao,

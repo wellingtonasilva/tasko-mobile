@@ -5,6 +5,7 @@ import 'package:tasko_mobile/domain/produto/response/produto_codigo_barras_respo
 
 class ProdutoResponse {
   final int id;
+  final int empresaId;
   final String? codigoProduto;
   final String nomeProduto;
   final String? descricaoProduto;
@@ -32,6 +33,7 @@ class ProdutoResponse {
 
   ProdutoResponse({
     required this.id,
+    required this.empresaId,
     this.codigoProduto,
     required this.nomeProduto,
     this.descricaoProduto,
@@ -61,6 +63,7 @@ class ProdutoResponse {
   factory ProdutoResponse.fromJson(Map<String, dynamic> json) {
     return ProdutoResponse(
       id: _toInt(json['id']) ?? 0,
+      empresaId: _toInt(json['empresaId']) ?? 0,
       codigoProduto: json['codigoProduto'] as String?,
       nomeProduto: (json['nomeProduto'] as String?) ?? '',
       descricaoProduto: json['descricaoProduto'] as String?,
@@ -91,6 +94,7 @@ class ProdutoResponse {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'empresaId': empresaId,
       'codigoProduto': codigoProduto,
       'nomeProduto': nomeProduto,
       'descricaoProduto': descricaoProduto,

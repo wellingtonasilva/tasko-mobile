@@ -10,6 +10,18 @@ class Auditoria {
 
   Auditoria({this.criadoEm, this.atualizadoEm, this.indicadorAtivo});
 
+  Auditoria copyWith({
+    DateTime? criadoEm,
+    DateTime? atualizadoEm,
+    bool? indicadorAtivo,
+  }) {
+    return Auditoria(
+      criadoEm: criadoEm ?? this.criadoEm,
+      atualizadoEm: atualizadoEm ?? this.atualizadoEm,
+      indicadorAtivo: indicadorAtivo ?? this.indicadorAtivo,
+    );
+  }
+
   factory Auditoria.fromJson(Map<String, dynamic> json) =>
       _$AuditoriaFromJson(json);
   Map<String, dynamic> toJson() => _$AuditoriaToJson(this);

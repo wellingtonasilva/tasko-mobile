@@ -5,6 +5,7 @@ part 'atualizar_vendedor.g.dart';
 @JsonSerializable()
 class AtualizarVendedorRequest {
   final int id;
+  final int empresaId;
   final String codigoVendedor;
   final String nomeVendedor;
   final String numeroCPF;
@@ -12,13 +13,14 @@ class AtualizarVendedorRequest {
   final String numeroTelefone;
   final double valorMetaMensal;
   final double percentualComissao;
-  final DateTime? ultimoSincronismo;
   final String? codigoDispositivo;
   final int? supervisorId;
   final int? territorioId;
+  final bool indicadorAtivo;
 
   AtualizarVendedorRequest({
     required this.id,
+    required this.empresaId,
     required this.codigoVendedor,
     required this.nomeVendedor,
     required this.numeroCPF,
@@ -26,10 +28,10 @@ class AtualizarVendedorRequest {
     required this.numeroTelefone,
     required this.valorMetaMensal,
     required this.percentualComissao,
-    this.ultimoSincronismo,
     this.codigoDispositivo,
     this.supervisorId,
     this.territorioId,
+    required this.indicadorAtivo,
   });
 
   factory AtualizarVendedorRequest.fromJson(Map<String, dynamic> json) =>

@@ -157,6 +157,7 @@ class _ClienteManterScreenState extends BaseScreenState<ClienteManterScreen> {
 
     final request = AtualizarClienteRequest(
       id: widget.clienteId,
+      empresaId: viewModel.cliente?.empresaId ?? 0,
       codigoCliente: _controllers.codigoCliente.controller.text.trim(),
       razaoSocial: _controllers.razaoSocial.controller.text.trim(),
       nomeFantasia: _controllers.nomeFantasia.controller.text.trim(),
