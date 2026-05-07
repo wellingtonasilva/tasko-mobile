@@ -208,7 +208,10 @@ class _VendedorManterDadosResumoState
         const SizedBox(height: 5),
         CustomReviewDados(label: 'CPF', value: draft?.numeroCPF ?? '-'),
         const SizedBox(height: 5),
-        CustomReviewDados(label: 'Status', value: 'Ativo'),
+        CustomReviewDados(
+          label: 'Status',
+          value: _formatStatus(draft?.auditoria?.indicadorAtivo),
+        ),
       ],
     );
   }
@@ -266,5 +269,10 @@ class _VendedorManterDadosResumoState
   String _formatPercent(double? value) {
     if (value == null) return '-';
     return '${value.toStringAsFixed(2)}%';
+  }
+
+  String _formatStatus(bool? indicadorAtivo) {
+    if (indicadorAtivo == null) return '-';
+    return indicadorAtivo ? 'Ativo' : 'Inativo';
   }
 }

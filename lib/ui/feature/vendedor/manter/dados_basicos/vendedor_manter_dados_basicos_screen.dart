@@ -252,12 +252,26 @@ class _VendedorManterDadosBasicosScreenState
   void _onNextPressed() {
     if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
 
+    final indicadorAtivo =
+        (ref
+            .read(vendedorManterViewModelProvider)
+            .vendedorDraft
+            ?.auditoria
+            ?.indicadorAtivo) ??
+        (ref
+            .read(vendedorManterViewModelProvider)
+            .vendedor
+            ?.auditoria
+            ?.indicadorAtivo) ??
+        true;
+
     ref
         .read(vendedorManterViewModelProvider.notifier)
         .salvarDadosBasicos(
           codigoVendedor: _controllers.codigoVendedor.controller.text.trim(),
           nomeVendedor: _controllers.nomeVendedor.controller.text.trim(),
           numeroCPF: _controllers.numeroCPF.controller.text.trim(),
+          indicadorAtivo: indicadorAtivo,
         );
 
     widget.onNext('Contato e Meta');
@@ -275,7 +289,14 @@ class _VendedorManterDadosBasicosScreenState
   }
 
   Widget _buildDropdownFieldGrupo() {
-    List<String> status = ['Ativo', 'Inativo'];
+    final viewState = ref.watch(vendedorManterViewModelProvider);
+    final indicadorAtivo =
+        viewState.vendedorDraft?.auditoria?.indicadorAtivo ??
+        viewState.vendedor?.auditoria?.indicadorAtivo;
+    final selectedStatus = indicadorAtivo == null
+        ? null
+        : (indicadorAtivo ? 'Ativo' : 'Inativo');
+    const status = ['Ativo', 'Inativo'];
 
     return CustomDropdownButtonFormField<String>(
       hint: 'Selecione o Status',
@@ -289,7 +310,7 @@ class _VendedorManterDadosBasicosScreenState
           size: 20,
         ),
       ),
-      //selectedValue: viewModel.selectedGrupo,
+      selectedValue: selectedStatus,
       validator: (value) {
         if (value == null) {
           return 'Por favor selecione um Status.';
@@ -297,10 +318,9 @@ class _VendedorManterDadosBasicosScreenState
         return null;
       },
       onChanged: (value) {
-        //viewModel.mesAnoSelecionado = value;
-      },
-      onSaved: (value) {
-        //  viewModel.mesAnoSelecionado = value;
+        ref
+            .read(vendedorManterViewModelProvider.notifier)
+            .setIndicadorAtivo(value == 'Ativo');
       },
     );
   }

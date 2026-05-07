@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/common/domain/auditoria.dart';
 import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/data/repositories/vendedor/supervisor/vendedor_supervisor_repository_remote.dart';
 import 'package:tasko_mobile/data/repositories/vendedor/territorio/vendedor_territorio_repository_remote.dart';
@@ -39,6 +40,7 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
     required String codigoVendedor,
     required String nomeVendedor,
     required String numeroCPF,
+    required bool indicadorAtivo,
   }) {
     final draft = state.vendedorDraft ?? state.vendedor;
     if (draft == null) return;
@@ -48,6 +50,24 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
         codigoVendedor: codigoVendedor,
         nomeVendedor: nomeVendedor,
         numeroCPF: numeroCPF,
+        auditoria: (draft.auditoria ?? Auditoria()).copyWith(
+          indicadorAtivo: indicadorAtivo,
+        ),
+      ),
+    );
+  }
+
+  void setIndicadorAtivo(bool? indicadorAtivo) {
+    if (indicadorAtivo == null) return;
+
+    final draft = state.vendedorDraft ?? state.vendedor;
+    if (draft == null) return;
+
+    state = state.copyWith(
+      vendedorDraft: draft.copyWith(
+        auditoria: (draft.auditoria ?? Auditoria()).copyWith(
+          indicadorAtivo: indicadorAtivo,
+        ),
       ),
     );
   }
@@ -90,7 +110,7 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
       codigoDispositivo: draft.codigoDispositivo,
       supervisorId: draft.supervisor?.id,
       territorioId: draft.territorio?.id,
-      indicadorAtivo: true,
+      indicadorAtivo: draft.auditoria?.indicadorAtivo ?? true,
     );
 
     await state.atualizarCommand.execute((draft.id, request));
