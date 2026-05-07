@@ -41,6 +41,17 @@ class _VendedorAdicionarScreenState
         Navigator.of(context).pop(true);
       }
     };
+
+    viewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
   }
 
   @override
@@ -83,6 +94,9 @@ class _VendedorAdicionarScreenState
             onNext: (value) {
               // Handle final submission or navigation
             },
+            gotoStep: (value) {
+              _goToStep(value);
+            },
           ),
         ],
       ),
@@ -108,7 +122,18 @@ class _VendedorAdicionarScreenState
       );
     }
   }
+
+  void _goToStep(int value) {
+    final target = value.clamp(0, 2);
+    if (!_controllers.pageController.hasClients) return;
+
+    _controllers.pageController.jumpToPage(target);
+    setState(() => currentStep = target);
+  }
 }
+
+
+
 
 
 /*

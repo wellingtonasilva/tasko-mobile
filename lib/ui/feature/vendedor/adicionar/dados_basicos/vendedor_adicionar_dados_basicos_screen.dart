@@ -36,6 +36,7 @@ class VendedorAdicionarDadosBasicosScreen extends BaseScreen {
 class _VendedorAdicionarDadosBasicosScreenState
     extends BaseScreenState<VendedorAdicionarDadosBasicosScreen> {
   late final VendedorAdicionarDadosBasicosControllers _controllers;
+  String? _hydratedDraftKey;
 
   @override
   void initState() {
@@ -55,8 +56,22 @@ class _VendedorAdicionarDadosBasicosScreenState
   }
 
   @override
+  void dispose() {
+    _controllers.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget buildContent(BuildContext context) {
     final viewModel = ref.watch(vendedorAdicionarViewModelProvider);
+    final draft = viewModel.vendedorDraft;
+    final draftKey =
+        '${draft?.codigoVendedor ?? ''}|${draft?.nomeVendedor ?? ''}|${draft?.numeroCPF ?? ''}';
+
+    if (_hydratedDraftKey != draftKey) {
+      _controllers.updateFormFields(draft);
+      _hydratedDraftKey = draftKey;
+    }
 
     return GestureDetector(
       onTap: () {

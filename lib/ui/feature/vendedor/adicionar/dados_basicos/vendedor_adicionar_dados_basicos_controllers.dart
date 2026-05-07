@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 
 class VendedorAdicionarDadosBasicosControllers {
   final formKey = GlobalKey<FormState>();
@@ -55,5 +56,20 @@ class VendedorAdicionarDadosBasicosControllers {
       inputFormatters: [FilteringTextInputFormatter.digitsOnly, cpfMask],
       keyboardType: TextInputType.number,
     );
+  }
+
+  void dispose() {
+    codigoVendedor.controller.dispose();
+    codigoVendedor.focusNode.dispose();
+    nomeVendedor.controller.dispose();
+    nomeVendedor.focusNode.dispose();
+    numeroCPF.controller.dispose();
+    numeroCPF.focusNode.dispose();
+  }
+
+  void updateFormFields(VendedorResponse? vendedor) {
+    codigoVendedor.controller.text = vendedor?.codigoVendedor ?? '';
+    nomeVendedor.controller.text = vendedor?.nomeVendedor ?? '';
+    numeroCPF.controller.text = vendedor?.numeroCPF ?? '';
   }
 }

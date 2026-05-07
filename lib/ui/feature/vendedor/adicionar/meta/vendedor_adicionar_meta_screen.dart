@@ -29,6 +29,7 @@ class VendedorAdicionarMetaScreen extends BaseScreen {
 class _VendedorAdicionarMetaScreenState
     extends BaseScreenState<VendedorAdicionarMetaScreen> {
   late final VendedorAdicionarMetaControllers _controllers;
+  String? _hydratedDraftKey;
 
   @override
   void initState() {
@@ -37,7 +38,22 @@ class _VendedorAdicionarMetaScreenState
   }
 
   @override
+  void dispose() {
+    _controllers.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget buildContent(BuildContext context) {
+    final viewModel = ref.watch(vendedorAdicionarViewModelProvider);
+    final draft = viewModel.vendedorDraft;
+    final draftKey =
+        '${draft?.email ?? ''}|${draft?.numeroTelefone ?? ''}|${draft?.valorMetaMensal ?? ''}|${draft?.percentualComissao ?? ''}';
+    if (_hydratedDraftKey != draftKey) {
+      _controllers.updateFormFields(draft);
+      _hydratedDraftKey = draftKey;
+    }
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();

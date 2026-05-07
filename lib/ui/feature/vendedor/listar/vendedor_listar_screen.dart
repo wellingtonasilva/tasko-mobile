@@ -5,9 +5,6 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/container/custom_container_default.dart';
-import 'package:tasko_mobile/common/widgets/dashboard/custom_dashboard_card_default.dart';
-import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_controllers.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/listar/vendedor_listar_view_model.dart';
@@ -97,6 +94,7 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                               'vendedores-adicionar',
                             );
                             if (adicionado == true) {
+                              showSnackBar('Vendedor adicionado com sucesso!');
                               ref
                                   .read(vendedorListarViewModelProvider)
                                   .listarVendedoresCommand
@@ -147,6 +145,9 @@ class _VendedorListarScreenState extends BaseScreenState<VendedorListarScreen> {
                                                 },
                                               );
                                           if (atualizado == true) {
+                                            showSnackBar(
+                                              'Vendedor atualizado com sucesso!',
+                                            );
                                             ref
                                                 .read(
                                                   vendedorListarViewModelProvider,

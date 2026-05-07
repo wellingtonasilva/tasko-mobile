@@ -48,6 +48,7 @@ class VendedorAdicionarViewModel extends Notifier<VendedorAdicionarUiState> {
     required String numeroCPF,
     required bool indicadorAtivo,
   }) {
+    onStartEvent?.call();
     final draft = state.vendedorDraft;
     if (draft == null) return;
 
@@ -61,6 +62,7 @@ class VendedorAdicionarViewModel extends Notifier<VendedorAdicionarUiState> {
         ),
       ),
     );
+    onFinishEvent?.call();
   }
 
   void setIndicadorAtivo(bool? indicadorAtivo) {
@@ -85,6 +87,7 @@ class VendedorAdicionarViewModel extends Notifier<VendedorAdicionarUiState> {
     required String percentualComissao,
     required String? codigoDispositivo,
   }) {
+    onStartEvent?.call();
     final draft = state.vendedorDraft;
     if (draft == null) return;
 
@@ -97,9 +100,11 @@ class VendedorAdicionarViewModel extends Notifier<VendedorAdicionarUiState> {
         codigoDispositivo: _normalizeNullable(codigoDispositivo),
       ),
     );
+    onFinishEvent?.call();
   }
 
   Future<void> enviarResumo() async {
+    onStartEvent?.call();
     final draft = state.vendedorDraft;
     if (draft == null) return;
 
@@ -118,6 +123,7 @@ class VendedorAdicionarViewModel extends Notifier<VendedorAdicionarUiState> {
     );
 
     await state.adicionarCommand.execute(request);
+    onFinishEvent?.call();
   }
 
   VendedorSupervisorResponse? get computedSelectedSupervisor {
