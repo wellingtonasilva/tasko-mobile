@@ -9,6 +9,7 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/meta/vendedor_manter_meta_controllers.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_view_model.dart';
 
 class VendedorManterMetaScreen extends BaseScreen {
   final Function(String value) onPrevious;
@@ -28,6 +29,7 @@ class VendedorManterMetaScreen extends BaseScreen {
 class _VendedorManterMetaScreenState
     extends BaseScreenState<VendedorManterMetaScreen> {
   late final VendedorManterMetaControllers _controllers;
+  int? _hydratedVendedorId;
 
   @override
   void initState() {
@@ -37,6 +39,15 @@ class _VendedorManterMetaScreenState
 
   @override
   Widget buildContent(BuildContext context) {
+    final viewState = ref.watch(vendedorManterViewModelProvider);
+    final vendedorAtual = viewState.vendedorDraft ?? viewState.vendedor;
+    final vendedorId = vendedorAtual?.id;
+
+    if (vendedorId != null && _hydratedVendedorId != vendedorId) {
+      _controllers.updateFormFields(vendedorAtual);
+      _hydratedVendedorId = vendedorId;
+    }
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -244,7 +255,7 @@ class _VendedorManterMetaScreenState
                           Expanded(
                             child: CustomButtonPrimary(
                               label: 'Próximo',
-                              onPressed: () => widget.onNext('Produto'),
+                              onPressed: _onNextPressed,
                             ),
                           ),
                         ],
@@ -258,5 +269,21 @@ class _VendedorManterMetaScreenState
         ),
       ),
     );
+  }
+
+  void _onNextPressed() {
+    if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
+
+    ref
+        .read(vendedorManterViewModelProvider.notifier)
+        .salvarContatoEMeta(
+          email: _controllers.email.controller.text.trim(),
+          numeroTelefone: _controllers.numeroTelefone.controller.text.trim(),
+          valorMetaMensal: _controllers.valorMetaMensal.controller.text,
+          percentualComissao: _controllers.percentualComissao.controller.text,
+          codigoDispositivo: _controllers.codigoDispositivo.controller.text,
+        );
+
+    widget.onNext('Revisão');
   }
 }

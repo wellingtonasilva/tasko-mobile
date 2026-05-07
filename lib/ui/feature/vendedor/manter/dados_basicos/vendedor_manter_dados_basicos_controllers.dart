@@ -67,9 +67,9 @@ class VendedorManterDadosBasicosControllers {
     numeroCPF.focusNode.dispose();
   }
 
-  void updateFormFields(VendedorResponse vendedor) {
-    codigoVendedor.controller.text = vendedor.codigoVendedor ?? '';
-    nomeVendedor.controller.text = vendedor.nomeVendedor ?? '';
-    numeroCPF.controller.text = vendedor.numeroCPF ?? '';
+  void updateFormFields(VendedorResponse? vendedor) {
+    codigoVendedor.controller.text = vendedor?.codigoVendedor ?? '';
+    nomeVendedor.controller.text = vendedor?.nomeVendedor ?? '';
+    numeroCPF.controller.text = vendedor?.numeroCPF ?? '';
   }
 }

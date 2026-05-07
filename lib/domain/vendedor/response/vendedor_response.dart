@@ -39,6 +39,40 @@ class VendedorResponse {
     this.auditoria,
   });
 
+  VendedorResponse copyWith({
+    int? id,
+    int? empresaId,
+    String? codigoVendedor,
+    String? nomeVendedor,
+    String? numeroCPF,
+    String? email,
+    String? numeroTelefone,
+    double? valorMetaMensal,
+    double? percentualComissao,
+    DateTime? ultimoSincronismo,
+    String? codigoDispositivo,
+    VendedorSupervisorResponse? supervisor,
+    VendedorTerritorioResponse? territorio,
+    Auditoria? auditoria,
+  }) {
+    return VendedorResponse(
+      id: id ?? this.id,
+      empresaId: empresaId ?? this.empresaId,
+      codigoVendedor: codigoVendedor ?? this.codigoVendedor,
+      nomeVendedor: nomeVendedor ?? this.nomeVendedor,
+      numeroCPF: numeroCPF ?? this.numeroCPF,
+      email: email ?? this.email,
+      numeroTelefone: numeroTelefone ?? this.numeroTelefone,
+      valorMetaMensal: valorMetaMensal ?? this.valorMetaMensal,
+      percentualComissao: percentualComissao ?? this.percentualComissao,
+      ultimoSincronismo: ultimoSincronismo ?? this.ultimoSincronismo,
+      codigoDispositivo: codigoDispositivo ?? this.codigoDispositivo,
+      supervisor: supervisor ?? this.supervisor,
+      territorio: territorio ?? this.territorio,
+      auditoria: auditoria ?? this.auditoria,
+    );
+  }
+
   factory VendedorResponse.fromJson(Map<String, dynamic> json) =>
       _$VendedorResponseFromJson(json);
   Map<String, dynamic> toJson() => _$VendedorResponseToJson(this);

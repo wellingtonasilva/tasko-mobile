@@ -4,6 +4,7 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/widgets/textfield/br_phone_input_formatter.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
 import 'package:tasko_mobile/common/widgets/textfield/decimal_text_input_formatter.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 
 class VendedorManterMetaControllers {
   final formKey = GlobalKey<FormState>();
@@ -98,5 +99,30 @@ class VendedorManterMetaControllers {
       focusNode: FocusNode(),
       labelText: 'Código Dispositivo',
     );
+  }
+
+  void dispose() {
+    email.controller.dispose();
+    numeroTelefone.controller.dispose();
+    numeroTelefoneAlternativo.controller.dispose();
+    valorMetaMensal.controller.dispose();
+    percentualComissao.controller.dispose();
+    ultimoSincronismo.controller.dispose();
+    codigoDispositivo.controller.dispose();
+  }
+
+  void updateFormFields(VendedorResponse? vendedor) {
+    email.controller.text = vendedor?.email ?? '';
+    numeroTelefone.controller.text = vendedor?.numeroTelefone ?? '';
+    //numeroTelefoneAlternativo.controller.text =
+    //    vendedor?.numeroTelefoneAlternativo ?? '';
+    valorMetaMensal.controller.text =
+        vendedor?.valorMetaMensal?.toStringAsFixed(2) ?? '';
+    percentualComissao.controller.text =
+        vendedor?.percentualComissao?.toStringAsFixed(2) ?? '';
+    //ultimoSincronismo.controller.text = vendedor?.ultimoSincronismo != null
+    //    ? DateFormat('dd/MM/yyyy HH:mm:ss').format(vendedor!.ultimoSincronismo!)
+    //    : '';
+    codigoDispositivo.controller.text = vendedor?.codigoDispositivo ?? '';
   }
 }

@@ -8,6 +8,7 @@ class VendedorManterUiState {
   static const Object _unset = Object();
 
   VendedorResponse? vendedor;
+  VendedorResponse? vendedorDraft;
   final Command1<VendedorResponse, (int id,)> obterPorIdCommand;
   final Command1<VendedorResponse, (int id, AtualizarVendedorRequest request)>
   atualizarCommand;
@@ -22,6 +23,7 @@ class VendedorManterUiState {
 
   VendedorManterUiState({
     this.vendedor,
+    this.vendedorDraft,
     required this.obterPorIdCommand,
     required this.atualizarCommand,
     required this.listarSupervisorCommand,
@@ -34,6 +36,7 @@ class VendedorManterUiState {
 
   VendedorManterUiState copyWith({
     Object? vendedor = _unset,
+    Object? vendedorDraft = _unset,
     Command1<VendedorResponse, (int id,)>? obterPorIdCommand,
     Command1<VendedorResponse, (int id, AtualizarVendedorRequest request)>?
     atualizarCommand,
@@ -48,6 +51,9 @@ class VendedorManterUiState {
       vendedor: identical(vendedor, _unset)
           ? this.vendedor
           : vendedor as VendedorResponse?,
+      vendedorDraft: identical(vendedorDraft, _unset)
+          ? this.vendedorDraft
+          : vendedorDraft as VendedorResponse?,
       obterPorIdCommand: obterPorIdCommand ?? this.obterPorIdCommand,
       atualizarCommand: atualizarCommand ?? this.atualizarCommand,
       listarSupervisorCommand:

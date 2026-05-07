@@ -35,6 +35,67 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
     state = state.copyWith(selectedSupervisor: supervisor);
   }
 
+  void salvarDadosBasicos({
+    required String codigoVendedor,
+    required String nomeVendedor,
+    required String numeroCPF,
+  }) {
+    final draft = state.vendedorDraft ?? state.vendedor;
+    if (draft == null) return;
+
+    state = state.copyWith(
+      vendedorDraft: draft.copyWith(
+        codigoVendedor: codigoVendedor,
+        nomeVendedor: nomeVendedor,
+        numeroCPF: numeroCPF,
+      ),
+    );
+  }
+
+  void salvarContatoEMeta({
+    required String email,
+    required String numeroTelefone,
+    required String valorMetaMensal,
+    required String percentualComissao,
+    required String? codigoDispositivo,
+  }) {
+    final draft = state.vendedorDraft ?? state.vendedor;
+    if (draft == null) return;
+
+    state = state.copyWith(
+      vendedorDraft: draft.copyWith(
+        email: email,
+        numeroTelefone: numeroTelefone,
+        valorMetaMensal: _parseDouble(valorMetaMensal),
+        percentualComissao: _parseDouble(percentualComissao),
+        codigoDispositivo: _normalizeNullable(codigoDispositivo),
+      ),
+    );
+  }
+
+  Future<void> enviarResumo() async {
+    final draft = state.vendedorDraft ?? state.vendedor;
+    if (draft == null) return;
+
+    final request = AtualizarVendedorRequest(
+      id: draft.id,
+      empresaId: draft.empresaId,
+      codigoVendedor: draft.codigoVendedor ?? '',
+      nomeVendedor: draft.nomeVendedor ?? '',
+      numeroCPF: draft.numeroCPF ?? '',
+      email: draft.email ?? '',
+      numeroTelefone: draft.numeroTelefone ?? '',
+      valorMetaMensal: draft.valorMetaMensal ?? 0,
+      percentualComissao: draft.percentualComissao ?? 0,
+      codigoDispositivo: draft.codigoDispositivo,
+      supervisorId: draft.supervisor?.id,
+      territorioId: draft.territorio?.id,
+      indicadorAtivo: true,
+    );
+
+    await state.atualizarCommand.execute((draft.id, request));
+  }
+
   VendedorSupervisorResponse? get computedSelectedSupervisor {
     if (state.vendedor?.supervisor == null || state.supervisores == null) {
       return null;
@@ -65,7 +126,10 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
         .read(vendedorRepositoryHybridProvider)
         .obterPorId(id);
     if (result is Success<VendedorResponse>) {
-      state = state.copyWith(vendedor: result.value);
+      state = state.copyWith(
+        vendedor: result.value,
+        vendedorDraft: result.value,
+      );
     } else if (result is Failure<VendedorResponse>) {
       showSnackBar?.call(
         (result).errors?[0] ?? 'An unknown error occurred',
@@ -87,6 +151,7 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
     if (result is Success<VendedorResponse>) {
       state = state.copyWith(
         vendedor: null,
+        vendedorDraft: null,
         selectedSupervisor: null,
         selectedTerritorio: null,
       );
@@ -135,6 +200,21 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
     }
     onFinishEvent?.call();
     return result;
+  }
+
+  static double _parseDouble(String? value) {
+    if (value == null || value.trim().isEmpty) return 0;
+    final sanitized = value.replaceAll(RegExp(r'[^0-9,\.]'), '').trim();
+    final normalized = sanitized.contains(',') && sanitized.contains('.')
+        ? sanitized.replaceAll('.', '').replaceAll(',', '.')
+        : sanitized.replaceAll(',', '.');
+    return double.tryParse(normalized) ?? 0;
+  }
+
+  static String? _normalizeNullable(String? value) {
+    final trimmed = value?.trim();
+    if (trimmed == null || trimmed.isEmpty) return null;
+    return trimmed;
   }
 }
 

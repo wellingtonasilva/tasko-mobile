@@ -11,7 +11,6 @@ import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_label.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/dados_basicos/vendedor_manter_dados_basicos_controllers.dart';
-import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_ui_state.dart';
 import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -33,6 +32,7 @@ class VendedorManterDadosBasicosScreen extends BaseScreen {
 class _VendedorManterDadosBasicosScreenState
     extends BaseScreenState<VendedorManterDadosBasicosScreen> {
   late final VendedorManterDadosBasicosControllers _controllers;
+  int? _hydratedVendedorId;
 
   @override
   void initState() {
@@ -59,16 +59,14 @@ class _VendedorManterDadosBasicosScreenState
 
   @override
   Widget buildContent(BuildContext context) {
-    ref.listen<VendedorManterUiState>(vendedorManterViewModelProvider, (
-      previous,
-      next,
-    ) {
-      // With autoDispose the provider always starts fresh (vendedor == null).
-      // Populate the form exactly once, on the first null → non-null transition.
-      if (previous?.vendedor == null && next.vendedor != null) {
-        _controllers.updateFormFields(next.vendedor!);
-      }
-    });
+    final viewState = ref.watch(vendedorManterViewModelProvider);
+    final vendedorAtual = viewState.vendedorDraft ?? viewState.vendedor;
+    final vendedorId = vendedorAtual?.id;
+
+    if (vendedorId != null && _hydratedVendedorId != vendedorId) {
+      _controllers.updateFormFields(vendedorAtual);
+      _hydratedVendedorId = vendedorId;
+    }
 
     return GestureDetector(
       onTap: () {
@@ -235,7 +233,7 @@ class _VendedorManterDadosBasicosScreenState
                           Expanded(
                             child: CustomButtonPrimary(
                               label: 'Próximo',
-                              onPressed: () => widget.onNext('Produto'),
+                              onPressed: _onNextPressed,
                             ),
                           ),
                         ],
@@ -249,6 +247,20 @@ class _VendedorManterDadosBasicosScreenState
         ),
       ),
     );
+  }
+
+  void _onNextPressed() {
+    if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
+
+    ref
+        .read(vendedorManterViewModelProvider.notifier)
+        .salvarDadosBasicos(
+          codigoVendedor: _controllers.codigoVendedor.controller.text.trim(),
+          nomeVendedor: _controllers.nomeVendedor.controller.text.trim(),
+          numeroCPF: _controllers.numeroCPF.controller.text.trim(),
+        );
+
+    widget.onNext('Contato e Meta');
   }
 
   Widget _buildDropdownStatus() {

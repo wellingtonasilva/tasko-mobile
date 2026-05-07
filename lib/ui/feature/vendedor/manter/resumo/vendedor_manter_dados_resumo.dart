@@ -4,13 +4,14 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_action_edit_icon_button.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/container/custom_review_container.dart';
 import 'package:tasko_mobile/common/widgets/custom_review_dados.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
+import 'package:tasko_mobile/ui/feature/vendedor/manter/vendedor_manter_view_model.dart';
 
 class VendedorManterDadosResumo extends BaseScreen {
   final Function(String value) onPrevious;
@@ -29,6 +30,11 @@ class VendedorManterDadosResumo extends BaseScreen {
 
 class _VendedorManterDadosResumoState
     extends BaseScreenState<VendedorManterDadosResumo> {
+  VendedorResponse? get _draft {
+    final state = ref.watch(vendedorManterViewModelProvider);
+    return state.vendedorDraft ?? state.vendedor;
+  }
+
   @override
   Widget buildContent(BuildContext context) {
     return GestureDetector(
@@ -171,7 +177,7 @@ class _VendedorManterDadosResumoState
                           Expanded(
                             child: CustomButtonPrimary(
                               label: 'Salvar',
-                              onPressed: () => widget.onNext('Produto'),
+                              onPressed: _onSalvarPressed,
                             ),
                           ),
                         ],
@@ -188,17 +194,19 @@ class _VendedorManterDadosResumoState
   }
 
   Widget _buildDadosBasicosSection() {
+    final draft = _draft;
+
     return CustomReviewContainer(
       label: 'Dados Básicos',
       onEdit: () {
         widget.onPrevious("Dados Básicos");
       },
       children: [
-        CustomReviewDados(label: 'Código', value: '12345'),
+        CustomReviewDados(label: 'Código', value: draft?.codigoVendedor ?? '-'),
         const SizedBox(height: 5),
-        CustomReviewDados(label: 'Nome', value: 'João Silva'),
+        CustomReviewDados(label: 'Nome', value: draft?.nomeVendedor ?? '-'),
         const SizedBox(height: 5),
-        CustomReviewDados(label: 'CPF', value: '123.456.789-00'),
+        CustomReviewDados(label: 'CPF', value: draft?.numeroCPF ?? '-'),
         const SizedBox(height: 5),
         CustomReviewDados(label: 'Status', value: 'Ativo'),
       ],
@@ -206,35 +214,57 @@ class _VendedorManterDadosResumoState
   }
 
   Widget _buildDadosContatoSection() {
+    final draft = _draft;
+
     return CustomReviewContainer(
       label: 'Contato',
       onEdit: () {
         widget.onPrevious("Contato");
       },
       children: [
-        CustomReviewDados(label: 'E-mail', value: 'joao.silva@example.com'),
-        const SizedBox(height: 5),
-        CustomReviewDados(label: 'Telefone', value: '(11) 1234-5678'),
+        CustomReviewDados(label: 'E-mail', value: draft?.email ?? '-'),
         const SizedBox(height: 5),
         CustomReviewDados(
-          label: 'Telefone Alternativo',
-          value: '(11) 1234-5678',
+          label: 'Telefone',
+          value: draft?.numeroTelefone ?? '-',
         ),
       ],
     );
   }
 
   Widget _buildDadosMetaSection() {
+    final draft = _draft;
+
     return CustomReviewContainer(
       label: 'Meta e Comissão',
       onEdit: () {
         widget.onPrevious("Meta e Comissão");
       },
       children: [
-        CustomReviewDados(label: 'Meta Anual', value: 'R\$ 100.000,00'),
+        CustomReviewDados(
+          label: 'Meta Mensal',
+          value: _formatCurrency(draft?.valorMetaMensal),
+        ),
         const SizedBox(height: 5),
-        CustomReviewDados(label: 'Comissão', value: '% 2'),
+        CustomReviewDados(
+          label: 'Comissão',
+          value: _formatPercent(draft?.percentualComissao),
+        ),
       ],
     );
+  }
+
+  Future<void> _onSalvarPressed() async {
+    await ref.read(vendedorManterViewModelProvider.notifier).enviarResumo();
+  }
+
+  String _formatCurrency(double? value) {
+    if (value == null) return '-';
+    return 'R\$ ${value.toStringAsFixed(2)}';
+  }
+
+  String _formatPercent(double? value) {
+    if (value == null) return '-';
+    return '${value.toStringAsFixed(2)}%';
   }
 }
