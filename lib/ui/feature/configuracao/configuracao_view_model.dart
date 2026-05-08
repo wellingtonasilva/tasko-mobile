@@ -9,28 +9,51 @@ class ConfiguracaoViewModel extends Notifier<ConfiguracaoUiState> {
     return ConfiguracaoUiState(
       configuracaoSections: {
         'Cadastros': [
-          Configuracao(label: 'Território', prefixIcon: Icons.map),
           Configuracao(
+            key: 'territorio',
+            label: 'Território',
+            prefixIcon: Icons.map,
+          ),
+          Configuracao(
+            key: 'supervisores',
             label: 'Supervisores',
             prefixIcon: Icons.supervisor_account,
           ),
-          Configuracao(label: 'Grupos', prefixIcon: Icons.category),
-          Configuracao(label: 'Forma Pagamento', prefixIcon: Icons.payments),
           Configuracao(
+            key: 'grupos',
+            label: 'Grupos',
+            prefixIcon: Icons.category,
+          ),
+          Configuracao(
+            key: 'forma_pagamento',
+            label: 'Forma Pagamento',
+            prefixIcon: Icons.payments,
+          ),
+          Configuracao(
+            key: 'condicao_pagamento',
             label: 'Condição de Pagamento',
             prefixIcon: Icons.monetization_on,
           ),
         ],
         'Sistema': [
-          Configuracao(label: 'Usuários', prefixIcon: Icons.person),
-          Configuracao(label: 'Sincronização', prefixIcon: Icons.sync),
+          Configuracao(
+            key: 'usuarios',
+            label: 'Usuários',
+            prefixIcon: Icons.person,
+          ),
+          Configuracao(
+            key: 'sincronizacao',
+            label: 'Sincronização',
+            prefixIcon: Icons.sync,
+          ),
         ],
         'App': [
           Configuracao(
+            key: 'sobre_app',
             label: 'Sobre o Aplicativo',
             prefixIcon: Icons.info_outline,
           ),
-          Configuracao(label: 'Versão', prefixIcon: Icons.tag),
+          Configuracao(key: 'versao', label: 'Versão', prefixIcon: Icons.tag),
         ],
       },
     );

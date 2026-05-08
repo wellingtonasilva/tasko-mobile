@@ -23,7 +23,9 @@ import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_steps_screen.d
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
-import 'package:tasko_mobile/ui/feature/selecao_vendedor/selecao_vendedor_screen.dart';
+import 'package:tasko_mobile/ui/feature/territorio/adicionar/territorio_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/territorio/listar/territorio_listar_scrren.dart';
+import 'package:tasko_mobile/ui/feature/territorio/manter/territorio_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/usuario/adicionar/usuario_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/usuario/listar/usuario_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/usuario/manter/usuario_manter_screen.dart';
@@ -60,11 +62,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final token = state.uri.queryParameters['token'];
           return ResetarSenhaScreen(token: token);
         },
-      ),
-      GoRoute(
-        path: '/selecao-vendedor',
-        name: 'selecao-vendedor',
-        builder: (context, state) => const SelecaoVendedorScreen(),
       ),
       GoRoute(
         path: '/login',
@@ -108,6 +105,31 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           );
         },
         routes: <RouteBase>[
+          GoRoute(
+            path: '/territorio',
+            name: 'territorio',
+            builder: (context, state) => const TerritorioListarScrren(),
+            routes: [
+              GoRoute(
+                path: '/territorio/adicionar',
+                name: 'territorio-adicionar',
+                builder: (context, state) => const TerritorioAdicionarScreen(),
+              ),
+              GoRoute(
+                path: '/territorio/:id',
+                name: 'territorio-manter',
+                builder: (context, state) {
+                  final territorioId = int.tryParse(
+                    state.pathParameters['id'] ?? '',
+                  );
+                  if (territorioId == null) {
+                    return const TerritorioListarScrren();
+                  }
+                  return TerritorioManterScreen(id: territorioId);
+                },
+              ),
+            ],
+          ),
           GoRoute(
             path: '/configuracoes',
             name: 'configuracoes',

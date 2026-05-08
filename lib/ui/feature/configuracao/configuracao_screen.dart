@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
@@ -110,6 +111,11 @@ class _ConfiguracaoScreenState extends BaseScreenState<ConfiguracaoScreen> {
     );
   }
 
+  void _onConfiguracaoTap(String key) {
+    debugPrint('Tapped on configuracao with key: $key');
+    context.push('/$key');
+  }
+
   Widget _buildCadastrosSection() {
     final viewModel = ref.watch(configuracaoViewModelProvider);
     final normalizedQuery = _normalizeText(_searchQuery);
@@ -168,6 +174,8 @@ class _ConfiguracaoScreenState extends BaseScreenState<ConfiguracaoScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CustomConfiguracaoItem(
+                    keyName: configEntry.value.key,
+                    onTap: (key) => _onConfiguracaoTap(key),
                     label: configEntry.value.label,
                     value: configEntry.value.value,
                     prefixIcon: configEntry.value.prefixIcon != null
