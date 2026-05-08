@@ -5,7 +5,7 @@ part 'atualizar_vendedor.g.dart';
 @JsonSerializable()
 class AtualizarVendedorRequest {
   final int id;
-  final int empresaId;
+  final int? empresaId;
   final String codigoVendedor;
   final String nomeVendedor;
   final String numeroCPF;
@@ -20,7 +20,7 @@ class AtualizarVendedorRequest {
 
   AtualizarVendedorRequest({
     required this.id,
-    required this.empresaId,
+    this.empresaId,
     required this.codigoVendedor,
     required this.nomeVendedor,
     required this.numeroCPF,

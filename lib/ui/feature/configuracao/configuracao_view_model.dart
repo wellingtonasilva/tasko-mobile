@@ -49,11 +49,10 @@ class ConfiguracaoViewModel extends Notifier<ConfiguracaoUiState> {
         ],
         'App': [
           Configuracao(
-            key: 'sobre_app',
+            key: 'sobre-aplicativo',
             label: 'Sobre o Aplicativo',
             prefixIcon: Icons.info_outline,
           ),
-          Configuracao(key: 'versao', label: 'Versão', prefixIcon: Icons.tag),
         ],
       },
     );

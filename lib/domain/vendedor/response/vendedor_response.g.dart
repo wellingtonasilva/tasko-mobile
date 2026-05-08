@@ -9,7 +9,7 @@ part of 'vendedor_response.dart';
 VendedorResponse _$VendedorResponseFromJson(Map<String, dynamic> json) =>
     VendedorResponse(
       id: (json['id'] as num).toInt(),
-      empresaId: (json['empresaId'] as num).toInt(),
+      empresaId: (json['empresaId'] as num?)?.toInt(),
       codigoVendedor: json['codigoVendedor'] as String?,
       nomeVendedor: json['nomeVendedor'] as String?,
       numeroCPF: json['numeroCPF'] as String?,
