@@ -14,6 +14,9 @@ import 'package:tasko_mobile/ui/feature/cliente/listar/cliente_listar_screen.dar
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/tabela_preco/cliente_tabela_preco_screen.dart';
 import 'package:tasko_mobile/ui/feature/configuracao/configuracao_screen.dart';
+import 'package:tasko_mobile/ui/feature/forma_pagamento/adicionar/forma_pagamento_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/forma_pagamento/listar/forma_pagamento_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/forma_pagamento/manter/forma_pagamento_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/grupo/adicionar/grupo_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/grupo/listar/grupo_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/grupo/manter/grupo_manter_screen.dart';
@@ -111,6 +114,33 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           );
         },
         routes: <RouteBase>[
+          GoRoute(
+            path: '/formas-pagamento',
+            name: 'formas-pagamento',
+            builder: (context, state) => const FormaPagamentoListarScreen(),
+            routes: [
+              GoRoute(
+                path: '/formas-pagamento/adicionar',
+                name: 'formas-pagamento-adicionar',
+                builder: (context, state) =>
+                    const FormaPagamentoAdicionarScreen(),
+              ),
+              GoRoute(
+                path: '/formas-pagamento/manter/:id',
+                name: 'formas-pagamento-manter',
+                builder: (context, state) {
+                  final formaPagamentoId = int.tryParse(
+                    state.pathParameters['id'] ?? '',
+                  );
+                  if (formaPagamentoId == null) {
+                    return const FormaPagamentoListarScreen();
+                  }
+                  return FormaPagamentoManterScreen(id: formaPagamentoId);
+                },
+              ),
+            ],
+          ),
+
           GoRoute(
             path: '/territorio',
             name: 'territorio',

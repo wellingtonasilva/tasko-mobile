@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:tasko_mobile/config/config_api.dart';
 import 'package:tasko_mobile/config/http_client_config.dart';
-import 'package:tasko_mobile/domain/pedido/response/forma_pagamento_response.dart';
+import 'package:tasko_mobile/domain/forma_pagamento/request/adicionar_forma_pagamento_request.dart';
+import 'package:tasko_mobile/domain/forma_pagamento/request/atualizar_forma_pagamento_request.dart';
+import 'package:tasko_mobile/domain/forma_pagamento/response/forma_pagamento_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class FormaPagamentoService {
@@ -16,6 +20,49 @@ class FormaPagamentoService {
     required http.Client client,
   }) : _configApi = configApi,
        _client = client;
+
+  Future<Result<FormaPagamentoResponse>> adicionar(
+    AdicionarFormaPagamentoRequest request,
+  ) async {
+    final url = Uri.https(_configApi.baseUrl, _path);
+
+    try {
+      final response = await _client.post(
+        url,
+        headers: _headers,
+        body: jsonEncode(request.toJson()),
+      );
+
+      return convertToResult<FormaPagamentoResponse>(
+        (decodedJson) => FormaPagamentoResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<FormaPagamentoResponse>> atualizar(
+    int id,
+    AtualizarFormaPagamentoRequest request,
+  ) async {
+    final url = Uri.https(_configApi.baseUrl, '$_path/$id');
+
+    try {
+      final response = await _client.put(
+        url,
+        headers: _headers,
+        body: jsonEncode(request.toJson()),
+      );
+
+      return convertToResult<FormaPagamentoResponse>(
+        (decodedJson) => FormaPagamentoResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
 
   Future<Result<List<FormaPagamentoResponse>>> listar() async {
     final url = Uri.https(_configApi.baseUrl, _path);
@@ -34,6 +81,32 @@ class FormaPagamentoService {
             )
             .toList();
       }, response);
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<FormaPagamentoResponse>> obterPorId(int id) async {
+    final url = Uri.https(_configApi.baseUrl, '$_path/$id');
+    try {
+      final response = await _client.get(url, headers: _headers);
+      return convertToResult<FormaPagamentoResponse>(
+        (decodedJson) => FormaPagamentoResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<void>> excluir(int id) async {
+    final url = Uri.https(_configApi.baseUrl, '$_path/$id');
+    try {
+      final response = await _client.delete(url, headers: _headers);
+      return convertToResult<FormaPagamentoResponse>(
+        (decodedJson) => FormaPagamentoResponse.fromJson(decodedJson['data']),
+        response,
+      );
     } on Exception catch (error) {
       return Result.failure([error.toString()]);
     }
