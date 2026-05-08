@@ -26,12 +26,12 @@ class ConfiguracaoViewModel extends Notifier<ConfiguracaoUiState> {
           ),
           Configuracao(
             key: 'formas-pagamento',
-            label: 'Forma Pagamento',
+            label: 'Formas de Pagamento',
             prefixIcon: Icons.payments,
           ),
           Configuracao(
-            key: 'condicao_pagamento',
-            label: 'Condição de Pagamento',
+            key: 'condicoes-pagamento',
+            label: 'Condições de Pagamento',
             prefixIcon: Icons.monetization_on,
           ),
         ],

@@ -13,6 +13,9 @@ import 'package:tasko_mobile/ui/feature/cliente/adicionar/cliente_adicionar_scre
 import 'package:tasko_mobile/ui/feature/cliente/listar/cliente_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/tabela_preco/cliente_tabela_preco_screen.dart';
+import 'package:tasko_mobile/ui/feature/condicao_pagamento/adicionar/condicao_pagamento_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/condicao_pagamento/listar/condicao_pagamento_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/condicao_pagamento/manter/condicao_pagamento_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/configuracao/configuracao_screen.dart';
 import 'package:tasko_mobile/ui/feature/forma_pagamento/adicionar/forma_pagamento_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/forma_pagamento/listar/forma_pagamento_listar_screen.dart';
@@ -113,7 +116,34 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             child: child,
           );
         },
+        //condicoes-pagamento
         routes: <RouteBase>[
+          GoRoute(
+            path: '/condicoes-pagamento',
+            name: 'condicoes-pagamento',
+            builder: (context, state) => const CondicaoPagamentoListarScreen(),
+            routes: [
+              GoRoute(
+                path: '/condicoes-pagamento/adicionar',
+                name: 'condicoes-pagamento-adicionar',
+                builder: (context, state) =>
+                    const CondicaoPagamentoAdicionarScreen(),
+              ),
+              GoRoute(
+                path: '/condicoes-pagamento/manter/:id',
+                name: 'condicoes-pagamento-manter',
+                builder: (context, state) {
+                  final condicaoPagamentoId = int.tryParse(
+                    state.pathParameters['id'] ?? '',
+                  );
+                  if (condicaoPagamentoId == null) {
+                    return const CondicaoPagamentoListarScreen();
+                  }
+                  return CondicaoPagamentoManterScreen(id: condicaoPagamentoId);
+                },
+              ),
+            ],
+          ),
           GoRoute(
             path: '/formas-pagamento',
             name: 'formas-pagamento',

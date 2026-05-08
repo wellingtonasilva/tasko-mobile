@@ -18,16 +18,20 @@ class CustomTituloBarDefault extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: kTestStyleBoldText20.copyWith(
-            color: kColorStyleSecondinaryDarkDefault,
+        Expanded(
+          child: Text(
+            title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: kTestStyleBoldText20.copyWith(
+              color: kColorStyleSecondinaryDarkDefault,
+            ),
           ),
         ),
-        if (child != null) ...[child!],
+        if (child != null) ...[const SizedBox(width: 8), child!],
+        if (onClosePressed != null) const SizedBox(width: 8),
         if (onClosePressed != null)
           CustomIconButton(
             icon: const Icon(
