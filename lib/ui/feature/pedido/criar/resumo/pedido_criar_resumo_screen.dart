@@ -243,8 +243,9 @@ class _PedidoCriarResumoScreenState
                                                                 .produtos!
                                                                 .first,
                                                       );
-                                                  if (produto == null)
+                                                  if (produto == null) {
                                                     return const SizedBox();
+                                                  }
                                                   final total =
                                                       (produto.precoSugerido ??
                                                           0) *

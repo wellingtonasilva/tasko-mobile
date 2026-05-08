@@ -3,6 +3,8 @@ import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 
 class CustomStepper extends StatelessWidget {
+  const CustomStepper({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Row(

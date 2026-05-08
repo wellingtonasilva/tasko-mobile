@@ -297,11 +297,12 @@ class _VendedorMetasFinanceiroScreenState
                       interval: 20000,
                       reservedSize: 50,
                       getTitlesWidget: (value, meta) {
-                        if (value == 0)
+                        if (value == 0) {
                           return const Text(
                             'R\$ 0',
                             style: TextStyle(fontSize: 10),
                           );
+                        }
                         final k = (value / 1000).toInt();
                         return Text(
                           'R\$ ${k}k',

@@ -14,7 +14,7 @@ class CustomTextfield extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
 
-  CustomTextfield({
+  const CustomTextfield({
     super.key,
     this.labelText,
     this.controller,

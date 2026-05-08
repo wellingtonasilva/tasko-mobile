@@ -225,7 +225,7 @@ class _UsuarioManterScreenState extends BaseScreenState<UsuarioManterScreen> {
   }
 
   Widget _buildDropdownFieldGrupo(UsuarioManterUiState viewModel) {
-    viewModel.selectedVendedor = viewModel.vendedores?.firstWhere(
+    viewModel.selectedVendedor = viewModel.vendedores.firstWhere(
       (element) => element.id == viewModel.usuario?.vendedor?.id,
       orElse: () =>
           VendedorResponse(id: -1, empresaId: 0, nomeVendedor: 'Default'),

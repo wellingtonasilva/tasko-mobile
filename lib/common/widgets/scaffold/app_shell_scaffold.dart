@@ -52,6 +52,9 @@ class _AppShellScaffoldState extends ConsumerState<AppShellScaffold> {
       case 'usuarios':
         context.go('/usuarios');
         break;
+      case 'configuracoes':
+        context.go('/configuracoes');
+        break;
       case 'trocar-usuario':
         ConfirmationDialogUtil().showConfirmationDialog(
           context: context,
@@ -79,6 +82,7 @@ class _AppShellScaffoldState extends ConsumerState<AppShellScaffold> {
     if (location.startsWith('/agenda')) return 'agenda';
     if (location.startsWith('/metas')) return 'metas';
     if (location.startsWith('/usuarios')) return 'usuarios';
+    if (location.startsWith('/configuracoes')) return 'configuracoes';
     return 'home';
   }
 

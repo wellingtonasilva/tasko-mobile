@@ -13,6 +13,7 @@ import 'package:tasko_mobile/ui/feature/cliente/adicionar/cliente_adicionar_scre
 import 'package:tasko_mobile/ui/feature/cliente/listar/cliente_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/tabela_preco/cliente_tabela_preco_screen.dart';
+import 'package:tasko_mobile/ui/feature/configuracao/configuracao_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/home_screen.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_screen.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/detalhe/agenda_visita_detalhe_screen.dart';
@@ -107,6 +108,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           );
         },
         routes: <RouteBase>[
+          GoRoute(
+            path: '/configuracoes',
+            name: 'configuracoes',
+            builder: (context, state) => const ConfiguracaoScreen(),
+          ),
           GoRoute(
             path: '/vendedores',
             name: 'vendedores-listar',
