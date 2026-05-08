@@ -61,7 +61,7 @@ class EmpresaService {
     final url = Uri.https(_configApi.baseUrl, '$_path/$id');
     try {
       final response = await _client.delete(url, headers: _headers);
-      return convertToResult<void>((_) => null, response);
+      return convertToResult<void>((_) {}, response);
     } on Exception catch (error) {
       return Result.failure([error.toString()]);
     }

@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:tasko_mobile/config/config_api.dart';
 import 'package:tasko_mobile/config/http_client_config.dart';
-import 'package:tasko_mobile/domain/pedido/response/condicao_pagamento_response.dart';
+import 'package:tasko_mobile/domain/condicao_pagamento/request/adicionar_condicao_pagamento_request.dart';
+import 'package:tasko_mobile/domain/condicao_pagamento/request/atualizar_condicao_pagamento_request.dart';
+import 'package:tasko_mobile/domain/condicao_pagamento/response/condicao_pagamento_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class CondicaoPagamentoService {
@@ -16,6 +20,51 @@ class CondicaoPagamentoService {
     required http.Client client,
   }) : _configApi = configApi,
        _client = client;
+
+  Future<Result<CondicaoPagamentoResponse>> adicionar(
+    AdicionarCondicaoPagamentoRequest request,
+  ) async {
+    final url = Uri.https(_configApi.baseUrl, _path);
+
+    try {
+      final response = await _client.post(
+        url,
+        headers: _headers,
+        body: jsonEncode(request.toJson()),
+      );
+
+      return convertToResult<CondicaoPagamentoResponse>(
+        (decodedJson) =>
+            CondicaoPagamentoResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<CondicaoPagamentoResponse>> atualizar(
+    int id,
+    AtualizarCondicaoPagamentoRequest request,
+  ) async {
+    final url = Uri.https(_configApi.baseUrl, '$_path/$id');
+
+    try {
+      final response = await _client.put(
+        url,
+        headers: _headers,
+        body: jsonEncode(request.toJson()),
+      );
+
+      return convertToResult<CondicaoPagamentoResponse>(
+        (decodedJson) =>
+            CondicaoPagamentoResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
 
   Future<Result<List<CondicaoPagamentoResponse>>> listar() async {
     final url = Uri.https(_configApi.baseUrl, _path);
@@ -35,6 +84,34 @@ class CondicaoPagamentoService {
             )
             .toList();
       }, response);
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<CondicaoPagamentoResponse>> obterPorId(int id) async {
+    final url = Uri.https(_configApi.baseUrl, '$_path/$id');
+    try {
+      final response = await _client.get(url, headers: _headers);
+      return convertToResult<CondicaoPagamentoResponse>(
+        (decodedJson) =>
+            CondicaoPagamentoResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<void>> excluir(int id) async {
+    final url = Uri.https(_configApi.baseUrl, '$_path/$id');
+    try {
+      final response = await _client.delete(url, headers: _headers);
+      return convertToResult<CondicaoPagamentoResponse>(
+        (decodedJson) =>
+            CondicaoPagamentoResponse.fromJson(decodedJson['data']),
+        response,
+      );
     } on Exception catch (error) {
       return Result.failure([error.toString()]);
     }

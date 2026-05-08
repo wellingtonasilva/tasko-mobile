@@ -17,6 +17,7 @@ class _HomeScreenState extends BaseScreenState<HomeScreen> {
   @override
   bool get useScaffold => false;
 
+  @override
   initState() {
     super.initState();
 

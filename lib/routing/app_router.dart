@@ -13,6 +13,16 @@ import 'package:tasko_mobile/ui/feature/cliente/adicionar/cliente_adicionar_scre
 import 'package:tasko_mobile/ui/feature/cliente/listar/cliente_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/tabela_preco/cliente_tabela_preco_screen.dart';
+import 'package:tasko_mobile/ui/feature/condicao_pagamento/adicionar/condicao_pagamento_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/condicao_pagamento/listar/condicao_pagamento_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/condicao_pagamento/manter/condicao_pagamento_manter_screen.dart';
+import 'package:tasko_mobile/ui/feature/configuracao/configuracao_screen.dart';
+import 'package:tasko_mobile/ui/feature/forma_pagamento/adicionar/forma_pagamento_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/forma_pagamento/listar/forma_pagamento_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/forma_pagamento/manter/forma_pagamento_manter_screen.dart';
+import 'package:tasko_mobile/ui/feature/grupo/adicionar/grupo_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/grupo/listar/grupo_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/grupo/manter/grupo_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/home_screen.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_screen.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/detalhe/agenda_visita_detalhe_screen.dart';
@@ -22,7 +32,12 @@ import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_steps_screen.d
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
-import 'package:tasko_mobile/ui/feature/selecao_vendedor/selecao_vendedor_screen.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/adicionar/supervisor_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/listar/supervisor_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/manter/supervisor_manter_screen.dart';
+import 'package:tasko_mobile/ui/feature/territorio/adicionar/territorio_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/territorio/listar/territorio_listar_scrren.dart';
+import 'package:tasko_mobile/ui/feature/territorio/manter/territorio_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/usuario/adicionar/usuario_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/usuario/listar/usuario_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/usuario/manter/usuario_manter_screen.dart';
@@ -59,11 +74,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final token = state.uri.queryParameters['token'];
           return ResetarSenhaScreen(token: token);
         },
-      ),
-      GoRoute(
-        path: '/selecao-vendedor',
-        name: 'selecao-vendedor',
-        builder: (context, state) => const SelecaoVendedorScreen(),
       ),
       GoRoute(
         path: '/login',
@@ -106,7 +116,114 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             child: child,
           );
         },
+        //condicoes-pagamento
         routes: <RouteBase>[
+          GoRoute(
+            path: '/condicoes-pagamento',
+            name: 'condicoes-pagamento',
+            builder: (context, state) => const CondicaoPagamentoListarScreen(),
+            routes: [
+              GoRoute(
+                path: '/condicoes-pagamento/adicionar',
+                name: 'condicoes-pagamento-adicionar',
+                builder: (context, state) =>
+                    const CondicaoPagamentoAdicionarScreen(),
+              ),
+              GoRoute(
+                path: '/condicoes-pagamento/manter/:id',
+                name: 'condicoes-pagamento-manter',
+                builder: (context, state) {
+                  final condicaoPagamentoId = int.tryParse(
+                    state.pathParameters['id'] ?? '',
+                  );
+                  if (condicaoPagamentoId == null) {
+                    return const CondicaoPagamentoListarScreen();
+                  }
+                  return CondicaoPagamentoManterScreen(id: condicaoPagamentoId);
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+            path: '/formas-pagamento',
+            name: 'formas-pagamento',
+            builder: (context, state) => const FormaPagamentoListarScreen(),
+            routes: [
+              GoRoute(
+                path: '/formas-pagamento/adicionar',
+                name: 'formas-pagamento-adicionar',
+                builder: (context, state) =>
+                    const FormaPagamentoAdicionarScreen(),
+              ),
+              GoRoute(
+                path: '/formas-pagamento/manter/:id',
+                name: 'formas-pagamento-manter',
+                builder: (context, state) {
+                  final formaPagamentoId = int.tryParse(
+                    state.pathParameters['id'] ?? '',
+                  );
+                  if (formaPagamentoId == null) {
+                    return const FormaPagamentoListarScreen();
+                  }
+                  return FormaPagamentoManterScreen(id: formaPagamentoId);
+                },
+              ),
+            ],
+          ),
+
+          GoRoute(
+            path: '/territorio',
+            name: 'territorio',
+            builder: (context, state) => const TerritorioListarScrren(),
+            routes: [
+              GoRoute(
+                path: '/territorio/adicionar',
+                name: 'territorio-adicionar',
+                builder: (context, state) => const TerritorioAdicionarScreen(),
+              ),
+              GoRoute(
+                path: '/territorio/:id',
+                name: 'territorio-manter',
+                builder: (context, state) {
+                  final territorioId = int.tryParse(
+                    state.pathParameters['id'] ?? '',
+                  );
+                  if (territorioId == null) {
+                    return const TerritorioListarScrren();
+                  }
+                  return TerritorioManterScreen(id: territorioId);
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+            path: '/supervisores',
+            name: 'supervisor',
+            builder: (context, state) => const SupervisorListarScreen(),
+          ),
+          GoRoute(
+            path: '/supervisores/adicionar',
+            name: 'supervisor-adicionar',
+            builder: (context, state) => const SupervisorAdicionarScreen(),
+          ),
+          GoRoute(
+            path: '/supervisores/:id',
+            name: 'supervisor-manter',
+            builder: (context, state) {
+              final supervisorId = int.tryParse(
+                state.pathParameters['id'] ?? '',
+              );
+              if (supervisorId == null) {
+                return const SupervisorListarScreen();
+              }
+              return SupervisorManterScreen(id: supervisorId);
+            },
+          ),
+          GoRoute(
+            path: '/configuracoes',
+            name: 'configuracoes',
+            builder: (context, state) => const ConfiguracaoScreen(),
+          ),
           GoRoute(
             path: '/vendedores',
             name: 'vendedores-listar',
@@ -179,6 +296,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 return const ProdutoListarScreen();
               }
               return ProdutoManterScreen(produtoId: produtoId);
+            },
+          ),
+          GoRoute(
+            path: '/grupos',
+            name: 'grupos',
+            builder: (context, state) => const GrupoListarScreen(),
+          ),
+          GoRoute(
+            path: '/grupos/adicionar',
+            name: 'grupos-adicionar',
+            builder: (context, state) => const GrupoAdicionarScreen(),
+          ),
+          GoRoute(
+            path: '/grupos/:id',
+            name: 'grupos-manter',
+            builder: (context, state) {
+              final grupoId = int.tryParse(state.pathParameters['id'] ?? '');
+              if (grupoId == null) {
+                return const GrupoListarScreen();
+              }
+              return GrupoManterScreen(grupoId: grupoId);
             },
           ),
           GoRoute(

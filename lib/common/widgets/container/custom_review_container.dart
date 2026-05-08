@@ -6,12 +6,14 @@ class CustomReviewContainer extends StatelessWidget {
   final String label;
   final VoidCallback? onEdit;
   final List<Widget> children;
+  final Color? backgroundColor;
 
   const CustomReviewContainer({
     super.key,
     required this.label,
     this.onEdit,
     required this.children,
+    this.backgroundColor,
   });
 
   @override
@@ -20,6 +22,7 @@ class CustomReviewContainer extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.only(top: 2, bottom: 10, left: 10, right: 10),
       decoration: BoxDecoration(
+        color: backgroundColor ?? Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade300),
       ),

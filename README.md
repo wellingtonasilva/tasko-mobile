@@ -88,8 +88,6 @@ Cadastro e edição de vendedor organizado em 3 etapas:
   <img src="readme/images/Screenshot_20260507_234454.png" width="220" alt="Listagem de Vendedores"/>
   <img src="readme/images/Screenshot_20260507_234459.png" width="220" alt="Listagem de Vendedores - busca"/>
   <img src="readme/images/Screenshot_20260507_234505.png" width="220" alt="Manter Vendedor - Dados Básicos"/>
-  <img src="readme/images/Screenshot_20260507_234518.png" width="220" alt="Manter Vendedor - Contato e Meta"/>
-
 </p>
 
 

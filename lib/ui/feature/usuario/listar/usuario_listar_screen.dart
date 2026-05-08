@@ -4,7 +4,6 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/dashboard/custom_dashboard_card_default.dart';
 import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/usuario/response/usuario_response.dart';
 import 'package:tasko_mobile/ui/feature/usuario/listar/usuario_listar_view_model.dart';

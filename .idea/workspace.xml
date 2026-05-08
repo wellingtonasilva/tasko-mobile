@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a999a25e-052f-4625-92ed-2583a98ff68f" name="Changes" comment="" />
+    <list default="true" id="a999a25e-052f-4625-92ed-2583a98ff68f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/ui/feature/configuracao/configuracao_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/common/widgets/stepper/custom_stepper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/common/widgets/stepper/custom_stepper.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/common/widgets/textfield/custom_textfield.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/common/widgets/textfield/custom_textfield.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/service/empresa_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/service/empresa_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/feature/home/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/feature/home/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/feature/pedido/criar/resumo/pedido_criar_resumo_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/feature/pedido/criar/resumo/pedido_criar_resumo_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/feature/usuario/listar/usuario_listar_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/feature/usuario/listar/usuario_listar_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/feature/usuario/manter/usuario_manter_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/feature/usuario/manter/usuario_manter_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/feature/vendedor/metas/financeiro/vendedor_metas_financeiro_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/feature/vendedor/metas/financeiro/vendedor_metas_financeiro_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/util/deep_link_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/util/deep_link_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,6 +26,37 @@
   </component>
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="CopilotChats">
+    <option name="panelChat">
+      <chat>
+        <option name="activeSessionId" value="e78f56db-a9a4-4598-bf78-5c887bbecf53" />
+        <option name="sessions">
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="aeb76b53-85a9-4ce9-bfac-77147d383bb1" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="e78f56db-a9a4-4598-bf78-5c887bbecf53" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+        </option>
+        <option name="type" value="PANEL" />
+      </chat>
+    </option>
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/wellingtonasilva/work/dev/tasko/tasko-mobile" value="3CtUT1UumBdgdulOeOtYU6QKWMW" />
+    </persistenceIdMap>
   </component>
   <component name="FileEditorManager">
     <leaf>
@@ -25,6 +70,13 @@
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -47,16 +99,23 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Flutter.main.dart.executor": "Debug",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "fix/adicionar__vendedor",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "feature/configuracao",
+    "io.flutter.project.isFirstOpen": "true",
+    "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/wellingtonasilva/work/dev/tasko/tasko-mobile"
+    "last_opened_file_path": "/Users/wellingtonasilva/work/dev/tasko/tasko-mobile",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
   <component name="TaskManager">
@@ -74,5 +133,13 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
     </layout>
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>
