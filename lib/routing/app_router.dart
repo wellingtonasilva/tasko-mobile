@@ -23,6 +23,9 @@ import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_steps_screen.d
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/adicionar/supervisor_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/listar/supervisor_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/manter/supervisor_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/territorio/adicionar/territorio_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/territorio/listar/territorio_listar_scrren.dart';
 import 'package:tasko_mobile/ui/feature/territorio/manter/territorio_manter_screen.dart';
@@ -129,6 +132,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 },
               ),
             ],
+          ),
+          GoRoute(
+            path: '/supervisores',
+            name: 'supervisor',
+            builder: (context, state) => const SupervisorListarScreen(),
+          ),
+          GoRoute(
+            path: '/supervisores/adicionar',
+            name: 'supervisor-adicionar',
+            builder: (context, state) => const SupervisorAdicionarScreen(),
+          ),
+          GoRoute(
+            path: '/supervisores/:id',
+            name: 'supervisor-manter',
+            builder: (context, state) {
+              final supervisorId = int.tryParse(
+                state.pathParameters['id'] ?? '',
+              );
+              if (supervisorId == null) {
+                return const SupervisorListarScreen();
+              }
+              return SupervisorManterScreen(id: supervisorId);
+            },
           ),
           GoRoute(
             path: '/configuracoes',
