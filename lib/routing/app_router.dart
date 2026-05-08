@@ -32,6 +32,7 @@ import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_steps_screen.d
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/sobre_aplicativo/sobre_aplicativo_screen.dart';
 import 'package:tasko_mobile/ui/feature/supervisor/adicionar/supervisor_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/supervisor/listar/supervisor_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/supervisor/manter/supervisor_manter_screen.dart';
@@ -118,6 +119,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         },
         //condicoes-pagamento
         routes: <RouteBase>[
+          GoRoute(
+            path: '/sobre-aplicativo',
+            name: 'sobre-aplicativo',
+            builder: (context, state) => const SobreAplicativoScreen(),
+          ),
           GoRoute(
             path: '/condicoes-pagamento',
             name: 'condicoes-pagamento',

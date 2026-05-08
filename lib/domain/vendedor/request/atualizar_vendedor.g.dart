@@ -10,7 +10,7 @@ AtualizarVendedorRequest _$AtualizarVendedorRequestFromJson(
   Map<String, dynamic> json,
 ) => AtualizarVendedorRequest(
   id: (json['id'] as num).toInt(),
-  empresaId: (json['empresaId'] as num).toInt(),
+  empresaId: (json['empresaId'] as num?)?.toInt(),
   codigoVendedor: json['codigoVendedor'] as String,
   nomeVendedor: json['nomeVendedor'] as String,
   numeroCPF: json['numeroCPF'] as String,
