@@ -14,6 +14,9 @@ import 'package:tasko_mobile/ui/feature/cliente/listar/cliente_listar_screen.dar
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/cliente/tabela_preco/cliente_tabela_preco_screen.dart';
 import 'package:tasko_mobile/ui/feature/configuracao/configuracao_screen.dart';
+import 'package:tasko_mobile/ui/feature/grupo/adicionar/grupo_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/grupo/listar/grupo_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/grupo/manter/grupo_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/home_screen.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_screen.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/detalhe/agenda_visita_detalhe_screen.dart';
@@ -233,6 +236,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 return const ProdutoListarScreen();
               }
               return ProdutoManterScreen(produtoId: produtoId);
+            },
+          ),
+          GoRoute(
+            path: '/grupos',
+            name: 'grupos',
+            builder: (context, state) => const GrupoListarScreen(),
+          ),
+          GoRoute(
+            path: '/grupos/adicionar',
+            name: 'grupos-adicionar',
+            builder: (context, state) => const GrupoAdicionarScreen(),
+          ),
+          GoRoute(
+            path: '/grupos/:id',
+            name: 'grupos-manter',
+            builder: (context, state) {
+              final grupoId = int.tryParse(state.pathParameters['id'] ?? '');
+              if (grupoId == null) {
+                return const GrupoListarScreen();
+              }
+              return GrupoManterScreen(grupoId: grupoId);
             },
           ),
           GoRoute(
