@@ -1,4 +1,4 @@
-import 'package:tasko_mobile/domain/produto/response/produto_grupo_response.dart';
+import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/util/command.dart';
 

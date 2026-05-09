@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:tasko_mobile/config/config_api.dart';
 import 'package:tasko_mobile/config/http_client_config.dart';
-import 'package:tasko_mobile/domain/produto/response/produto_grupo_response.dart';
+import 'package:tasko_mobile/domain/grupo/request/adicionar_produto_grupo_request.dart';
+import 'package:tasko_mobile/domain/grupo/request/atualizar_produto_grupo_request.dart';
+import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class ProdutoGrupoService {
@@ -31,6 +35,75 @@ class ProdutoGrupoService {
             .map(ProdutoGrupoResponse.fromJson)
             .toList();
       }, response);
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<ProdutoGrupoResponse>> adicionar(
+    AdicionarProdutoGrupoRequest request,
+  ) async {
+    final url = Uri.https(_configApi.baseUrl, _path);
+
+    try {
+      final response = await _client.post(
+        url,
+        headers: _headers,
+        body: jsonEncode(request.toJson()),
+      );
+
+      return convertToResult<ProdutoGrupoResponse>(
+        (decodedJson) => ProdutoGrupoResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<ProdutoGrupoResponse>> atualizar(
+    int id,
+    AtualizarProdutoGrupoRequest request,
+  ) async {
+    final url = Uri.https(_configApi.baseUrl, '$_path/$id');
+
+    try {
+      final response = await _client.put(
+        url,
+        headers: _headers,
+        body: jsonEncode(request.toJson()),
+      );
+
+      return convertToResult<ProdutoGrupoResponse>(
+        (decodedJson) => ProdutoGrupoResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<ProdutoGrupoResponse>> obterPorId(int id) async {
+    final url = Uri.https(_configApi.baseUrl, '$_path/$id');
+    try {
+      final response = await _client.get(url, headers: _headers);
+      return convertToResult<ProdutoGrupoResponse>(
+        (decodedJson) => ProdutoGrupoResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<void>> excluir(int id) async {
+    final url = Uri.https(_configApi.baseUrl, '$_path/$id');
+    try {
+      final response = await _client.delete(url, headers: _headers);
+      return convertToResult<ProdutoGrupoResponse>(
+        (decodedJson) => ProdutoGrupoResponse.fromJson(decodedJson['data']),
+        response,
+      );
     } on Exception catch (error) {
       return Result.failure([error.toString()]);
     }

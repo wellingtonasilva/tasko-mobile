@@ -5,7 +5,7 @@ import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/card/custom_simple_item_list_card.dart';
-import 'package:tasko_mobile/domain/produto/response/produto_grupo_response.dart';
+import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
 import 'package:tasko_mobile/ui/feature/grupo/listar/grupo_listar_controllers.dart';
 import 'package:tasko_mobile/ui/feature/grupo/listar/grupo_listar_view_model.dart';
 
