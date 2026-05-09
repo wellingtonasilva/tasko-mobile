@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
-import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
+import 'package:tasko_mobile/domain/vendedor/request/atualizar_vendedor_supervisor_request.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/manter/supervisor_manter_controllers.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/manter/supervisor_manter_ui_state.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/manter/supervisor_manter_view_model.dart';
+import 'package:tasko_mobile/util/result.dart';
 
 class SupervisorManterScreen extends BaseScreen {
   final int id;
@@ -18,8 +22,61 @@ class SupervisorManterScreen extends BaseScreen {
 
 class _SupervisorManterScreenState
     extends BaseScreenState<SupervisorManterScreen> {
+  late final SupervisorManterControllers _controllers;
+  @override
+  void initState() {
+    super.initState();
+    _controllers = SupervisorManterControllers();
+
+    final viewModel = ref.read(supervisorManterViewModelProvider.notifier);
+    viewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+
+    viewModel.onManterSucesso = () {
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    };
+
+    viewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
+
+    ref.read(supervisorManterViewModelProvider).obterPorIdCommand.execute((
+      widget.id,
+    ));
+  }
+
   @override
   Widget buildContent(BuildContext context) {
+    final viewModel = ref.watch(supervisorManterViewModelProvider);
+
+    ref.listen<SupervisorManterUiState>(supervisorManterViewModelProvider, (
+      previous,
+      next,
+    ) {
+      final previousId = previous?.supervisor?.id;
+      final supervisorAtual = next.supervisor;
+
+      if (supervisorAtual != null && previousId != supervisorAtual.id) {
+        _controllers.updateFormFields(supervisorAtual);
+      }
+    });
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -43,6 +100,7 @@ class _SupervisorManterScreenState
                   color: kColorStylePrimary0,
                 ),
                 child: Form(
+                  key: _controllers.formKey,
                   autovalidateMode: AutovalidateMode.disabled,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -63,11 +121,11 @@ class _SupervisorManterScreenState
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Selecione o cliente para o pedido',
-                                style: kTestStyleBoldText18,
+                              SizedBox(height: 10),
+                              buildTextField(
+                                _controllers.nomeSupervisor,
+                                isMandatory: true,
                               ),
-                              const SizedBox(height: 20),
                             ],
                           ),
                         ),
@@ -108,7 +166,21 @@ class _SupervisorManterScreenState
     );
   }
 
-  void _handleCancelarPressed() {}
+  void _handleCancelarPressed() {
+    Navigator.of(context).pop(false);
+  }
 
-  void _handleSalvarPressed() {}
+  void _handleSalvarPressed() {
+    if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
+
+    final request = AtualizarVendedorSupervisorRequest(
+      nomeSupervisor: _controllers.nomeSupervisor.controller.text.trim(),
+      id: ref.read(supervisorManterViewModelProvider).supervisor?.id ?? 0,
+    );
+
+    ref.read(supervisorManterViewModelProvider).atualizarCommand.execute((
+      request.id,
+      request,
+    ));
+  }
 }

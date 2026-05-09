@@ -11,9 +11,6 @@ VendedorSupervisorResponse _$VendedorSupervisorResponseFromJson(
 ) => VendedorSupervisorResponse(
   id: (json['id'] as num).toInt(),
   nomeSupervisor: json['nomeSupervisor'] as String?,
-  auditoria: json['auditoria'] == null
-      ? null
-      : Auditoria.fromJson(json['auditoria'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$VendedorSupervisorResponseToJson(
@@ -21,5 +18,4 @@ Map<String, dynamic> _$VendedorSupervisorResponseToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'nomeSupervisor': instance.nomeSupervisor,
-  'auditoria': instance.auditoria,
 };

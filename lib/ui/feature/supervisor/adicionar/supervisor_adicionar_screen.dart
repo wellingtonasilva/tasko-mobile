@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
-import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
+import 'package:tasko_mobile/domain/vendedor/request/adicionar_vendedor_supervisor_request.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/adicionar/supervisor_adicionar_controllers.dart';
+import 'package:tasko_mobile/ui/feature/supervisor/adicionar/supervisor_adicionar_view_model.dart';
+import 'package:tasko_mobile/util/result.dart';
 
 class SupervisorAdicionarScreen extends BaseScreen {
   const SupervisorAdicionarScreen({super.key});
@@ -16,6 +19,48 @@ class SupervisorAdicionarScreen extends BaseScreen {
 
 class _SupervisorAdicionarScreenState
     extends BaseScreenState<SupervisorAdicionarScreen> {
+  late final SupervisorAdicionarControllers _controllers;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = SupervisorAdicionarControllers();
+
+    final viewModel = ref.read(supervisorAdicionarViewModelProvider.notifier);
+    viewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+
+    viewModel.onAdicionarSucesso = () {
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    };
+
+    viewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
+  }
+
+  @override
+  void dispose() {
+    _controllers.dispose();
+    super.dispose();
+  }
+
   @override
   Widget buildContent(BuildContext context) {
     return GestureDetector(
@@ -41,6 +86,7 @@ class _SupervisorAdicionarScreenState
                   color: kColorStylePrimary0,
                 ),
                 child: Form(
+                  key: _controllers.formKey,
                   autovalidateMode: AutovalidateMode.disabled,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -61,11 +107,11 @@ class _SupervisorAdicionarScreenState
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Selecione o cliente para o pedido',
-                                style: kTestStyleBoldText18,
+                              SizedBox(height: 10),
+                              buildTextField(
+                                _controllers.nomeSupervisor,
+                                isMandatory: true,
                               ),
-                              const SizedBox(height: 20),
                             ],
                           ),
                         ),
@@ -108,5 +154,16 @@ class _SupervisorAdicionarScreenState
 
   void _handleCancelarPressed() {}
 
-  void _handleSalvarPressed() {}
+  void _handleSalvarPressed() {
+    if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
+
+    final request = AdicionarVendedorSupervisorRequest(
+      nomeSupervisor: _controllers.nomeSupervisor.controller.text.trim(),
+    );
+
+    ref
+        .read(supervisorAdicionarViewModelProvider)
+        .adicionarVendedorSupervisorCommand
+        .execute(request);
+  }
 }
