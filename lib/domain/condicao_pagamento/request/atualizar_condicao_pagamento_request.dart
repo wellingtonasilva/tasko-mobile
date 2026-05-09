@@ -6,12 +6,14 @@ part 'atualizar_condicao_pagamento_request.g.dart';
 class AtualizarCondicaoPagamentoRequest {
   final int id;
   final int empresaId;
+  final int? formaPagamentoId;
   final String descricaoCondicaoPagamento;
   final String? condicaoPagamento;
 
   AtualizarCondicaoPagamentoRequest({
     required this.id,
     required this.empresaId,
+    this.formaPagamentoId,
     required this.descricaoCondicaoPagamento,
     this.condicaoPagamento,
   });

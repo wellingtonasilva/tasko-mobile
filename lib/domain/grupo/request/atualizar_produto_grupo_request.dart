@@ -1,0 +1,21 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'atualizar_produto_grupo_request.g.dart';
+
+@JsonSerializable()
+class AtualizarProdutoGrupoRequest {
+  final int id;
+  final int empresaId;
+  final String descricaoGrupo;
+
+  AtualizarProdutoGrupoRequest({
+    required this.id,
+    required this.empresaId,
+    required this.descricaoGrupo,
+  });
+
+  factory AtualizarProdutoGrupoRequest.fromJson(Map<String, dynamic> json) =>
+      _$AtualizarProdutoGrupoRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AtualizarProdutoGrupoRequestToJson(this);
+}

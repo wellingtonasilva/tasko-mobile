@@ -6,8 +6,8 @@ import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dar
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
-import 'package:tasko_mobile/domain/produto/response/produto_grupo_response.dart';
-import 'package:tasko_mobile/domain/produto/response/produto_subgrupo_response.dart';
+import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
+import 'package:tasko_mobile/domain/subgrupo/response/produto_subgrupo_response.dart';
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_controllers.dart';
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_ui_state.dart';
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_view_model.dart';

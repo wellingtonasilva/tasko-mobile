@@ -94,6 +94,9 @@ class _CondicaoPagamentoListarScreenState
                               'condicoes-pagamento-adicionar',
                             );
                             if (adicionado == true) {
+                              showSnackBar(
+                                'Condição de pagamento adicionada com sucesso!',
+                              );
                               ref
                                   .read(
                                     condicaoPagamentoListarViewModelProvider,

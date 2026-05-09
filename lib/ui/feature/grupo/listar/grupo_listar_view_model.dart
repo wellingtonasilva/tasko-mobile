@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/data/repositories/produto/produto_repository_hybrid.dart';
-import 'package:tasko_mobile/domain/produto/response/produto_grupo_response.dart';
+import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
 import 'package:tasko_mobile/ui/feature/grupo/listar/grupo_listar_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';

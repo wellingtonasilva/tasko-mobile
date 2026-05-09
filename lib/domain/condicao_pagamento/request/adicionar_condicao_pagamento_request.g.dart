@@ -9,6 +9,7 @@ part of 'adicionar_condicao_pagamento_request.dart';
 AdicionarCondicaoPagamentoRequest _$AdicionarCondicaoPagamentoRequestFromJson(
   Map<String, dynamic> json,
 ) => AdicionarCondicaoPagamentoRequest(
+  formaPagamentoId: (json['formaPagamentoId'] as num?)?.toInt(),
   descricaoCondicaoPagamento: json['descricaoCondicaoPagamento'] as String,
   condicaoPagamento: json['condicaoPagamento'] as String?,
 );
@@ -16,6 +17,7 @@ AdicionarCondicaoPagamentoRequest _$AdicionarCondicaoPagamentoRequestFromJson(
 Map<String, dynamic> _$AdicionarCondicaoPagamentoRequestToJson(
   AdicionarCondicaoPagamentoRequest instance,
 ) => <String, dynamic>{
+  'formaPagamentoId': instance.formaPagamentoId,
   'descricaoCondicaoPagamento': instance.descricaoCondicaoPagamento,
   'condicaoPagamento': instance.condicaoPagamento,
 };

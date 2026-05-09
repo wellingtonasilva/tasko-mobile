@@ -9,11 +9,11 @@ import 'package:tasko_mobile/data/service/produto_subgrupo_service.dart';
 import 'package:tasko_mobile/data/service/produto_unidade_medida_service.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_codigo_barras_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_estoque_localizacao_response.dart';
-import 'package:tasko_mobile/domain/produto/response/produto_grupo_response.dart';
+import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_preco_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
-import 'package:tasko_mobile/domain/produto/response/produto_subgrupo_response.dart';
-import 'package:tasko_mobile/domain/produto/response/produto_unidade_medida_response.dart';
+import 'package:tasko_mobile/domain/subgrupo/response/produto_subgrupo_response.dart';
+import 'package:tasko_mobile/domain/unidade_medida/response/produto_unidade_medida_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class ProdutoRepositoryRemote implements ProdutoRepository {
