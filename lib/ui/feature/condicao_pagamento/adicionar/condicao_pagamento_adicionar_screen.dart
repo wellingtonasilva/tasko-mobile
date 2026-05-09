@@ -229,7 +229,7 @@ class _CondicaoPagamentoAdicionarScreenState
         ),
       ),
       hint: 'Selecione uma Forma de Pagamento',
-      items: viewModel.formasPagamento ?? [],
+      items: viewModel.formasPagamento,
       itemLabelBuilder: (item) => item.descricaoFormaPagamento ?? '',
       selectedValue: selectedFormaPagamento,
       validator: (value) {
