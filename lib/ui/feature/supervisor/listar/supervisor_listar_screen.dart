@@ -98,6 +98,9 @@ class _SupervisorListarScreenState
                               'supervisor-adicionar',
                             );
                             if (adicionado == true) {
+                              showSnackBar(
+                                'Supervisor adicionado com sucesso!',
+                              );
                               ref
                                   .read(supervisorListarViewModelProvider)
                                   .listarSupervisoresCommand

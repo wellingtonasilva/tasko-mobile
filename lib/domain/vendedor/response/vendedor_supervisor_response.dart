@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:tasko_mobile/common/domain/auditoria.dart';
 
 part 'vendedor_supervisor_response.g.dart';
 
@@ -7,13 +6,8 @@ part 'vendedor_supervisor_response.g.dart';
 class VendedorSupervisorResponse {
   final int id;
   final String? nomeSupervisor;
-  final Auditoria? auditoria;
 
-  VendedorSupervisorResponse({
-    required this.id,
-    this.nomeSupervisor,
-    this.auditoria,
-  });
+  VendedorSupervisorResponse({required this.id, this.nomeSupervisor});
 
   factory VendedorSupervisorResponse.fromJson(Map<String, dynamic> json) =>
       _$VendedorSupervisorResponseFromJson(json);

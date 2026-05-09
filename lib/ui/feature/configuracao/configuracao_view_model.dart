@@ -24,11 +24,7 @@ class ConfiguracaoViewModel extends Notifier<ConfiguracaoUiState> {
             label: 'Grupos',
             prefixIcon: Icons.category,
           ),
-          Configuracao(
-            key: 'formas-pagamento',
-            label: 'Formas de Pagamento',
-            prefixIcon: Icons.payments,
-          ),
+
           Configuracao(
             key: 'condicoes-pagamento',
             label: 'Condições de Pagamento',
