@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
-import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
-import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
-import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
-import 'package:tasko_mobile/domain/subgrupo/response/produto_subgrupo_response.dart';
+import 'package:tasko_mobile/ui/feature/produto/manter/dados_basicos/produto_manter_dados_basicos_screen.dart';
+import 'package:tasko_mobile/ui/feature/produto/manter/precos_margem/produto_manter_precos_margem_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_controllers.dart';
-import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_ui_state.dart';
-import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_view_model.dart';
-import 'package:tasko_mobile/util/result.dart';
 
 class ProdutoManterScreen extends BaseScreen {
   const ProdutoManterScreen({super.key, required this.produtoId});
@@ -25,8 +16,68 @@ class ProdutoManterScreen extends BaseScreen {
 
 class _ProdutoManterScreenState extends BaseScreenState<ProdutoManterScreen> {
   late final ProdutoManterControllers _controllers;
-  late final int _produtoId;
+  int currentStep = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    _controllers = ProdutoManterControllers();
+  }
+
+  @override
+  Widget buildContent(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: PageView(
+        controller: _controllers.pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: [
+          ProdutoManterDadosBasicosScreen(
+            onPrevious: (value) {
+              prevStep();
+            },
+            onNext: (value) {
+              nextStep();
+            },
+          ),
+          ProdutoManterPrecosMargemScreen(
+            onPrevious: (value) {
+              prevStep();
+            },
+            onNext: (value) {
+              nextStep();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void nextStep() {
+    if (currentStep < 2) {
+      setState(() => currentStep++);
+      _controllers.pageController.nextPage(
+        duration: Duration(milliseconds: 5),
+        curve: Curves.ease,
+      );
+    }
+  }
+
+  void prevStep() {
+    if (currentStep > 0) {
+      setState(() => currentStep--);
+      _controllers.pageController.previousPage(
+        duration: Duration(milliseconds: 5),
+        curve: Curves.ease,
+      );
+    }
+  }
+}
+
+/*
   @override
   void initState() {
     super.initState();
@@ -280,3 +331,4 @@ class _ProdutoManterScreenState extends BaseScreenState<ProdutoManterScreen> {
 
   void _handleSalvarPressed() {}
 }
+*/

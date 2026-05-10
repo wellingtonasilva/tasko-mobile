@@ -10,6 +10,7 @@ import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 import 'package:tasko_mobile/ui/feature/produto/adicionar/precos_margem/produto_adicionar_pecos_margens_controllers.dart';
 import 'package:tasko_mobile/ui/feature/produto/adicionar/produto_adicionar_view_model.dart';
+import 'package:tasko_mobile/util/number_util.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class ProdutoAdicionarPecosMargensScreen extends BaseScreen {
@@ -325,38 +326,40 @@ class _ProdutoAdicionarPecosMargensScreenState
     ref
         .read(produtoAdicionarViewModelProvider.notifier)
         .salvarDadosPrecosMargens(
-          precoCusto:
-              double.tryParse(_controllers.precoCusto.controller.text) ?? 0,
-          precoSugerido:
-              double.tryParse(_controllers.precoSugerido.controller.text) ?? 0,
-          margemMinima:
-              double.tryParse(_controllers.margemMinima.controller.text) ?? 0,
-          aliquotaIcms:
-              double.tryParse(_controllers.aliquotaIcms.controller.text) ?? 0,
-          aliquotaIpi:
-              double.tryParse(_controllers.aliquotaIpi.controller.text) ?? 0,
-          quantidadeDisponivel:
-              double.tryParse(
-                _controllers.quantidadeDisponivel.controller.text,
-              ) ??
-              0,
-          quantidadeReservada:
-              double.tryParse(
-                _controllers.quantidadeReservada.controller.text,
-              ) ??
-              0,
-          pesoLiquido:
-              double.tryParse(_controllers.pesoLiquido.controller.text) ?? 0,
-          dimensaoAltura:
-              double.tryParse(_controllers.dimensaoAltura.controller.text) ?? 0,
-          dimensaoLargura:
-              double.tryParse(_controllers.dimensaoLargura.controller.text) ??
-              0,
-          dimensaoProfundidade:
-              double.tryParse(
-                _controllers.dimensaoProfundidade.controller.text,
-              ) ??
-              0,
+          precoCusto: NumberUtil.parseDouble(
+            _controllers.precoCusto.controller.text,
+          ),
+          precoSugerido: NumberUtil.parseDouble(
+            _controllers.precoSugerido.controller.text,
+          ),
+          margemMinima: NumberUtil.parseDouble(
+            _controllers.margemMinima.controller.text,
+          ),
+          aliquotaIcms: NumberUtil.parseDouble(
+            _controllers.aliquotaIcms.controller.text,
+          ),
+          aliquotaIpi: NumberUtil.parseDouble(
+            _controllers.aliquotaIpi.controller.text,
+          ),
+          quantidadeDisponivel: NumberUtil.parseDouble(
+            _controllers.quantidadeDisponivel.controller.text,
+          ),
+          quantidadeReservada: NumberUtil.parseDouble(
+            _controllers.quantidadeReservada.controller.text,
+          ),
+          pesoLiquido: NumberUtil.parseDouble(
+            _controllers.pesoLiquido.controller.text,
+          ),
+          dimensaoAltura: NumberUtil.parseDouble(
+            _controllers.dimensaoAltura.controller.text,
+          ),
+
+          dimensaoLargura: NumberUtil.parseDouble(
+            _controllers.dimensaoLargura.controller.text,
+          ),
+          dimensaoProfundidade: NumberUtil.parseDouble(
+            _controllers.dimensaoProfundidade.controller.text,
+          ),
         );
 
     ref.read(produtoAdicionarViewModelProvider.notifier).enviarResumo();

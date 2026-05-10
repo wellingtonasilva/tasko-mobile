@@ -1,3 +1,4 @@
+import 'package:tasko_mobile/domain/produto/request/atualizar_produto_request.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_codigo_barras_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_estoque_localizacao_response.dart';
 import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
@@ -33,5 +34,9 @@ abstract class ProdutoRepository {
   Future<Result<List<ProdutoSubgrupoResponse>>> listarSubgrupos();
   Future<Result<ProdutoResponse>> adicionarProduto(
     AdicionarProdutoRequest request,
+  );
+  Future<Result<ProdutoResponse>> atualizar(
+    int id,
+    AtualizarProdutoRequest request,
   );
 }

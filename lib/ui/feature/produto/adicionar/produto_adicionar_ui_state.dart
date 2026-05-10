@@ -10,6 +10,7 @@ class ProdutoAdicionarUiState {
 
   ProdutoResponse? produtoDraft;
   final Command1<ProdutoResponse, AdicionarProdutoRequest> adicionarCommand;
+
   // Unidade de Medida
   final Command0<void> listarUnidadeMedidaCommand;
   List<ProdutoUnidadeMedidaResponse>? unidadesMedida;
