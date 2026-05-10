@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/data/repositories/produto/produto_repository_hybrid.dart';
+import 'package:tasko_mobile/data/repositories/produto/produto_repository_remote.dart';
 import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
 import 'package:tasko_mobile/domain/produto/request/atualizar_produto_request.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
@@ -33,12 +34,29 @@ class ProdutoManterViewModel extends Notifier<ProdutoManterUiState> {
 
   Future<void> enviarResumo() async {
     onStartEvent?.call();
-    final draft = state.produto ?? state.produtoDraft;
+    final draft = state.produtoDraft;
 
-    if (draft == null) return;
+    if (draft == null) {
+      showSnackBar?.call(
+        'Nao foi possivel preparar os dados do produto para envio.',
+        Result.failure(['Produto nao carregado']),
+      );
+      onFinishEvent?.call();
+      return;
+    }
+
+    final produtoId = draft.id;
+    if (produtoId == null) {
+      showSnackBar?.call(
+        'Produto ainda nao foi carregado completamente. Tente novamente.',
+        Result.failure(['Produto sem id para atualizacao']),
+      );
+      onFinishEvent?.call();
+      return;
+    }
 
     final request = AtualizarProdutoRequest(
-      id: draft.id!,
+      id: produtoId,
       nomeProduto: draft.nomeProduto,
       descricaoProduto: draft.descricaoProduto,
       marca: draft.marca,
@@ -59,7 +77,7 @@ class ProdutoManterViewModel extends Notifier<ProdutoManterUiState> {
       dimensaoProfundidade: draft.dimensaoProfundidade,
     );
 
-    await state.atualizarCommand.execute((draft.id!, request));
+    await state.atualizarCommand.execute((produtoId, request));
     onFinishEvent?.call();
   }
 
