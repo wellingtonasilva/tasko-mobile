@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
+import 'package:tasko_mobile/common/widgets/tags/custom_tag_ativo.dart';
+import 'package:tasko_mobile/common/widgets/tags/custom_tag_inativo.dart';
 
 class CustomSimpleItemListCard extends StatelessWidget {
   final int id;
   final String title;
   final String subtitle;
   final Function(int id)? onTap;
+  final bool? indicadorAtivo;
 
   const CustomSimpleItemListCard({
     super.key,
@@ -14,6 +17,7 @@ class CustomSimpleItemListCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.onTap,
+    this.indicadorAtivo,
   });
 
   @override
@@ -52,7 +56,20 @@ class CustomSimpleItemListCard extends StatelessWidget {
                   children: [
                     Text(title, style: kTestStyleBoldText16),
                     SizedBox(height: 4),
-                    Text(subtitle, style: kTestStyleRegularText14),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(subtitle, style: kTestStyleRegularText14),
+                        ),
+                        SizedBox(width: 16),
+                        if (indicadorAtivo != null)
+                          indicadorAtivo == true
+                              ? CustomTagAtivo()
+                              : CustomTagInativo(),
+                        SizedBox(width: 16),
+                      ],
+                    ),
+
                     SizedBox(height: 4),
                   ],
                 ),
