@@ -80,10 +80,16 @@ class _ProdutoListarScreenState extends BaseScreenState<ProdutoListarScreen> {
                         child: CustomButtonPrimary(
                           label: 'Adicionar Produto',
                           onPressed: () async {
-                            showSnackBar(
-                              'Funcionalidade em desenvolvimento',
-                              isError: true,
+                            final adicionado = await context.pushNamed<bool>(
+                              'produtos-adicionar',
                             );
+                            if (adicionado == true) {
+                              showSnackBar('Produto adicionado com sucesso!');
+                              ref
+                                  .read(produtoListarViewModelProvider)
+                                  .listarProdutosCommand
+                                  .execute();
+                            }
                           },
                           trailingIcon: Icons.add,
                         ),
@@ -186,13 +192,13 @@ class _ProdutoListarScreenState extends BaseScreenState<ProdutoListarScreen> {
                                 */
                                           },
                                           getTitle: (value) =>
-                                              value.nomeProduto,
+                                              value.nomeProduto ?? '-',
                                           getSubtitle: (value) =>
                                               value.descricaoProduto ?? '-',
 
                                           onDelete: (produto, index) {
                                             _excluirProduto(
-                                              produto.id,
+                                              produto.id ?? 0,
                                               index,
                                               produto,
                                             );

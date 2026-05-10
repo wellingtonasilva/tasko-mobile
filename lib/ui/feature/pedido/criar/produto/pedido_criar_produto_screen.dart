@@ -205,7 +205,7 @@ class _PedidoCriarProdutoScreenState
                                                           .notifier,
                                                     )
                                                     .setQuantidade(
-                                                      produto.id,
+                                                      produto.id ?? 0,
                                                       q,
                                                     );
                                               },
@@ -323,7 +323,7 @@ class _PedidoCriarProdutoScreenState
       final total = preco * e.value;
       return AdicionarPedidoItemRequest(
         pedidoId: pedido.id,
-        produtoId: produto.id,
+        produtoId: produto.id ?? 0,
         quantidade: e.value,
         precoUnitario: preco,
         valorTotal: total,
@@ -338,8 +338,8 @@ class _PedidoCriarProdutoScreenState
               ?.firstOrNull
               ?.empresaId ??
           0,
-      clienteId: pedido.clienteId,
-      vendedorId: pedido.vendedorId,
+      clienteId: pedido.clienteId ?? 0,
+      vendedorId: pedido.vendedorId ?? 0,
       dataPedido: pedido.dataPedido.toIso8601String(),
       subtotal: subtotal,
       valorTotal: subtotal,
@@ -348,7 +348,7 @@ class _PedidoCriarProdutoScreenState
     );
 
     final args = (
-      pedidoId: pedido.id,
+      pedidoId: pedido.id ?? 0,
       request: request,
       itens: itens,
       formaPagamentoNome: pedido.formaPagamentoNome,

@@ -30,6 +30,7 @@ import 'package:tasko_mobile/ui/feature/agenda_visita/listar/agenda_visita_lista
 import 'package:tasko_mobile/ui/feature/home/modulo_placeholder_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_steps_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/produto/adicionar/produto_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/sobre_aplicativo/sobre_aplicativo_screen.dart';
@@ -294,8 +295,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const ProdutoListarScreen(),
           ),
           GoRoute(
+            path: '/produtos-adicionar',
+            name: 'produtos-adicionar',
+            builder: (context, state) => const ProdutoAdicionarScreen(),
+          ),
+          GoRoute(
             path: '/produtos/:id',
-            name: 'produtos-detalhe',
+            name: 'produtos-manter',
             builder: (context, state) {
               final produtoId = int.tryParse(state.pathParameters['id'] ?? '');
               if (produtoId == null) {

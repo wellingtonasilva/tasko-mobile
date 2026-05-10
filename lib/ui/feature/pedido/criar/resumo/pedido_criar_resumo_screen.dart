@@ -258,7 +258,8 @@ class _PedidoCriarResumoScreenState
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        produto.nomeProduto,
+                                                        produto.nomeProduto ??
+                                                            '',
                                                         style: kTestStyleMediumText14
                                                             .copyWith(
                                                               color:

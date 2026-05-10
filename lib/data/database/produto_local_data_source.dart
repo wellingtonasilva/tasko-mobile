@@ -150,7 +150,7 @@ class ProdutoLocalDataSource {
       'quantidade_disponivel': produto.quantidadeDisponivel,
       'quantidade_reservada': produto.quantidadeReservada,
       'codigos_barras_json': jsonEncode(
-        produto.codigosBarras.map((e) => e.toJson()).toList(),
+        produto.codigosBarras?.map((e) => e.toJson()).toList(),
       ),
       'auditoria_criado_em': produto.auditoria?.criadoEm
           ?.toUtc()

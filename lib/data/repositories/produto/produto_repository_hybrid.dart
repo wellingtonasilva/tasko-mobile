@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/data/database/produto_local_data_source.dart';
 import 'package:tasko_mobile/data/repositories/produto/produto_repository.dart';
 import 'package:tasko_mobile/data/repositories/produto/produto_repository_remote.dart';
+import 'package:tasko_mobile/domain/produto/request/adicionar_produto_request.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_codigo_barras_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_estoque_localizacao_response.dart';
 import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
@@ -128,6 +129,18 @@ class ProdutoRepositoryHybrid implements ProdutoRepository {
   @override
   Future<Result<List<ProdutoSubgrupoResponse>>> listarSubgrupos() {
     return _remote.listarSubgrupos();
+  }
+
+  Future<Result<ProdutoResponse>> adicionarProduto(
+    AdicionarProdutoRequest request,
+  ) async {
+    final remoteResult = await _remote.adicionarProduto(request);
+
+    if (remoteResult is Success<ProdutoResponse>) {
+      await _local.upsert(remoteResult.value);
+    }
+
+    return remoteResult;
   }
 }
 

@@ -48,7 +48,7 @@ class PedidoCriarResumoViewModel extends Notifier<PedidoCriarResumoUiState> {
           final preco = produto.precoSugerido ?? 0;
           return AdicionarPedidoItemRequest(
             pedidoId: rascunho.id,
-            produtoId: produto.id,
+            produtoId: produto.id ?? 0,
             quantidade: e.value,
             precoUnitario: preco,
             valorTotal: preco * e.value,
