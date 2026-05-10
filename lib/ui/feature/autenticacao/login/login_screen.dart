@@ -279,7 +279,7 @@ class _LoginScreenState extends BaseScreenState<LoginScreen> {
                           child: Column(
                             children: [
                               Text(
-                                '© 2026 WAS Sistemas. All rights reserved.',
+                                '© 2026 WAS Sistemas. Todos os direitos reservados.',
                                 style: kTestStyleMediumText14.copyWith(
                                   color: kColorStyleSecondinaryLight400,
                                 ),
