@@ -95,6 +95,9 @@ class _TerritorioListarScrrenState
                               'territorio-adicionar',
                             );
                             if (adicionado == true) {
+                              showSnackBar(
+                                'Território adicionado com sucesso!',
+                              );
                               ref
                                   .read(territorioListarViewModelProvider)
                                   .listarTerritoriosCommand

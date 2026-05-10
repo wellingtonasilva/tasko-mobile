@@ -6,20 +6,20 @@ part 'atualizar_vendedor_territorio_request.g.dart';
 class AtualizarVendedorTerritorioRequest {
   final int id;
   final String nomeTerritorio;
-  final String descricaoTerritorio;
-  final String nomeRegiao;
-  final String estado;
-  final String coordenadasPoligono;
-  final int supervisorId;
+  final String? descricaoTerritorio;
+  final String? nomeRegiao;
+  final String? estado;
+  final String? coordenadasPoligono;
+  final int? supervisorId;
 
   AtualizarVendedorTerritorioRequest({
     required this.id,
     required this.nomeTerritorio,
-    required this.descricaoTerritorio,
-    required this.nomeRegiao,
-    required this.estado,
-    required this.coordenadasPoligono,
-    required this.supervisorId,
+    this.descricaoTerritorio,
+    this.nomeRegiao,
+    this.estado,
+    this.coordenadasPoligono,
+    this.supervisorId,
   });
 
   factory AtualizarVendedorTerritorioRequest.fromJson(
