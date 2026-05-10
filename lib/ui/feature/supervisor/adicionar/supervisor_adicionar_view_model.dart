@@ -43,6 +43,7 @@ class SupervisorAdicionarViewModel
 }
 
 final supervisorAdicionarViewModelProvider =
-    NotifierProvider<SupervisorAdicionarViewModel, SupervisorAdicionarUiState>(
-      () => SupervisorAdicionarViewModel(),
-    );
+    NotifierProvider.autoDispose<
+      SupervisorAdicionarViewModel,
+      SupervisorAdicionarUiState
+    >(() => SupervisorAdicionarViewModel());

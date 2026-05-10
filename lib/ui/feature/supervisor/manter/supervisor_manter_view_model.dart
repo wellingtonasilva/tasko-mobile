@@ -70,6 +70,7 @@ class SupervisorManterViewModel extends Notifier<SupervisorManterUiState> {
 }
 
 final supervisorManterViewModelProvider =
-    NotifierProvider<SupervisorManterViewModel, SupervisorManterUiState>(
-      () => SupervisorManterViewModel(),
-    );
+    NotifierProvider.autoDispose<
+      SupervisorManterViewModel,
+      SupervisorManterUiState
+    >(() => SupervisorManterViewModel());

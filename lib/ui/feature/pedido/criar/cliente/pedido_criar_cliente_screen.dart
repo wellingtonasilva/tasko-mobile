@@ -279,7 +279,7 @@ class _PedidoCriarClienteScreenState
       empresaId:
           (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
               ?.empresas
-              .firstOrNull
+              ?.firstOrNull
               ?.empresaId ??
           0,
       clienteId: cliente.id,

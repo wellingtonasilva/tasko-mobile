@@ -335,7 +335,7 @@ class _PedidoCriarProdutoScreenState
       empresaId:
           (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
               ?.empresas
-              .firstOrNull
+              ?.firstOrNull
               ?.empresaId ??
           0,
       clienteId: pedido.clienteId,

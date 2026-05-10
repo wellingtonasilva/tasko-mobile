@@ -31,7 +31,7 @@ class HomeScreenViewModel extends Notifier<HomeScreenUiState> {
   }
 
   bool get isAdmin {
-    return state.usuarioLoginResponse?.perfis.any(
+    return state.usuarioLoginResponse?.perfis?.any(
           (perfil) => perfil.perfilTipo == 'ROLE_ADMIN',
         ) ??
         false;

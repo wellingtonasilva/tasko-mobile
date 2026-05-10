@@ -16,8 +16,10 @@ UsuarioResponse _$UsuarioResponseFromJson(Map<String, dynamic> json) =>
           ? null
           : VendedorResponse.fromJson(json['vendedor'] as Map<String, dynamic>),
       auditoria: Auditoria.fromJson(json['auditoria'] as Map<String, dynamic>),
-      perfis: (json['perfis'] as List<dynamic>)
-          .map((e) => UsuarioPerfilResponse.fromJson(e as Map<String, dynamic>))
+      perfis: (json['perfis'] as List<dynamic>?)
+          ?.map(
+            (e) => UsuarioPerfilResponse.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
     );
 
