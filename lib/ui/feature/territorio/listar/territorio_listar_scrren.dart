@@ -58,6 +58,7 @@ class _TerritorioListarScrrenState
             await viewModel.listarTerritoriosCommand.execute();
           },
           child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.only(top: 15.0),

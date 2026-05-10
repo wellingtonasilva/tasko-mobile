@@ -65,6 +65,7 @@ class _ProdutoListarScreenState extends BaseScreenState<ProdutoListarScreen> {
             return viewModel.listarProdutosCommand.execute();
           },
           child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.only(top: 15.0),
