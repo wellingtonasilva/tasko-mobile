@@ -87,6 +87,7 @@ class _GrupoListarScreenState extends BaseScreenState<GrupoListarScreen> {
                               'grupos-adicionar',
                             );
                             if (adicionado == true) {
+                              showSnackBar('Grupo adicionado com sucesso!');
                               ref
                                   .read(grupoListarViewModelProvider)
                                   .listarGruposCommand

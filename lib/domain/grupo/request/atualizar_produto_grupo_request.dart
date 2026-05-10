@@ -5,12 +5,10 @@ part 'atualizar_produto_grupo_request.g.dart';
 @JsonSerializable()
 class AtualizarProdutoGrupoRequest {
   final int id;
-  final int empresaId;
   final String descricaoGrupo;
 
   AtualizarProdutoGrupoRequest({
     required this.id,
-    required this.empresaId,
     required this.descricaoGrupo,
   });
 
