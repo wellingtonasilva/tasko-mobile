@@ -7,6 +7,7 @@ import 'package:tasko_mobile/data/service/produto_preco_service.dart';
 import 'package:tasko_mobile/data/service/produto_service.dart';
 import 'package:tasko_mobile/data/service/produto_subgrupo_service.dart';
 import 'package:tasko_mobile/data/service/produto_unidade_medida_service.dart';
+import 'package:tasko_mobile/domain/produto/request/atualizar_produto_request.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_codigo_barras_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_estoque_localizacao_response.dart';
 import 'package:tasko_mobile/domain/grupo/response/produto_grupo_response.dart';
@@ -123,6 +124,14 @@ class ProdutoRepositoryRemote implements ProdutoRepository {
   @override
   Future<Result<List<ProdutoSubgrupoResponse>>> listarSubgrupos() {
     return _subgrupoService.listar();
+  }
+
+  @override
+  Future<Result<ProdutoResponse>> atualizar(
+    int id,
+    AtualizarProdutoRequest request,
+  ) {
+    return _service.atualizar(id, request);
   }
 }
 

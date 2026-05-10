@@ -15,6 +15,17 @@ class ProdutoGrupoResponse {
     return {'id': id, 'descricaoGrupo': descricaoGrupo};
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProdutoGrupoResponse &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          descricaoGrupo == other.descricaoGrupo;
+
+  @override
+  int get hashCode => id.hashCode ^ descricaoGrupo.hashCode;
+
   static int? _toInt(Object? value) {
     if (value is int) return value;
     return int.tryParse(value?.toString() ?? '');

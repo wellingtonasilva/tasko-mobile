@@ -4,10 +4,10 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/dashboard/custom_dashboard_card_default.dart';
-import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
+import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_controllers.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_view_model.dart';
+import 'package:tasko_mobile/ui/feature/produto/listar/widgets/custom_produto_item_card.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class ProdutoListarScreen extends BaseScreen {
@@ -19,7 +19,7 @@ class ProdutoListarScreen extends BaseScreen {
 }
 
 class _ProdutoListarScreenState extends BaseScreenState<ProdutoListarScreen> {
-  final _buscaController = TextEditingController();
+  late final ProdutoListarControllers _controllers;
 
   @override
   bool get useScaffold => false;
@@ -27,6 +27,9 @@ class _ProdutoListarScreenState extends BaseScreenState<ProdutoListarScreen> {
   @override
   void initState() {
     super.initState();
+    _controllers = ProdutoListarControllers();
+    _controllers.pesquisar.controller.addListener(_onPesquisarChanged);
+
     final viewModel = ref.read(produtoListarViewModelProvider.notifier);
     viewModel.showSnackBar = (String message, Result result) {
       if (!mounted) {
@@ -40,13 +43,15 @@ class _ProdutoListarScreenState extends BaseScreenState<ProdutoListarScreen> {
 
   @override
   void dispose() {
-    _buscaController.dispose();
+    _controllers.dispose();
+    _controllers.pesquisar.controller.removeListener(_onPesquisarChanged);
     super.dispose();
   }
 
   @override
   Widget buildContent(BuildContext context) {
     final viewModel = ref.watch(produtoListarViewModelProvider);
+    final produtosFiltrados = _filtrarProdutos(viewModel.produtos ?? []);
 
     return GestureDetector(
       onTap: () {
@@ -60,6 +65,7 @@ class _ProdutoListarScreenState extends BaseScreenState<ProdutoListarScreen> {
             return viewModel.listarProdutosCommand.execute();
           },
           child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.only(top: 15.0),
@@ -96,118 +102,55 @@ class _ProdutoListarScreenState extends BaseScreenState<ProdutoListarScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Total Produtos',
-                          value: '10',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_box.png',
-                            //color: kColorStylePrimaryNeutralPaletteDark500,
-                            width: 35,
-                          ),
-                          iconBackgroundColor:
-                              kColorStylePrimaryNeutralPaletteLight100,
+                        child: buildTextField(
+                          _controllers.pesquisar,
+                          isShowHint: true,
+                          topPadding: 0,
                         ),
                       ),
+                      //Listaagem
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Pedidos Abertos',
-                          value: '12',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_document_text.png',
-                            //color: kColorStyleInformationDarkDefault,
-                            width: 35,
-                          ),
-                          iconBackgroundColor:
-                              kColorStyleInformationLightDefault,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomDashboardCardDefault(
-                          title: 'Faturamento Mensal',
-                          value: '\$1,412',
-                          icon: Image.asset(
-                            'assets/images/pos_icon_money_tick.png',
-                            //color: kColorStyleSuccessDark500,
-                            width: 35,
-                          ),
-                          iconBackgroundColor: kColorStyleSuccessLightefault,
-                        ),
-                      ),
-                      //CustomContainerDefault(child: LineChart(avgData())),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(minHeight: 200),
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: kColorStyleSecondinaryDark200,
-                                width: 1,
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x1F000000),
-                                  blurRadius: 4,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10, left: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Lista de Produtos',
-                                    style: kTestStyleBoldText16,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            viewModel.listarProdutosCommand.running
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : produtosFiltrados.isEmpty
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 24.0,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        _controllers.pesquisar.controller.text
+                                                .trim()
+                                                .isEmpty
+                                            ? 'Nenhum produto encontrado.'
+                                            : 'Nenhum produto encontrado para a pesquisa.',
+                                        style: kTestStyleRegularText14,
+                                      ),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.zero,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: produtosFiltrados.length,
+                                    itemBuilder: (context, index) {
+                                      final produto = produtosFiltrados[index];
+                                      return CustomProdutoItemCard(
+                                        produto: produto,
+                                        onTap: _onCustomProdutoItemCardTap,
+                                      );
+                                    },
                                   ),
-                                  const SizedBox(height: 20),
-                                  viewModel.listarProdutosCommand.running
-                                      ? const Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : CustomListView<ProdutoResponse>(
-                                          values: viewModel.produtos,
-                                          onTap: (value) {
-                                            context.pushNamed(
-                                              'produtos-detalhe',
-                                              pathParameters: {
-                                                'id': value.id.toString(),
-                                              },
-                                            );
-                                            /*
-                                context.pushNamed(
-                                  Routes.produtoManter.name,
-                                  pathParameters: {'id': value.id.toString()},
-                                );
-                                */
-                                          },
-                                          getTitle: (value) =>
-                                              value.nomeProduto ?? '-',
-                                          getSubtitle: (value) =>
-                                              value.descricaoProduto ?? '-',
-
-                                          onDelete: (produto, index) {
-                                            _excluirProduto(
-                                              produto.id ?? 0,
-                                              index,
-                                              produto,
-                                            );
-                                          },
-                                        ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          ],
                         ),
                       ),
                     ],
@@ -222,4 +165,37 @@ class _ProdutoListarScreenState extends BaseScreenState<ProdutoListarScreen> {
   }
 
   void _excluirProduto(int id, int index, ProdutoResponse produto) {}
+
+  void _onPesquisarChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _onCustomProdutoItemCardTap(ProdutoResponse produto) async {
+    final atualizado = await context.pushNamed<bool>(
+      'produtos-manter',
+      pathParameters: {'id': produto.id.toString()},
+    );
+    if (atualizado == true) {
+      showSnackBar('Produto atualizado com sucesso!');
+      ref.read(produtoListarViewModelProvider).listarProdutosCommand.execute();
+    }
+  }
+
+  List<ProdutoResponse> _filtrarProdutos(List<ProdutoResponse> produtos) {
+    final pesquisa = _controllers.pesquisar.controller.text
+        .trim()
+        .toLowerCase();
+
+    if (pesquisa.isEmpty) {
+      return produtos;
+    }
+
+    return produtos.where((produto) {
+      final nome = produto.nomeProduto?.toLowerCase() ?? '';
+
+      return nome.contains(pesquisa);
+    }).toList();
+  }
 }

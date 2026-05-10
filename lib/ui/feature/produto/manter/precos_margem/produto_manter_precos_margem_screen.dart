@@ -8,37 +8,37 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
-import 'package:tasko_mobile/ui/feature/produto/adicionar/precos_margem/produto_adicionar_pecos_margens_controllers.dart';
-import 'package:tasko_mobile/ui/feature/produto/adicionar/produto_adicionar_view_model.dart';
+import 'package:tasko_mobile/ui/feature/produto/manter/precos_margem/produto_manter_precos_margem_controllers.dart';
+import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_view_model.dart';
 import 'package:tasko_mobile/util/number_util.dart';
 import 'package:tasko_mobile/util/result.dart';
 
-class ProdutoAdicionarPecosMargensScreen extends BaseScreen {
+class ProdutoManterPrecosMargemScreen extends BaseScreen {
   final Function(String value) onPrevious;
   final Function(String value) onNext;
 
-  const ProdutoAdicionarPecosMargensScreen({
+  const ProdutoManterPrecosMargemScreen({
     super.key,
     required this.onPrevious,
     required this.onNext,
   });
 
   @override
-  BaseScreenState<ProdutoAdicionarPecosMargensScreen> createState() =>
-      _ProdutoAdicionarPecosMargensScreenState();
+  BaseScreenState<ProdutoManterPrecosMargemScreen> createState() =>
+      _ProdutoManterPrecosMargemScreenState();
 }
 
-class _ProdutoAdicionarPecosMargensScreenState
-    extends BaseScreenState<ProdutoAdicionarPecosMargensScreen> {
-  late final ProdutoAdicionarPecosMargensControllers _controllers;
+class _ProdutoManterPrecosMargemScreenState
+    extends BaseScreenState<ProdutoManterPrecosMargemScreen> {
+  late final ProdutoManterPrecosMargemControllers _controllers;
   String? _hydratedDraftKey;
 
   @override
   void initState() {
     super.initState();
-    _controllers = ProdutoAdicionarPecosMargensControllers();
+    _controllers = ProdutoManterPrecosMargemControllers();
 
-    final viewModel = ref.read(produtoAdicionarViewModelProvider.notifier);
+    final viewModel = ref.read(produtoManterViewModelProvider.notifier);
     viewModel.showSnackBar = (String message, Result result) {
       if (mounted) {
         if (result is Success) {
@@ -58,7 +58,7 @@ class _ProdutoAdicionarPecosMargensScreenState
 
   @override
   Widget buildContent(BuildContext context) {
-    final viewModel = ref.watch(produtoAdicionarViewModelProvider);
+    final viewModel = ref.watch(produtoManterViewModelProvider);
     final draft = viewModel.produtoDraft;
     final draftKey =
         '${draft?.codigoProduto ?? ''}|${draft?.nomeProduto ?? ''}|${draft?.descricaoProduto ?? ''}';
@@ -99,7 +99,7 @@ class _ProdutoAdicionarPecosMargensScreenState
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CustomTituloBarDefault(
-                          title: 'Adicionar Produto',
+                          title: 'Manter Produto',
                           onClosePressed: () => context.pop(false),
                         ),
                       ),
@@ -320,11 +320,11 @@ class _ProdutoAdicionarPecosMargensScreenState
     widget.onPrevious('Dados Básicos');
   }
 
-  void _onNextPressed() {
+  Future<void> _onNextPressed() async {
     if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
 
     ref
-        .read(produtoAdicionarViewModelProvider.notifier)
+        .read(produtoManterViewModelProvider.notifier)
         .salvarDadosPrecosMargens(
           precoCusto: NumberUtil.parseDouble(
             _controllers.precoCusto.controller.text,
@@ -362,8 +362,6 @@ class _ProdutoAdicionarPecosMargensScreenState
           ),
         );
 
-    ref.read(produtoAdicionarViewModelProvider.notifier).enviarResumo();
-
-    widget.onNext('Contato e Meta');
+    await ref.read(produtoManterViewModelProvider.notifier).enviarResumo();
   }
 }
