@@ -4,10 +4,10 @@ import 'package:tasko_mobile/common/domain/auditoria.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_codigo_barras_response.dart';
 
 class ProdutoResponse {
-  final int id;
-  final int empresaId;
+  final int? id;
+  final int? empresaId;
   final String? codigoProduto;
-  final String nomeProduto;
+  final String? nomeProduto;
   final String? descricaoProduto;
   final int? unidadeMedidaId;
   final String? unidadeMedidaNome;
@@ -28,14 +28,14 @@ class ProdutoResponse {
   final double? margemMinima;
   final double? quantidadeDisponivel;
   final double? quantidadeReservada;
-  final List<ProdutoCodigoBarrasResponse> codigosBarras;
+  final List<ProdutoCodigoBarrasResponse>? codigosBarras;
   final Auditoria? auditoria;
 
   ProdutoResponse({
-    required this.id,
-    required this.empresaId,
+    this.id,
+    this.empresaId,
     this.codigoProduto,
-    required this.nomeProduto,
+    this.nomeProduto,
     this.descricaoProduto,
     this.unidadeMedidaId,
     this.unidadeMedidaNome,
@@ -56,16 +56,74 @@ class ProdutoResponse {
     this.margemMinima,
     this.quantidadeDisponivel,
     this.quantidadeReservada,
-    required this.codigosBarras,
+    this.codigosBarras,
     this.auditoria,
   });
+
+  ProdutoResponse copyWith({
+    int? id,
+    int? empresaId,
+    String? codigoProduto,
+    String? nomeProduto,
+    String? descricaoProduto,
+    int? unidadeMedidaId,
+    String? unidadeMedidaNome,
+    int? grupoId,
+    String? grupoNome,
+    int? subgrupoId,
+    String? subgrupoNome,
+    double? pesoLiquido,
+    String? marca,
+    String? fornecedor,
+    double? aliquotaIcms,
+    double? aliquotaIpi,
+    double? dimensaoAltura,
+    double? dimensaoLargura,
+    double? dimensaoProfundidade,
+    double? precoCusto,
+    double? precoSugerido,
+    double? margemMinima,
+    double? quantidadeDisponivel,
+    double? quantidadeReservada,
+    List<ProdutoCodigoBarrasResponse>? codigosBarras,
+    Auditoria? auditoria,
+  }) {
+    return ProdutoResponse(
+      id: id ?? this.id,
+      empresaId: empresaId ?? this.empresaId,
+      codigoProduto: codigoProduto ?? this.codigoProduto,
+      nomeProduto: nomeProduto ?? this.nomeProduto,
+      descricaoProduto: descricaoProduto ?? this.descricaoProduto,
+      unidadeMedidaId: unidadeMedidaId ?? this.unidadeMedidaId,
+      unidadeMedidaNome: unidadeMedidaNome ?? this.unidadeMedidaNome,
+      grupoId: grupoId ?? this.grupoId,
+      grupoNome: grupoNome ?? this.grupoNome,
+      subgrupoId: subgrupoId ?? this.subgrupoId,
+      subgrupoNome: subgrupoNome ?? this.subgrupoNome,
+      pesoLiquido: pesoLiquido ?? this.pesoLiquido,
+      marca: marca ?? this.marca,
+      fornecedor: fornecedor ?? this.fornecedor,
+      aliquotaIcms: aliquotaIcms ?? this.aliquotaIcms,
+      aliquotaIpi: aliquotaIpi ?? this.aliquotaIpi,
+      dimensaoAltura: dimensaoAltura ?? this.dimensaoAltura,
+      dimensaoLargura: dimensaoLargura ?? this.dimensaoLargura,
+      dimensaoProfundidade: dimensaoProfundidade ?? this.dimensaoProfundidade,
+      precoCusto: precoCusto ?? this.precoCusto,
+      precoSugerido: precoSugerido ?? this.precoSugerido,
+      margemMinima: margemMinima ?? this.margemMinima,
+      quantidadeDisponivel: quantidadeDisponivel ?? this.quantidadeDisponivel,
+      quantidadeReservada: quantidadeReservada ?? this.quantidadeReservada,
+      codigosBarras: codigosBarras ?? this.codigosBarras,
+      auditoria: auditoria ?? this.auditoria,
+    );
+  }
 
   factory ProdutoResponse.fromJson(Map<String, dynamic> json) {
     return ProdutoResponse(
       id: _toInt(json['id']) ?? 0,
       empresaId: _toInt(json['empresaId']) ?? 0,
       codigoProduto: json['codigoProduto'] as String?,
-      nomeProduto: (json['nomeProduto'] as String?) ?? '',
+      nomeProduto: json['nomeProduto'] as String?,
       descricaoProduto: json['descricaoProduto'] as String?,
       unidadeMedidaId: _toInt(json['unidadeMedidaId']),
       unidadeMedidaNome: json['unidadeMedidaNome'] as String?,
@@ -117,7 +175,7 @@ class ProdutoResponse {
       'margemMinima': margemMinima,
       'quantidadeDisponivel': quantidadeDisponivel,
       'quantidadeReservada': quantidadeReservada,
-      'codigosBarras': codigosBarras.map((e) => e.toJson()).toList(),
+      'codigosBarras': codigosBarras?.map((e) => e.toJson()).toList(),
       'auditoria': auditoria == null
           ? null
           : {

@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:tasko_mobile/config/config_api.dart';
 import 'package:tasko_mobile/config/http_client_config.dart';
+import 'package:tasko_mobile/domain/produto/request/adicionar_produto_request.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -14,6 +17,27 @@ class ProdutoService {
   ProdutoService({required ConfigApi configApi, required http.Client client})
     : _configApi = configApi,
       _client = client;
+
+  Future<Result<ProdutoResponse>> adicionarProduto(
+    AdicionarProdutoRequest request,
+  ) async {
+    final url = Uri.https(_configApi.baseUrl, _path);
+
+    try {
+      final response = await _client.post(
+        url,
+        headers: _headers,
+        body: jsonEncode(request.toJson()),
+      );
+
+      return convertToResult<ProdutoResponse>(
+        (decodedJson) => ProdutoResponse.fromJson(decodedJson['data']),
+        response,
+      );
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
 
   Future<Result<List<ProdutoResponse>>> listar() async {
     final url = Uri.https(_configApi.baseUrl, _path);

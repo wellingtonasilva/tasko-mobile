@@ -5,6 +5,7 @@ import 'package:tasko_mobile/domain/produto/response/produto_preco_response.dart
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/domain/subgrupo/response/produto_subgrupo_response.dart';
 import 'package:tasko_mobile/domain/unidade_medida/response/produto_unidade_medida_response.dart';
+import 'package:tasko_mobile/domain/produto/request/adicionar_produto_request.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 abstract class ProdutoRepository {
@@ -30,4 +31,7 @@ abstract class ProdutoRepository {
 
   Future<Result<List<ProdutoUnidadeMedidaResponse>>> listarUnidadesMedida();
   Future<Result<List<ProdutoSubgrupoResponse>>> listarSubgrupos();
+  Future<Result<ProdutoResponse>> adicionarProduto(
+    AdicionarProdutoRequest request,
+  );
 }

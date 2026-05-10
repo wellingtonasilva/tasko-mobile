@@ -39,7 +39,7 @@ class ProdutoCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(produto.nomeProduto, style: kTestStyleBoldText16),
+                  Text(produto.nomeProduto ?? '-', style: kTestStyleBoldText16),
                   SizedBox(height: 4),
                   Text(
                     "Código: ${produto.codigoProduto ?? 'N/A'}",

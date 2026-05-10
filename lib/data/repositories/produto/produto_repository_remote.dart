@@ -15,6 +15,7 @@ import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/domain/subgrupo/response/produto_subgrupo_response.dart';
 import 'package:tasko_mobile/domain/unidade_medida/response/produto_unidade_medida_response.dart';
 import 'package:tasko_mobile/util/result.dart';
+import 'package:tasko_mobile/domain/produto/request/adicionar_produto_request.dart';
 
 class ProdutoRepositoryRemote implements ProdutoRepository {
   ProdutoRepositoryRemote({
@@ -40,6 +41,14 @@ class ProdutoRepositoryRemote implements ProdutoRepository {
   final ProdutoGrupoService _grupoService;
   final ProdutoUnidadeMedidaService _unidadeMedidaService;
   final ProdutoSubgrupoService _subgrupoService;
+
+  @override
+  Future<Result<ProdutoResponse>> adicionarProduto(
+    AdicionarProdutoRequest request,
+  ) {
+    return _service.adicionarProduto(request);
+  }
+
   @override
   Future<Result<List<ProdutoResponse>>> listar({
     String? termoBusca,
@@ -56,7 +65,7 @@ class ProdutoRepositoryRemote implements ProdutoRepository {
     if (termoBusca != null && termoBusca.trim().isNotEmpty) {
       final search = termoBusca.trim().toLowerCase();
       produtos = produtos.where((produto) {
-        final nome = produto.nomeProduto.toLowerCase();
+        final nome = produto.nomeProduto?.toLowerCase() ?? '';
         final codigo = (produto.codigoProduto ?? '').toLowerCase();
         return nome.contains(search) || codigo.contains(search);
       }).toList();

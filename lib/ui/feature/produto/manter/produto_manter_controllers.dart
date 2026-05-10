@@ -82,7 +82,7 @@ class ProdutoManterControllers {
 
   void updateFormFields(ProdutoResponse produto) {
     codigoProduto.controller.text = produto.id.toString();
-    nomeProduto.controller.text = produto.nomeProduto;
+    nomeProduto.controller.text = produto.nomeProduto ?? '';
     descricaoProduto.controller.text = produto.descricaoProduto ?? '';
     precoProduto.controller.text =
         produto.precoSugerido?.toStringAsFixed(2) ?? '';
