@@ -30,6 +30,10 @@ class ProdutoResponse {
   final double? quantidadeReservada;
   final List<ProdutoCodigoBarrasResponse>? codigosBarras;
   final Auditoria? auditoria;
+  final String? descricaoGrupo;
+  final String? descricaoSubgrupo;
+  final String? descricaoUnidadeMedida;
+  final String? descricaoUnidadeMedidaCodigo;
 
   ProdutoResponse({
     this.id,
@@ -58,6 +62,10 @@ class ProdutoResponse {
     this.quantidadeReservada,
     this.codigosBarras,
     this.auditoria,
+    this.descricaoGrupo,
+    this.descricaoSubgrupo,
+    this.descricaoUnidadeMedida,
+    this.descricaoUnidadeMedidaCodigo,
   });
 
   ProdutoResponse copyWith({
@@ -87,6 +95,10 @@ class ProdutoResponse {
     double? quantidadeReservada,
     List<ProdutoCodigoBarrasResponse>? codigosBarras,
     Auditoria? auditoria,
+    String? descricaoGrupo,
+    String? descricaoSubgrupo,
+    String? descricaoUnidadeMedida,
+    String? descricaoUnidadeMedidaCodigo,
   }) {
     return ProdutoResponse(
       id: id ?? this.id,
@@ -115,6 +127,12 @@ class ProdutoResponse {
       quantidadeReservada: quantidadeReservada ?? this.quantidadeReservada,
       codigosBarras: codigosBarras ?? this.codigosBarras,
       auditoria: auditoria ?? this.auditoria,
+      descricaoGrupo: descricaoGrupo ?? this.descricaoGrupo,
+      descricaoSubgrupo: descricaoSubgrupo ?? this.descricaoSubgrupo,
+      descricaoUnidadeMedida:
+          descricaoUnidadeMedida ?? this.descricaoUnidadeMedida,
+      descricaoUnidadeMedidaCodigo:
+          descricaoUnidadeMedidaCodigo ?? this.descricaoUnidadeMedidaCodigo,
     );
   }
 
@@ -146,6 +164,11 @@ class ProdutoResponse {
       quantidadeReservada: _toDouble(json['quantidadeReservada']),
       codigosBarras: _toCodigosBarras(json['codigosBarras']),
       auditoria: _toAuditoria(json['auditoria']),
+      descricaoGrupo: json['descricaoGrupo'] as String?,
+      descricaoSubgrupo: json['descricaoSubgrupo'] as String?,
+      descricaoUnidadeMedida: json['descricaoUnidadeMedida'] as String?,
+      descricaoUnidadeMedidaCodigo:
+          json['descricaoUnidadeMedidaCodigo'] as String?,
     );
   }
 
@@ -183,6 +206,10 @@ class ProdutoResponse {
               'atualizadoEm': auditoria?.atualizadoEm?.toIso8601String(),
               'indicadorAtivo': auditoria?.indicadorAtivo,
             },
+      'descricaoGrupo': descricaoGrupo,
+      'descricaoSubgrupo': descricaoSubgrupo,
+      'descricaoUnidadeMedida': descricaoUnidadeMedida,
+      'descricaoUnidadeMedidaCodigo': descricaoUnidadeMedidaCodigo,
     };
   }
 
