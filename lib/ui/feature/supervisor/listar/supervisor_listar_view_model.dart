@@ -60,6 +60,7 @@ class SupervisorListarViewModel extends Notifier<SupervisorListarUiState> {
 }
 
 final supervisorListarViewModelProvider =
-    NotifierProvider<SupervisorListarViewModel, SupervisorListarUiState>(
-      () => SupervisorListarViewModel(),
-    );
+    NotifierProvider.autoDispose<
+      SupervisorListarViewModel,
+      SupervisorListarUiState
+    >(() => SupervisorListarViewModel());

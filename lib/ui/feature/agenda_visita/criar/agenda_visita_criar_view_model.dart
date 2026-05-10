@@ -122,7 +122,7 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
       empresaId: await ref
           .read(authLocalStorageProvider)
           .getUsuarioLoginResponse()
-          .then((value) => value?.empresas.first.empresaId ?? 0),
+          .then((value) => value?.empresas?.first.empresaId ?? 0),
       dataAgendada: state.dataAgendada.toUtc().toIso8601String(),
       duracaoPrevista: state.duracaoPrevista,
       objetivo: state.objetivo,

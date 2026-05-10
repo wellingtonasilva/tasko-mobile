@@ -74,7 +74,7 @@ class PedidoCriarResumoViewModel extends Notifier<PedidoCriarResumoUiState> {
         empresaId:
             (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
                 ?.empresas
-                .firstOrNull
+                ?.firstOrNull
                 ?.empresaId ??
             0,
       );
@@ -101,7 +101,7 @@ class PedidoCriarResumoViewModel extends Notifier<PedidoCriarResumoUiState> {
         empresaId:
             (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
                 ?.empresas
-                .firstOrNull
+                ?.firstOrNull
                 ?.empresaId ??
             0,
       );

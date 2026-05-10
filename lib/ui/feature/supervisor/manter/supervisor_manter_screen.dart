@@ -23,6 +23,8 @@ class SupervisorManterScreen extends BaseScreen {
 class _SupervisorManterScreenState
     extends BaseScreenState<SupervisorManterScreen> {
   late final SupervisorManterControllers _controllers;
+  int? _lastHydratedSupervisorId;
+
   @override
   void initState() {
     super.initState();
@@ -62,20 +64,20 @@ class _SupervisorManterScreenState
   }
 
   @override
+  void dispose() {
+    _controllers.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget buildContent(BuildContext context) {
     final viewModel = ref.watch(supervisorManterViewModelProvider);
-
-    ref.listen<SupervisorManterUiState>(supervisorManterViewModelProvider, (
-      previous,
-      next,
-    ) {
-      final previousId = previous?.supervisor?.id;
-      final supervisorAtual = next.supervisor;
-
-      if (supervisorAtual != null && previousId != supervisorAtual.id) {
-        _controllers.updateFormFields(supervisorAtual);
-      }
-    });
+    final supervisorAtual = viewModel.supervisor;
+    if (supervisorAtual != null &&
+        _lastHydratedSupervisorId != supervisorAtual.id) {
+      _controllers.updateFormFields(supervisorAtual);
+      _lastHydratedSupervisorId = supervisorAtual.id;
+    }
 
     return GestureDetector(
       onTap: () {

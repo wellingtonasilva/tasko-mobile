@@ -4,10 +4,10 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
+import 'package:tasko_mobile/common/widgets/card/custom_simple_item_list_card.dart';
 import 'package:tasko_mobile/domain/usuario/response/usuario_response.dart';
+import 'package:tasko_mobile/ui/feature/usuario/listar/usuario_listar_controllers.dart';
 import 'package:tasko_mobile/ui/feature/usuario/listar/usuario_listar_view_model.dart';
-import 'package:tasko_mobile/util/result.dart';
 
 class UsuarioListarScreen extends BaseScreen {
   const UsuarioListarScreen({super.key});
@@ -18,25 +18,31 @@ class UsuarioListarScreen extends BaseScreen {
 }
 
 class _UsuarioListarScreenState extends BaseScreenState<UsuarioListarScreen> {
+  late final UsuarioListarControllers _controllers;
+
+  @override
+  bool get useScaffold => false;
+
   @override
   void initState() {
     super.initState();
-    final viewModel = ref.read(usuarioListarViewModelProvider.notifier);
-    viewModel.showSnackBar = (String message, Result result) {
-      if (!mounted) return;
-      if (result is Success) {
-        showSnackBar(message, isError: false);
-      } else {
-        showSnackBar(message, isError: true);
-      }
-    };
+    _controllers = UsuarioListarControllers();
+    _controllers.pesquisar.controller.addListener(_onPesquisarChanged);
 
     ref.read(usuarioListarViewModelProvider).listarUsuariosCommand.execute();
   }
 
   @override
+  void dispose() {
+    _controllers.pesquisar.controller.removeListener(_onPesquisarChanged);
+    _controllers.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget buildContent(BuildContext context) {
     final viewModel = ref.watch(usuarioListarViewModelProvider);
+    final usuariosFiltrados = _filtrarUsuarios(viewModel.usuarios ?? []);
 
     return GestureDetector(
       onTap: () {
@@ -75,6 +81,7 @@ class _UsuarioListarScreenState extends BaseScreenState<UsuarioListarScreen> {
                               'usuarios-adicionar',
                             );
                             if (adicionado == true) {
+                              showSnackBar('Usuário adicionado com sucesso!');
                               ref
                                   .read(usuarioListarViewModelProvider)
                                   .listarUsuariosCommand
@@ -85,80 +92,61 @@ class _UsuarioListarScreenState extends BaseScreenState<UsuarioListarScreen> {
                         ),
                       ),
 
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: buildTextField(
+                          _controllers.pesquisar,
+                          isShowHint: true,
+                          topPadding: 0,
+                        ),
+                      ),
                       //Lista de Usuários
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(minHeight: 200),
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: kColorStyleSecondinaryDark200,
-                                width: 1,
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x1F000000),
-                                  blurRadius: 4,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10, left: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Lista de Produtos',
-                                    style: kTestStyleBoldText16,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            viewModel.listarUsuariosCommand.running
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : usuariosFiltrados.isEmpty
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 24.0,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        _controllers.pesquisar.controller.text
+                                                .trim()
+                                                .isEmpty
+                                            ? 'Nenhum usuário encontrado.'
+                                            : 'Nenhum usuário encontrado para a pesquisa.',
+                                        style: kTestStyleRegularText14,
+                                      ),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.zero,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: usuariosFiltrados.length,
+                                    itemBuilder: (context, index) {
+                                      final usuario = usuariosFiltrados[index];
+                                      return CustomSimpleItemListCard(
+                                        title: usuario.nomeUsuario ?? '',
+                                        subtitle: 'ID: ${usuario.id}',
+                                        onTap: _onCustomSimpleItemListCardTap,
+                                        id: usuario.id,
+                                        indicadorAtivo:
+                                            usuario.auditoria?.indicadorAtivo,
+                                      );
+                                    },
                                   ),
-                                  const SizedBox(height: 20),
-                                  viewModel.listarUsuariosCommand.running
-                                      ? const Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : CustomListView<UsuarioResponse>(
-                                          values: viewModel.usuarios,
-                                          onTap: (value) async {
-                                            final atualizado = await context
-                                                .pushNamed(
-                                                  'usuarios-manter',
-                                                  pathParameters: {
-                                                    'id': value.id.toString(),
-                                                  },
-                                                );
-                                            if (atualizado == true) {
-                                              await viewModel
-                                                  .listarUsuariosCommand
-                                                  .execute();
-                                            }
-                                          },
-                                          getTitle: (value) =>
-                                              value.nomeUsuario,
-                                          getSubtitle: (value) =>
-                                              value.vendedor?.nomeVendedor ??
-                                              '-',
-
-                                          onDelete: (usuario, index) {
-                                            _excluirUsuario(
-                                              usuario.id,
-                                              index,
-                                              usuario,
-                                            );
-                                          },
-                                        ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          ],
                         ),
                       ),
                     ],
@@ -173,4 +161,37 @@ class _UsuarioListarScreenState extends BaseScreenState<UsuarioListarScreen> {
   }
 
   void _excluirUsuario(int id, int index, UsuarioResponse usuario) {}
+
+  void _onPesquisarChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _onCustomSimpleItemListCardTap(int id) async {
+    final atualizado = await context.pushNamed<bool>(
+      'usuarios-manter',
+      pathParameters: {'id': id.toString()},
+    );
+    if (atualizado == true) {
+      showSnackBar('Usuário atualizado com sucesso!');
+      ref.read(usuarioListarViewModelProvider).listarUsuariosCommand.execute();
+    }
+  }
+
+  List<UsuarioResponse> _filtrarUsuarios(List<UsuarioResponse> usuarios) {
+    final pesquisa = _controllers.pesquisar.controller.text
+        .trim()
+        .toLowerCase();
+
+    if (pesquisa.isEmpty) {
+      return usuarios;
+    }
+
+    return usuarios.where((usuario) {
+      final nome = usuario.nomeUsuario?.toLowerCase() ?? '';
+
+      return nome.contains(pesquisa);
+    }).toList();
+  }
 }

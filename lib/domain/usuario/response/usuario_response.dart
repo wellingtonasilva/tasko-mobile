@@ -13,7 +13,7 @@ class UsuarioResponse {
   final String? numeroTelefone;
   final VendedorResponse? vendedor;
   final Auditoria auditoria;
-  final List<UsuarioPerfilResponse> perfis;
+  final List<UsuarioPerfilResponse>? perfis;
 
   UsuarioResponse({
     required this.id,
@@ -22,7 +22,7 @@ class UsuarioResponse {
     this.numeroTelefone,
     this.vendedor,
     required this.auditoria,
-    required this.perfis,
+    this.perfis,
   });
 
   factory UsuarioResponse.fromJson(Map<String, dynamic> json) =>

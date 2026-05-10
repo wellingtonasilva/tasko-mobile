@@ -15,12 +15,20 @@ UsuarioLoginResponse _$UsuarioLoginResponseFromJson(
       : VendedorResponse.fromJson(json['vendedor'] as Map<String, dynamic>),
   nomeUsuario: json['nomeUsuario'] as String,
   token: json['token'] as String,
-  perfis: (json['perfis'] as List<dynamic>)
-      .map((e) => UsuarioPerfilResponse.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  empresas: (json['empresas'] as List<dynamic>)
-      .map((e) => UsuarioEmpresaResponse.fromJson(e as Map<String, dynamic>))
-      .toList(),
+  perfis:
+      (json['perfis'] as List<dynamic>?)
+          ?.map(
+            (e) => UsuarioPerfilResponse.fromJson(e as Map<String, dynamic>),
+          )
+          .toList() ??
+      [],
+  empresas:
+      (json['empresas'] as List<dynamic>?)
+          ?.map(
+            (e) => UsuarioEmpresaResponse.fromJson(e as Map<String, dynamic>),
+          )
+          .toList() ??
+      [],
 );
 
 Map<String, dynamic> _$UsuarioLoginResponseToJson(

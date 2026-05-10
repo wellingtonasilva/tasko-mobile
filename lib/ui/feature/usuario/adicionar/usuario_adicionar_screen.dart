@@ -213,12 +213,6 @@ class _UsuarioAdicionarScreenState
       items: viewModel.vendedores ?? [],
       itemLabelBuilder: (item) => item.nomeVendedor ?? 'Sem nome',
       selectedValue: viewModel.selectedVendedor,
-      validator: (value) {
-        if (value == null) {
-          return 'Por favor selecione um Vendedor.';
-        }
-        return null;
-      },
       onChanged: (value) {
         viewModel.selectedVendedor = value;
       },

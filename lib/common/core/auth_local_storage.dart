@@ -17,8 +17,8 @@ class AuthLocalStorage {
     await prefs.setString(_loginDataKey, json.encode(loginData.toJson()));
     // Mantém chaves individuais usadas pelo AuthHttpClient
     await prefs.setString(_tokenKey, loginData.token);
-    if (loginData.empresas.isNotEmpty) {
-      await prefs.setInt(_empresaIdKey, loginData.empresas.first.empresaId);
+    if (loginData.empresas?.isNotEmpty ?? false) {
+      await prefs.setInt(_empresaIdKey, loginData.empresas!.first.empresaId);
     }
   }
 

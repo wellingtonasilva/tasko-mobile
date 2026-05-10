@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:tasko_mobile/common/colors/colors_styles.dart';
+import 'package:tasko_mobile/common/widgets/textfield/br_phone_input_formatter.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
 import 'package:tasko_mobile/domain/usuario/response/usuario_response.dart';
 
@@ -18,6 +21,11 @@ class UsuarioManterControllers {
           val == null || val.isEmpty ? 'Por favor informe o ID.' : null,
     );
     nomeCompleto = CustomFormFieldData(
+      prefixIcon: const Icon(
+        Icons.person,
+        color: kColorStyleSecondinaryLight300,
+        size: 20,
+      ),
       controller: TextEditingController(),
       focusNode: FocusNode(),
       labelText: 'Nome Completo',
@@ -34,6 +42,16 @@ class UsuarioManterControllers {
           : null,
     );
     numeroTelefone = CustomFormFieldData(
+      prefixIcon: const Icon(
+        Icons.phone,
+        color: kColorStyleSecondinaryLight300,
+        size: 20,
+      ),
+      keyboardType: TextInputType.phone,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        BrPhoneInputFormatter(),
+      ],
       controller: TextEditingController(),
       focusNode: FocusNode(),
       labelText: 'Número Telefone',

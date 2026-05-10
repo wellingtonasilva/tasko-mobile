@@ -45,9 +45,11 @@ class UsuarioManterViewModel extends Notifier<UsuarioManterUiState> {
       state = state.copyWith(
         usuario: result.value,
         indicadorAtivo: result.value.auditoria.indicadorAtivo,
-        isAdmin: result.value.perfis.any(
-          (perfil) => perfil.perfilTipo == 'ROLE_ADMIN',
-        ),
+        isAdmin:
+            result.value.perfis?.any(
+              (perfil) => perfil.perfilTipo == 'ROLE_ADMIN',
+            ) ??
+            false,
       );
     } else if (result is Failure<UsuarioResponse>) {
       showSnackBar?.call(
