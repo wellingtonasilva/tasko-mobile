@@ -168,7 +168,7 @@ class _RecuperarSenhaScreenState extends BaseScreenState<RecuperarSenhaScreen> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      '© 2026 WAS Sistemas. All rights reserved.',
+                                      '© 2026 WAS Sistemas. Todos os direitos reservados.',
                                       style: kTestStyleMediumText14.copyWith(
                                         color: kColorStyleSecondinaryLight400,
                                       ),
@@ -230,7 +230,7 @@ class _RecuperarSenhaScreenState extends BaseScreenState<RecuperarSenhaScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    'Unleash the Power of Our Intuitive Point of Sale Solution',
+                                    'Desperte o poder da nossa solução intuitiva de ponto de venda',
                                     style: kTestStyleBoldText24.copyWith(
                                       color: Colors.white,
                                     ),
@@ -239,7 +239,7 @@ class _RecuperarSenhaScreenState extends BaseScreenState<RecuperarSenhaScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    'Experience the future of retail with our user-friendly POS platform. Increase your sales, streamline operations, and delight your customers with a modern and efficient checkout process',
+                                    'Experimente o futuro do varejo com nossa plataforma de PDV amigável. Aumente suas vendas, otimize operações e encante seus clientes com um processo de checkout moderno e eficiente',
                                     style: kTestStyleRegularText14.copyWith(
                                       color: Colors.white,
                                     ),

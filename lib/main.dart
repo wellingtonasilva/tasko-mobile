@@ -8,7 +8,8 @@ import 'package:go_router/go_router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DeepLinkService.init();
-  await dotenv.load();
+  const envFile = String.fromEnvironment('ENV_FILE', defaultValue: '.env');
+  await dotenv.load(fileName: envFile);
   runApp(ProviderScope(child: MyApp()));
 }
 

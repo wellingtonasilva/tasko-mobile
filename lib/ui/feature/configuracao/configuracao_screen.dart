@@ -113,6 +113,10 @@ class _ConfiguracaoScreenState extends BaseScreenState<ConfiguracaoScreen> {
 
   void _onConfiguracaoTap(String key) {
     debugPrint('Tapped on configuracao with key: $key');
+    if (key == 'sincronizacao') {
+      showSnackBar('Sincronização iniciada. Isso pode levar alguns segundos.');
+      return;
+    }
     context.push('/$key');
   }
 

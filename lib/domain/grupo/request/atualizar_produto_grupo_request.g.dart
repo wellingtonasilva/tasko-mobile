@@ -10,7 +10,6 @@ AtualizarProdutoGrupoRequest _$AtualizarProdutoGrupoRequestFromJson(
   Map<String, dynamic> json,
 ) => AtualizarProdutoGrupoRequest(
   id: (json['id'] as num).toInt(),
-  empresaId: (json['empresaId'] as num).toInt(),
   descricaoGrupo: json['descricaoGrupo'] as String,
 );
 
@@ -18,6 +17,5 @@ Map<String, dynamic> _$AtualizarProdutoGrupoRequestToJson(
   AtualizarProdutoGrupoRequest instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'empresaId': instance.empresaId,
   'descricaoGrupo': instance.descricaoGrupo,
 };

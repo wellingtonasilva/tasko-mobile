@@ -152,7 +152,9 @@ class _SupervisorAdicionarScreenState
     );
   }
 
-  void _handleCancelarPressed() {}
+  void _handleCancelarPressed() {
+    Navigator.of(context).pop();
+  }
 
   void _handleSalvarPressed() {
     if (!(_controllers.formKey.currentState?.validate() ?? false)) return;

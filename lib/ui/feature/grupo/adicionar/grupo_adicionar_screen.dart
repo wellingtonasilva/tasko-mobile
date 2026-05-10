@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
-import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
+import 'package:tasko_mobile/domain/grupo/request/adicionar_produto_grupo_request.dart';
+import 'package:tasko_mobile/ui/feature/grupo/adicionar/grupo_adicionar_controllers.dart';
+import 'package:tasko_mobile/ui/feature/grupo/adicionar/grupo_adicionar_view_model.dart';
+import 'package:tasko_mobile/util/result.dart';
 
 class GrupoAdicionarScreen extends BaseScreen {
   const GrupoAdicionarScreen({super.key});
@@ -15,6 +18,48 @@ class GrupoAdicionarScreen extends BaseScreen {
 }
 
 class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
+  late final GrupoAdicionarControllers _controllers;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = GrupoAdicionarControllers();
+
+    final viewModel = ref.read(grupoAdicionarViewModelProvider.notifier);
+    viewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+
+    viewModel.onAdicionarSucesso = () {
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    };
+
+    viewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
+  }
+
+  @override
+  void dispose() {
+    _controllers.dispose();
+    super.dispose();
+  }
+
   @override
   Widget buildContent(BuildContext context) {
     return GestureDetector(
@@ -40,6 +85,7 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
                   color: kColorStylePrimary0,
                 ),
                 child: Form(
+                  key: _controllers.formKey,
                   autovalidateMode: AutovalidateMode.disabled,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -60,11 +106,11 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Selecione o cliente para o pedido',
-                                style: kTestStyleBoldText18,
+                              SizedBox(height: 10),
+                              buildTextField(
+                                _controllers.descricaoGrupo,
+                                isMandatory: true,
                               ),
-                              const SizedBox(height: 20),
                             ],
                           ),
                         ),
@@ -105,7 +151,20 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
     );
   }
 
-  void _handleCancelarPressed() {}
+  void _handleCancelarPressed() {
+    Navigator.of(context).pop();
+  }
 
-  void _handleSalvarPressed() {}
+  void _handleSalvarPressed() {
+    if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
+
+    final request = AdicionarProdutoGrupoRequest(
+      descricaoGrupo: _controllers.descricaoGrupo.controller.text.trim(),
+    );
+
+    ref
+        .read(grupoAdicionarViewModelProvider)
+        .adicionarProdutoGrupoCommand
+        .execute(request);
+  }
 }
