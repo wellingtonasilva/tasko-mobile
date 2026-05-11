@@ -1,8 +1,12 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:tasko_mobile/common/domain/auditoria.dart';
 
+part 'cliente_response.g.dart';
+
+@JsonSerializable()
 class ClienteResponse {
   final int id;
-  final int empresaId;
+  final int? empresaId;
   final int? vendedorId;
   final String? codigoCliente;
   final String razaoSocial;
@@ -14,6 +18,7 @@ class ClienteResponse {
   final String? categoria;
   final String? cep;
   final String? logradouro;
+  final String? logradouroNumero;
   final String? complemento;
   final String? bairro;
   final String? cidade;
@@ -24,9 +29,125 @@ class ClienteResponse {
   final int? prazoPagamento;
   final DateTime? dataUltimoPedido;
   final double? valorUltimaCompra;
-  final bool bloqueado;
+  final bool? bloqueado;
   final String? motivoBloqueio;
+  final String? numeroTelefone;
+  final String? numeroTelefoneSecundario;
+  final String? email;
+  final String? observacao;
   final Auditoria? auditoria;
+
+  ClienteResponse({
+    required this.id,
+    this.empresaId,
+    this.vendedorId,
+    this.codigoCliente,
+    required this.razaoSocial,
+    this.nomeFantasia,
+    this.cnpjCpf,
+    this.inscricaoEstadual,
+    this.tipo,
+    this.segmento,
+    this.categoria,
+    this.cep,
+    this.logradouro,
+    this.logradouroNumero,
+    this.complemento,
+    this.bairro,
+    this.cidade,
+    this.estado,
+    this.latitude,
+    this.longitude,
+    this.limiteCredito,
+    this.prazoPagamento,
+    this.dataUltimoPedido,
+    this.valorUltimaCompra,
+    this.bloqueado,
+    this.motivoBloqueio,
+    this.auditoria,
+    this.numeroTelefone,
+    this.numeroTelefoneSecundario,
+    this.email,
+    this.observacao,
+  });
+
+  ClienteResponse copyWith({
+    int? id,
+    int? empresaId,
+    int? vendedorId,
+    String? codigoCliente,
+    String? razaoSocial,
+    String? nomeFantasia,
+    String? cnpjCpf,
+    String? inscricaoEstadual,
+    String? tipo,
+    String? segmento,
+    String? categoria,
+    String? cep,
+    String? logradouro,
+    String? logradouroNumero,
+    String? complemento,
+    String? bairro,
+    String? cidade,
+    String? estado,
+    double? latitude,
+    double? longitude,
+    double? limiteCredito,
+    int? prazoPagamento,
+    DateTime? dataUltimoPedido,
+    double? valorUltimaCompra,
+    bool? bloqueado,
+    String? motivoBloqueio,
+    Auditoria? auditoria,
+    String? numeroTelefone,
+    String? numeroTelefoneSecundario,
+    String? email,
+    String? observacao,
+  }) {
+    return ClienteResponse(
+      id: id ?? this.id,
+      empresaId: empresaId ?? this.empresaId,
+      vendedorId: vendedorId ?? this.vendedorId,
+      codigoCliente: codigoCliente ?? this.codigoCliente,
+      razaoSocial: razaoSocial ?? this.razaoSocial,
+      nomeFantasia: nomeFantasia ?? this.nomeFantasia,
+      cnpjCpf: cnpjCpf ?? this.cnpjCpf,
+      inscricaoEstadual: inscricaoEstadual ?? this.inscricaoEstadual,
+      tipo: tipo ?? this.tipo,
+      segmento: segmento ?? this.segmento,
+      categoria: categoria ?? this.categoria,
+      cep: cep ?? this.cep,
+      logradouro: logradouro ?? this.logradouro,
+      logradouroNumero:
+          logradouroNumero ?? this.logradouroNumero, // Corrigido aqui
+      complemento: complemento ?? this.complemento,
+      bairro: bairro ?? this.bairro,
+      cidade: cidade ?? this.cidade,
+      estado: estado ?? this.estado,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      limiteCredito: limiteCredito ?? this.limiteCredito,
+      prazoPagamento: prazoPagamento ?? this.prazoPagamento,
+      dataUltimoPedido:
+          dataUltimoPedido ?? this.dataUltimoPedido, // Corrigido aqui
+      valorUltimaCompra:
+          valorUltimaCompra ?? this.valorUltimaCompra, // Corrigido aqui
+      bloqueado: bloqueado ?? this.bloqueado,
+      motivoBloqueio: motivoBloqueio ?? this.motivoBloqueio,
+      auditoria: auditoria ?? this.auditoria,
+      numeroTelefone: numeroTelefone ?? this.numeroTelefone,
+      numeroTelefoneSecundario:
+          numeroTelefoneSecundario ?? this.numeroTelefoneSecundario,
+      email: email ?? this.email,
+      observacao: observacao ?? this.observacao,
+    );
+  }
+
+  factory ClienteResponse.fromJson(Map<String, dynamic> json) =>
+      _$ClienteResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$ClienteResponseToJson(this);
+}
+/*
 
   ClienteResponse({
     required this.id,
@@ -42,6 +163,7 @@ class ClienteResponse {
     this.categoria,
     this.cep,
     this.logradouro,
+    this.logradouroNumero,
     this.complemento,
     this.bairro,
     this.cidade,
@@ -55,6 +177,10 @@ class ClienteResponse {
     required this.bloqueado,
     this.motivoBloqueio,
     this.auditoria,
+    this.numeroTelefone,
+    this.numeroTelefoneSecundario,
+    this.email,
+    this.observacao,
   });
 
   factory ClienteResponse.fromJson(Map<String, dynamic> json) {
@@ -72,6 +198,7 @@ class ClienteResponse {
       categoria: json['categoria'] as String?,
       cep: json['cep'] as String?,
       logradouro: json['logradouro'] as String?,
+      logradouroNumero: json['logradouroNumero'] as String?,
       complemento: json['complemento'] as String?,
       bairro: json['bairro'] as String?,
       cidade: json['cidade'] as String?,
@@ -85,6 +212,10 @@ class ClienteResponse {
       bloqueado: (json['bloqueado'] as bool?) ?? false,
       motivoBloqueio: json['motivoBloqueio'] as String?,
       auditoria: _toAuditoria(json['auditoria']),
+      numeroTelefone: json['numeroTelefone'] as String?,
+      numeroTelefoneSecundario: json['numeroTelefoneSecundario'] as String?,
+      email: json['email'] as String?,
+      observacao: json['observacao'] as String?,
     );
   }
 
@@ -103,6 +234,7 @@ class ClienteResponse {
       'categoria': categoria,
       'cep': cep,
       'logradouro': logradouro,
+      'logradouroNumero': logradouroNumero,
       'complemento': complemento,
       'bairro': bairro,
       'cidade': cidade,
@@ -122,8 +254,13 @@ class ClienteResponse {
               'atualizadoEm': auditoria?.atualizadoEm?.toIso8601String(),
               'indicadorAtivo': auditoria?.indicadorAtivo,
             },
+      'numeroTelefone': numeroTelefone,
+      'numeroTelefoneSecundario': numeroTelefoneSecundario,
+      'email': email,
+      'observacao': observacao,
     };
   }
+
 
   static double? _toDouble(Object? value) {
     if (value == null) return null;
@@ -146,3 +283,4 @@ class ClienteResponse {
     );
   }
 }
+*/

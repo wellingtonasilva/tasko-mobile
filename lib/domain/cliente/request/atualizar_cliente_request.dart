@@ -1,6 +1,5 @@
 class AtualizarClienteRequest {
   final int id;
-  final int empresaId;
   final int? vendedorId;
   final String? codigoCliente;
   final String razaoSocial;
@@ -12,6 +11,7 @@ class AtualizarClienteRequest {
   final String? categoria;
   final String? cep;
   final String? logradouro;
+  final String? logradouroNumero;
   final String? complemento;
   final String? bairro;
   final String? cidade;
@@ -22,10 +22,13 @@ class AtualizarClienteRequest {
   final int? prazoPagamento;
   final bool? bloqueado;
   final String? motivoBloqueio;
+  final String? numeroTelefone;
+  final String? numeroTelefoneSecundario;
+  final String? email;
+  final String? observacao;
 
   AtualizarClienteRequest({
     required this.id,
-    required this.empresaId,
     this.vendedorId,
     this.codigoCliente,
     required this.razaoSocial,
@@ -37,6 +40,7 @@ class AtualizarClienteRequest {
     this.categoria,
     this.cep,
     this.logradouro,
+    this.logradouroNumero,
     this.complemento,
     this.bairro,
     this.cidade,
@@ -47,12 +51,15 @@ class AtualizarClienteRequest {
     this.prazoPagamento,
     this.bloqueado,
     this.motivoBloqueio,
+    this.numeroTelefone,
+    this.numeroTelefoneSecundario,
+    this.email,
+    this.observacao,
   });
 
   factory AtualizarClienteRequest.fromJson(Map<String, dynamic> json) {
     return AtualizarClienteRequest(
       id: (json['id'] as int?) ?? 0,
-      empresaId: (json['empresaId'] as int?) ?? 0,
       vendedorId: json['vendedorId'] as int?,
       codigoCliente: json['codigoCliente'] as String?,
       razaoSocial: (json['razaoSocial'] as String?) ?? '',
@@ -64,6 +71,7 @@ class AtualizarClienteRequest {
       categoria: json['categoria'] as String?,
       cep: json['cep'] as String?,
       logradouro: json['logradouro'] as String?,
+      logradouroNumero: json['logradouroNumero'] as String?,
       complemento: json['complemento'] as String?,
       bairro: json['bairro'] as String?,
       cidade: json['cidade'] as String?,
@@ -74,6 +82,10 @@ class AtualizarClienteRequest {
       prazoPagamento: json['prazoPagamento'] as int?,
       bloqueado: json['bloqueado'] as bool?,
       motivoBloqueio: json['motivoBloqueio'] as String?,
+      numeroTelefone: json['numeroTelefone'] as String?,
+      numeroTelefoneSecundario: json['numeroTelefoneSecundario'] as String?,
+      email: json['email'] as String?,
+      observacao: json['observacao'] as String?,
     );
   }
 
@@ -91,6 +103,7 @@ class AtualizarClienteRequest {
       'categoria': categoria,
       'cep': cep,
       'logradouro': logradouro,
+      'logradouroNumero': logradouroNumero,
       'complemento': complemento,
       'bairro': bairro,
       'cidade': cidade,
@@ -101,6 +114,10 @@ class AtualizarClienteRequest {
       'prazoPagamento': prazoPagamento,
       'bloqueado': bloqueado,
       'motivoBloqueio': motivoBloqueio,
+      'numeroTelefone': numeroTelefone,
+      'numeroTelefoneSecundario': numeroTelefoneSecundario,
+      'email': email,
+      'observacao': observacao,
     };
   }
 
