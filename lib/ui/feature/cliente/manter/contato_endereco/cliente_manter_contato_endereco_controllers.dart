@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
+import 'package:tasko_mobile/common/widgets/textfield/br_phone_input_formatter.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
+import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 
 class ClienteManterContatoEnderecoControllers {
   final formKey = GlobalKey<FormState>();
@@ -18,6 +21,11 @@ class ClienteManterContatoEnderecoControllers {
 
   ClienteManterContatoEnderecoControllers() {
     numeroTelefonePrincipal = CustomFormFieldData(
+      keyboardType: TextInputType.phone,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        BrPhoneInputFormatter(),
+      ],
       prefixIcon: const Icon(
         Icons.phone,
         color: kColorStyleSecondinaryLight300,
@@ -28,6 +36,11 @@ class ClienteManterContatoEnderecoControllers {
       labelText: 'Telefone Principal',
     );
     numeroTelefoneSecundario = CustomFormFieldData(
+      keyboardType: TextInputType.phone,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        BrPhoneInputFormatter(),
+      ],
       prefixIcon: const Icon(
         Icons.phone,
         color: kColorStyleSecondinaryLight300,
@@ -141,5 +154,20 @@ class ClienteManterContatoEnderecoControllers {
     cidade.controller.dispose();
     estado.controller.dispose();
     observacao.controller.dispose();
+  }
+
+  void updateFormFields(ClienteResponse? draft) {
+    numeroTelefonePrincipal.controller.text = draft?.numeroTelefone ?? '';
+    numeroTelefoneSecundario.controller.text =
+        draft?.numeroTelefoneSecundario ?? '';
+    emailPrincipal.controller.text = draft?.email ?? '';
+    cep.controller.text = draft?.cep ?? '';
+    logradouro.controller.text = draft?.logradouro ?? '';
+    logradouroNumero.controller.text = draft?.logradouroNumero ?? '';
+    complemento.controller.text = draft?.complemento ?? '';
+    bairro.controller.text = draft?.bairro ?? '';
+    cidade.controller.text = draft?.cidade ?? '';
+    estado.controller.text = draft?.estado ?? '';
+    observacao.controller.text = draft?.observacao ?? '';
   }
 }

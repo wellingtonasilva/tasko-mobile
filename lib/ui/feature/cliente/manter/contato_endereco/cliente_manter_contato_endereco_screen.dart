@@ -8,6 +8,7 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_view_model.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/contato_endereco/cliente_manter_contato_endereco_controllers.dart';
 
 class ClienteManterContatoEnderecoScreen extends BaseScreen {
@@ -28,6 +29,7 @@ class ClienteManterContatoEnderecoScreen extends BaseScreen {
 class _ClienteManterContatoEnderecoScreenState
     extends BaseScreenState<ClienteManterContatoEnderecoScreen> {
   late final ClienteManterContatoEnderecoControllers _controllers;
+  String _hydratedDraftKey = '';
 
   @override
   void initState() {
@@ -43,6 +45,16 @@ class _ClienteManterContatoEnderecoScreenState
 
   @override
   Widget buildContent(BuildContext context) {
+    final viewModel = ref.watch(clienteManterViewModelProvider);
+    final draft = viewModel.clienteDraft;
+    final draftKey =
+        '${draft?.codigoCliente ?? ''}|${draft?.nomeFantasia ?? ''}|${draft?.cnpjCpf ?? ''}';
+
+    if (_hydratedDraftKey != draftKey) {
+      _controllers.updateFormFields(draft);
+      _hydratedDraftKey = draftKey;
+    }
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -192,6 +204,13 @@ class _ClienteManterContatoEnderecoScreenState
                                         ),
                                       ],
                                     ),
+                                    SizedBox(height: 30),
+                                    Text(
+                                      'Observações',
+                                      style: kTestStyleMediumText16.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                     SizedBox(height: 10),
                                     buildTextField(_controllers.observacao),
                                   ],
@@ -221,7 +240,7 @@ class _ClienteManterContatoEnderecoScreenState
                             child: CustomButtonPrimary(
                               label: 'Próximo',
                               onPressed: () {
-                                widget.onNext('');
+                                _onNextPressed();
                               },
                             ),
                           ),
@@ -236,5 +255,33 @@ class _ClienteManterContatoEnderecoScreenState
         ),
       ),
     );
+  }
+
+  void _onNextPressed() {
+    if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
+
+    ref
+        .read(clienteManterViewModelProvider.notifier)
+        .salvarDadosContatoEndereco(
+          cep: _controllers.cep.controller.text.trim(),
+          logradouro: _controllers.logradouro.controller.text.trim(),
+          logradouroNumero: _controllers.logradouroNumero.controller.text
+              .trim(),
+          complemento: _controllers.complemento.controller.text.trim(),
+          bairro: _controllers.bairro.controller.text.trim(),
+          cidade: _controllers.cidade.controller.text.trim(),
+          estado: _controllers.estado.controller.text.trim(),
+          numeroTelefone: _controllers.numeroTelefonePrincipal.controller.text
+              .trim(),
+          numeroTelefoneSecundario: _controllers
+              .numeroTelefoneSecundario
+              .controller
+              .text
+              .trim(),
+          email: _controllers.emailPrincipal.controller.text.trim(),
+          observacao: _controllers.observacao.controller.text.trim(),
+        );
+
+    ref.read(clienteManterViewModelProvider.notifier).enviar();
   }
 }

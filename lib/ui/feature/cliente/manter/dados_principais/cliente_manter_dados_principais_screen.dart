@@ -9,7 +9,9 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart'
     show CustomStepperLine;
+import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_view_model.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/dados_principais/cliente_manter_dados_principais_controllers.dart';
+import 'package:tasko_mobile/util/number_util.dart';
 
 class ClienteManterDadosPrincipaisScreen extends BaseScreen {
   final Function(String value) onPrevious;
@@ -29,6 +31,7 @@ class ClienteManterDadosPrincipaisScreen extends BaseScreen {
 class _ClienteManterDadosPrincipaisScreenState
     extends BaseScreenState<ClienteManterDadosPrincipaisScreen> {
   late final ClienteManterDadosPrincipaisControllers _controllers;
+  String _hydratedDraftKey = '';
 
   @override
   void initState() {
@@ -44,6 +47,16 @@ class _ClienteManterDadosPrincipaisScreenState
 
   @override
   Widget buildContent(BuildContext context) {
+    final viewModel = ref.watch(clienteManterViewModelProvider);
+    final draft = viewModel.clienteDraft;
+    final draftKey =
+        '${draft?.codigoCliente ?? ''}|${draft?.nomeFantasia ?? ''}|${draft?.cnpjCpf ?? ''}';
+
+    if (_hydratedDraftKey != draftKey) {
+      _controllers.updateFormFields(draft);
+      _hydratedDraftKey = draftKey;
+    }
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -183,7 +196,7 @@ class _ClienteManterDadosPrincipaisScreenState
                             child: CustomButtonPrimary(
                               label: 'Próximo',
                               onPressed: () {
-                                widget.onNext('');
+                                _onNextPressed();
                               },
                             ),
                           ),
@@ -198,5 +211,23 @@ class _ClienteManterDadosPrincipaisScreenState
         ),
       ),
     );
+  }
+
+  void _onNextPressed() {
+    if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
+
+    ref
+        .read(clienteManterViewModelProvider.notifier)
+        .salvarDadosBasicos(
+          codigoCliente: _controllers.codigoCliente.controller.text.trim(),
+          razaoSocial: _controllers.razaoSocial.controller.text.trim(),
+          nomeFantasia: _controllers.nomeFantasia.controller.text.trim(),
+          cnpjCpf: _controllers.cnpjCpf.controller.text.trim(),
+          limiteCredito: NumberUtil.parseDouble(
+            _controllers.limiteCredito.controller.text.trim(),
+          ),
+        );
+
+    widget.onNext('Contato e Meta');
   }
 }

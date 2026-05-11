@@ -52,6 +52,10 @@ class _ClienteManterScreenState extends BaseScreenState<ClienteManterScreen> {
         hideLoading();
       }
     };
+
+    ref.read(clienteManterViewModelProvider).obterPorIdCommand.execute((
+      widget.clienteId,
+    ));
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/widgets/textfield/cpf_cnpj_text_input_formatter.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
 import 'package:tasko_mobile/common/widgets/textfield/decimal_text_input_formatter.dart';
+import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 
 class ClienteManterDadosPrincipaisControllers {
   final formKey = GlobalKey<FormState>();
@@ -91,5 +92,15 @@ class ClienteManterDadosPrincipaisControllers {
     cnpjCpf.focusNode.dispose();
     limiteCredito.controller.dispose();
     limiteCredito.focusNode.dispose();
+  }
+
+  void updateFormFields(ClienteResponse? draft) {
+    codigoCliente.controller.text = draft?.codigoCliente ?? '';
+    razaoSocial.controller.text = draft?.razaoSocial ?? '';
+    nomeFantasia.controller.text = draft?.nomeFantasia ?? '';
+    cnpjCpf.controller.text = draft?.cnpjCpf ?? '';
+    limiteCredito.controller.text = draft != null
+        ? draft.limiteCredito?.toStringAsFixed(2) ?? ''
+        : '';
   }
 }

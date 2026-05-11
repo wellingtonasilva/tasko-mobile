@@ -11,6 +11,7 @@ class AdicionarClienteRequest {
   final String? categoria;
   final String? cep;
   final String? logradouro;
+  final String? logradouroNumero;
   final String? complemento;
   final String? bairro;
   final String? cidade;
@@ -21,6 +22,10 @@ class AdicionarClienteRequest {
   final int? prazoPagamento;
   final bool? bloqueado;
   final String? motivoBloqueio;
+  final String? numeroTelefone;
+  final String? numeroSecundario;
+  final String? email;
+  final String? observacao;
 
   AdicionarClienteRequest({
     this.vendedorId,
@@ -35,6 +40,7 @@ class AdicionarClienteRequest {
     this.categoria,
     this.cep,
     this.logradouro,
+    this.logradouroNumero,
     this.complemento,
     this.bairro,
     this.cidade,
@@ -45,6 +51,10 @@ class AdicionarClienteRequest {
     this.prazoPagamento,
     this.bloqueado,
     this.motivoBloqueio,
+    this.numeroTelefone,
+    this.numeroSecundario,
+    this.email,
+    this.observacao,
   });
 
   factory AdicionarClienteRequest.fromJson(Map<String, dynamic> json) {
@@ -61,6 +71,7 @@ class AdicionarClienteRequest {
       categoria: json['categoria'] as String?,
       cep: json['cep'] as String?,
       logradouro: json['logradouro'] as String?,
+      logradouroNumero: json['logradouroNumero'] as String?,
       complemento: json['complemento'] as String?,
       bairro: json['bairro'] as String?,
       cidade: json['cidade'] as String?,
@@ -71,6 +82,10 @@ class AdicionarClienteRequest {
       prazoPagamento: json['prazoPagamento'] as int?,
       bloqueado: json['bloqueado'] as bool?,
       motivoBloqueio: json['motivoBloqueio'] as String?,
+      numeroTelefone: json['numeroTelefone'] as String?,
+      numeroSecundario: json['numeroSecundario'] as String?,
+      email: json['email'] as String?,
+      observacao: json['observacao'] as String?,
     );
   }
 
@@ -88,6 +103,7 @@ class AdicionarClienteRequest {
       'categoria': categoria,
       'cep': cep,
       'logradouro': logradouro,
+      'logradouroNumero': logradouroNumero,
       'complemento': complemento,
       'bairro': bairro,
       'cidade': cidade,
@@ -98,6 +114,10 @@ class AdicionarClienteRequest {
       'prazoPagamento': prazoPagamento,
       'bloqueado': bloqueado,
       'motivoBloqueio': motivoBloqueio,
+      'numeroTelefone': numeroTelefone,
+      'numeroSecundario': numeroSecundario,
+      'email': email,
+      'observacao': observacao,
     };
   }
 

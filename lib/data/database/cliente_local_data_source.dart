@@ -148,7 +148,6 @@ class ClienteLocalDataSource {
       final now = DateTime.now().toUtc().toIso8601String();
       final merged = ClienteResponse(
         id: request.id,
-        empresaId: request.empresaId,
         vendedorId: request.vendedorId,
         codigoCliente: request.codigoCliente,
         razaoSocial: request.razaoSocial,
@@ -302,7 +301,7 @@ class ClienteLocalDataSource {
       'prazo_pagamento': cliente.prazoPagamento,
       'data_ultimo_pedido': cliente.dataUltimoPedido?.toUtc().toIso8601String(),
       'valor_ultima_compra': cliente.valorUltimaCompra,
-      'bloqueado': cliente.bloqueado ? 1 : 0,
+      'bloqueado': cliente.bloqueado == true ? 1 : 0,
       'motivo_bloqueio': cliente.motivoBloqueio,
       'auditoria_criado_em': cliente.auditoria?.criadoEm
           ?.toUtc()

@@ -15,7 +15,6 @@ class ClienteManterViewModel extends Notifier<ClienteManterUiState> {
   @override
   ClienteManterUiState build() {
     return ClienteManterUiState(
-      cliente: null,
       obterPorIdCommand: Command1<ClienteResponse, (int id,)>(_obterPorId),
       atualizarCommand:
           Command1<ClienteResponse, (int id, AtualizarClienteRequest request)>(
@@ -24,20 +23,103 @@ class ClienteManterViewModel extends Notifier<ClienteManterUiState> {
     );
   }
 
+  void enviar() {
+    final cliente = state.clienteDraft;
+    if (cliente == null) return;
+
+    final request = AtualizarClienteRequest(
+      codigoCliente: cliente.codigoCliente,
+      razaoSocial: cliente.razaoSocial,
+      nomeFantasia: cliente.nomeFantasia,
+      cnpjCpf: cliente.cnpjCpf,
+      cep: cliente.cep,
+      logradouro: cliente.logradouro,
+      logradouroNumero: cliente.logradouroNumero,
+      complemento: cliente.complemento,
+      bairro: cliente.bairro,
+      cidade: cliente.cidade,
+      estado: cliente.estado,
+      numeroTelefone: cliente.numeroTelefone,
+      numeroTelefoneSecundario: cliente.numeroTelefoneSecundario,
+      email: cliente.email,
+      observacao: cliente.observacao,
+      id: cliente.id,
+      limiteCredito: cliente.limiteCredito,
+    );
+
+    state.atualizarCommand.execute((cliente.id, request));
+  }
+
+  void salvarDadosBasicos({
+    String? codigoCliente,
+    String? razaoSocial,
+    String? nomeFantasia,
+    String? cnpjCpf,
+    double? limiteCredito,
+  }) {
+    final draft = state.clienteDraft ?? state.cliente;
+    if (draft == null) return;
+
+    state = state.copyWith(
+      clienteDraft: draft.copyWith(
+        codigoCliente: codigoCliente,
+        razaoSocial: razaoSocial,
+        nomeFantasia: nomeFantasia,
+        cnpjCpf: cnpjCpf,
+        limiteCredito: limiteCredito,
+      ),
+    );
+  }
+
+  void salvarDadosContatoEndereco({
+    String? cep,
+    String? logradouro,
+    String? logradouroNumero,
+    String? complemento,
+    String? bairro,
+    String? cidade,
+    String? estado,
+    String? numeroTelefone,
+    String? numeroTelefoneSecundario,
+    String? email,
+    String? observacao,
+  }) {
+    final draft = state.clienteDraft ?? state.cliente;
+    if (draft == null) return;
+
+    state = state.copyWith(
+      clienteDraft: draft.copyWith(
+        cep: cep,
+        logradouro: logradouro,
+        logradouroNumero: logradouroNumero,
+        complemento: complemento,
+        bairro: bairro,
+        cidade: cidade,
+        estado: estado,
+        numeroTelefone: numeroTelefone,
+        numeroTelefoneSecundario: numeroTelefoneSecundario,
+        email: email,
+        observacao: observacao,
+      ),
+    );
+  }
+
   Future<Result<ClienteResponse>> _obterPorId((int id,) parameters) async {
     final (id,) = parameters;
+    onStartEvent?.call();
     final result = await ref
         .read(clienteRepositoryHybridProvider)
         .obterPorId(id);
 
     if (result is Success<ClienteResponse>) {
-      state = state.copyWith(cliente: result.value);
+      state = state.copyWith(cliente: result.value, clienteDraft: result.value);
     } else if (result is Failure<ClienteResponse>) {
       showSnackBar?.call(
         result.errors?[0] ?? 'An unknown error occurred',
         result,
       );
     }
+    onFinishEvent?.call();
 
     return result;
   }
@@ -45,20 +127,23 @@ class ClienteManterViewModel extends Notifier<ClienteManterUiState> {
   Future<Result<ClienteResponse>> _atualizar(
     (int id, AtualizarClienteRequest request) parameters,
   ) async {
+    onStartEvent?.call();
     final (id, request) = parameters;
     final result = await ref
         .read(clienteRepositoryHybridProvider)
         .atualizar(id, request);
 
     if (result is Success<ClienteResponse>) {
-      state = state.copyWith(cliente: result.value);
+      state = state.copyWith(cliente: result.value, clienteDraft: result.value);
       showSnackBar?.call('Cliente atualizado com sucesso!', result);
+      onManterSucesso?.call();
     } else if (result is Failure<ClienteResponse>) {
       showSnackBar?.call(
         result.errors?[0] ?? 'An unknown error occurred',
         result,
       );
     }
+    onFinishEvent?.call();
 
     return result;
   }
