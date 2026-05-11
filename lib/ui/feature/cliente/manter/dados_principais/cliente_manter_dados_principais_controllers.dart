@@ -1,27 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/widgets/textfield/cpf_cnpj_text_input_formatter.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
+import 'package:tasko_mobile/common/widgets/textfield/decimal_text_input_formatter.dart';
 
-class ClienteAdicionarControllers {
+class ClienteManterDadosPrincipaisControllers {
   final formKey = GlobalKey<FormState>();
   late final CustomFormFieldData codigoCliente;
   late final CustomFormFieldData razaoSocial;
   late final CustomFormFieldData nomeFantasia;
   late final CustomFormFieldData cnpjCpf;
-  late final CustomFormFieldData cidade;
-  late final CustomFormFieldData estado;
   late final CustomFormFieldData limiteCredito;
 
-  ClienteAdicionarControllers() {
+  ClienteManterDadosPrincipaisControllers() {
     final cnpjCpfFormatter = CpfCnpjTextInputFormatter();
-
     codigoCliente = CustomFormFieldData(
+      prefixIcon: const Icon(
+        Icons.vertical_shades_closed,
+        color: kColorStyleSecondinaryLight300,
+        size: 20,
+      ),
       controller: TextEditingController(),
       focusNode: FocusNode(),
       labelText: 'Codigo Cliente',
     );
     razaoSocial = CustomFormFieldData(
+      prefixIcon: const Icon(
+        Icons.person_outline,
+        color: kColorStyleSecondinaryLight300,
+        size: 20,
+      ),
       controller: TextEditingController(),
       focusNode: FocusNode(),
       labelText: 'Razao Social',
@@ -30,28 +39,41 @@ class ClienteAdicionarControllers {
           : null,
     );
     nomeFantasia = CustomFormFieldData(
+      prefixIcon: const Icon(
+        Icons.local_offer,
+        color: kColorStyleSecondinaryLight300,
+        size: 20,
+      ),
       controller: TextEditingController(),
       focusNode: FocusNode(),
       labelText: 'Nome Fantasia',
     );
     cnpjCpf = CustomFormFieldData(
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly, cnpjCpfFormatter],
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        cnpjCpfFormatter,
+      ],
       keyboardType: TextInputType.number,
+      prefixIcon: const Icon(
+        Icons.assignment_ind,
+        color: kColorStyleSecondinaryLight300,
+        size: 20,
+      ),
       controller: TextEditingController(),
       focusNode: FocusNode(),
       labelText: 'CNPJ/CPF',
     );
-    cidade = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Cidade',
-    );
-    estado = CustomFormFieldData(
-      controller: TextEditingController(),
-      focusNode: FocusNode(),
-      labelText: 'Estado',
-    );
+
     limiteCredito = CustomFormFieldData(
+      prefixIcon: const Icon(
+        Icons.attach_money,
+        color: kColorStyleSecondinaryLight300,
+        size: 20,
+      ),
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        DecimalTextInputFormatter(decimalDigits: 2),
+      ],
       controller: TextEditingController(),
       focusNode: FocusNode(),
       labelText: 'Limite de Credito',
@@ -67,10 +89,6 @@ class ClienteAdicionarControllers {
     nomeFantasia.focusNode.dispose();
     cnpjCpf.controller.dispose();
     cnpjCpf.focusNode.dispose();
-    cidade.controller.dispose();
-    cidade.focusNode.dispose();
-    estado.controller.dispose();
-    estado.focusNode.dispose();
     limiteCredito.controller.dispose();
     limiteCredito.focusNode.dispose();
   }

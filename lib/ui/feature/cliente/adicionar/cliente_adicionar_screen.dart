@@ -86,7 +86,10 @@ class _ClienteAdicionarScreenState
                         child: Column(
                           children: [
                             buildTextField(_controllers.codigoCliente),
-                            buildTextField(_controllers.razaoSocial),
+                            buildTextField(
+                              _controllers.razaoSocial,
+                              isMandatory: true,
+                            ),
                             buildTextField(_controllers.nomeFantasia),
                             buildTextField(_controllers.cnpjCpf),
                             buildTextField(_controllers.cidade),

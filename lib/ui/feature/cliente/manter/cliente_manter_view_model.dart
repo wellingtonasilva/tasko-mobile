@@ -8,6 +8,9 @@ import 'package:tasko_mobile/util/result.dart';
 
 class ClienteManterViewModel extends Notifier<ClienteManterUiState> {
   void Function(String, Result result)? showSnackBar;
+  void Function()? onManterSucesso;
+  void Function()? onStartEvent;
+  void Function()? onFinishEvent;
 
   @override
   ClienteManterUiState build() {
