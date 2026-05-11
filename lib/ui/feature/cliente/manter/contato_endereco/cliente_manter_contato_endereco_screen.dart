@@ -238,7 +238,7 @@ class _ClienteManterContatoEnderecoScreenState
                           const SizedBox(width: 20),
                           Expanded(
                             child: CustomButtonPrimary(
-                              label: 'Próximo',
+                              label: 'Salvar',
                               onPressed: () {
                                 _onNextPressed();
                               },
