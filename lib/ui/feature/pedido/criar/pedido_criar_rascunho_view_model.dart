@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/common/core/auth_persistence.dart';
 import 'package:tasko_mobile/data/repositories/cliente/cliente_repository_hybrid.dart';
 import 'package:tasko_mobile/data/repositories/pedido/pedido_repository_hybrid.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
@@ -35,10 +36,15 @@ class PedidoCriarRascunhoViewModel
     AdicionarPedidoRequest request,
   ) async {
     onStartEvent?.call();
+    final usuarioLoginResponse = await ref
+        .read(authLocalStorageProvider)
+        .getUsuarioLoginResponse();
+    final vendedor = usuarioLoginResponse?.vendedor;
+    state = state.copyWith(vendedor: vendedor);
 
     final result = await ref
         .read(pedidoRepositoryHybridProvider)
-        .criarRascunho(request);
+        .criarRascunho(request.copyWith(vendedorId: vendedor?.id));
 
     if (result is Success<PedidoResponse>) {
       state = state.copyWith(pedido: result.value, isEdicao: false);

@@ -37,6 +37,46 @@ class AdicionarPedidoRequest {
     this.uuidOffline,
   });
 
+  AdicionarPedidoRequest copyWith({
+    int? clienteId,
+    int? empresaId,
+    int? vendedorId,
+    int? pedidoStatusTipoId,
+    String? dataPedido,
+    String? dataEntregaPrevista,
+    String? observacao,
+    double? subtotal,
+    double? percentualDesconto,
+    double? valorDesconto,
+    double? valorFrete,
+    double? valorTotal,
+    int? formaPagamentoId,
+    int? condicaoPagamentoId,
+    double? latitude,
+    double? longitude,
+    String? uuidOffline,
+  }) {
+    return AdicionarPedidoRequest(
+      clienteId: clienteId ?? this.clienteId,
+      empresaId: empresaId ?? this.empresaId,
+      vendedorId: vendedorId ?? this.vendedorId,
+      pedidoStatusTipoId: pedidoStatusTipoId ?? this.pedidoStatusTipoId,
+      dataPedido: dataPedido ?? this.dataPedido,
+      dataEntregaPrevista: dataEntregaPrevista ?? this.dataEntregaPrevista,
+      observacao: observacao ?? this.observacao,
+      subtotal: subtotal ?? this.subtotal,
+      percentualDesconto: percentualDesconto ?? this.percentualDesconto,
+      valorDesconto: valorDesconto ?? this.valorDesconto,
+      valorFrete: valorFrete ?? this.valorFrete,
+      valorTotal: valorTotal ?? this.valorTotal,
+      formaPagamentoId: formaPagamentoId ?? this.formaPagamentoId,
+      condicaoPagamentoId: condicaoPagamentoId ?? this.condicaoPagamentoId,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      uuidOffline: uuidOffline ?? this.uuidOffline,
+    );
+  }
+
   factory AdicionarPedidoRequest.fromJson(Map<String, dynamic> json) {
     return AdicionarPedidoRequest(
       clienteId: (json['clienteId'] as int?) ?? 0,

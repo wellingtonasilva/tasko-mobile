@@ -264,17 +264,6 @@ class _PedidoCriarClienteScreenState
       return;
     }
 
-    final vendedorId = 2;
-    /*
-        ref.read(vendedorSelecionadoIdProvider) ?? cliente.vendedorId;
-    if (vendedorId == null) {
-      showSnackBar(
-        'Selecione um vendedor antes de criar o pedido',
-        isError: true,
-      );
-      return;
-    }
-    */
     final request = AdicionarPedidoRequest(
       empresaId:
           (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
@@ -283,7 +272,11 @@ class _PedidoCriarClienteScreenState
               ?.empresaId ??
           0,
       clienteId: cliente.id,
-      vendedorId: vendedorId,
+      vendedorId:
+          (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
+              ?.vendedor
+              ?.id ??
+          0,
       dataPedido: DateTime.now().toUtc().toIso8601String(),
       subtotal: 0,
       valorTotal: 0,
