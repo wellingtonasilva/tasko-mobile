@@ -78,6 +78,6 @@ class ClienteListarViewModel extends Notifier<ClienteListarUiState> {
 }
 
 final clienteListarViewModelProvider =
-    NotifierProvider<ClienteListarViewModel, ClienteListarUiState>(
+    NotifierProvider.autoDispose<ClienteListarViewModel, ClienteListarUiState>(
       ClienteListarViewModel.new,
     );
