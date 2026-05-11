@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/data/repositories/cliente/cliente_repository_hybrid.dart';
+import 'package:tasko_mobile/data/repositories/vendedor/vendedor_repository_remote.dart';
 import 'package:tasko_mobile/domain/cliente/request/atualizar_cliente_request.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
@@ -20,6 +23,7 @@ class ClienteManterViewModel extends Notifier<ClienteManterUiState> {
           Command1<ClienteResponse, (int id, AtualizarClienteRequest request)>(
             _atualizar,
           ),
+      listarVendedorCommand: Command0<void>(_listarVendedor)..execute(),
     );
   }
 
@@ -28,6 +32,7 @@ class ClienteManterViewModel extends Notifier<ClienteManterUiState> {
     if (cliente == null) return;
 
     final request = AtualizarClienteRequest(
+      vendedorId: state.selectedVendedor?.id,
       codigoCliente: cliente.codigoCliente,
       razaoSocial: cliente.razaoSocial,
       nomeFantasia: cliente.nomeFantasia,
@@ -67,6 +72,7 @@ class ClienteManterViewModel extends Notifier<ClienteManterUiState> {
         nomeFantasia: nomeFantasia,
         cnpjCpf: cnpjCpf,
         limiteCredito: limiteCredito,
+        vendedorId: state.selectedVendedor?.id,
       ),
     );
   }
@@ -147,9 +153,53 @@ class ClienteManterViewModel extends Notifier<ClienteManterUiState> {
 
     return result;
   }
+
+  //------------------- Vendedor ------------------
+  Future<Result<List<VendedorResponse>>> _listarVendedor() async {
+    onStartEvent?.call();
+    final result = await ref.read(vendedorRepositoryRemoteProvider).listar();
+    if (result is Success<List<VendedorResponse>>) {
+      state = state.copyWith(vendedores: result.value);
+    } else if (result is Failure<List<VendedorResponse>>) {
+      showSnackBar?.call(
+        (result).errors?[0] ?? 'An unknown error occurred',
+        result,
+      );
+    }
+    onFinishEvent?.call();
+
+    return result;
+  }
+
+  VendedorResponse? get computedSelectedVendedor {
+    final vendedorId = (state.clienteDraft ?? state.cliente)?.vendedorId;
+    if (vendedorId == null || state.vendedores == null) return null;
+
+    final found = state.vendedores!.firstWhere(
+      (v) => v.id == vendedorId,
+      orElse: () => VendedorResponse(id: -1),
+    );
+    return found.id == -1 ? null : found;
+  }
+
+  DropdownLoadingState get vendedorDropdownState {
+    if (state.listarVendedorCommand.running ||
+        state.obterPorIdCommand.running) {
+      return DropdownLoadingState.loading;
+    }
+    if (state.listarVendedorCommand.completed &&
+        state.obterPorIdCommand.completed) {
+      return DropdownLoadingState.ready;
+    }
+    return DropdownLoadingState.error;
+  }
+
+  void selectVendedor(VendedorResponse? vendedor) {
+    state = state.copyWith(selectedVendedor: vendedor);
+  }
 }
 
 final clienteManterViewModelProvider =
-    NotifierProvider<ClienteManterViewModel, ClienteManterUiState>(
+    NotifierProvider.autoDispose<ClienteManterViewModel, ClienteManterUiState>(
       ClienteManterViewModel.new,
     );

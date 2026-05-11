@@ -3,38 +3,43 @@ import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
+import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
+import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
-import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_view_model.dart';
-import 'package:tasko_mobile/ui/feature/cliente/manter/contato_endereco/cliente_manter_contato_endereco_controllers.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
+import 'package:tasko_mobile/ui/feature/cliente/adicionar/cliente_adicionar_ui_state.dart';
+import 'package:tasko_mobile/ui/feature/cliente/adicionar/cliente_adicionar_view_model.dart';
+import 'package:tasko_mobile/ui/feature/cliente/adicionar/dados_principais/cliente_adicionar_dados_principais_controllers.dart';
+import 'package:tasko_mobile/util/number_util.dart';
 
-class ClienteManterContatoEnderecoScreen extends BaseScreen {
+class ClienteAdicionarDadosPrincipaisScreen extends BaseScreen {
   final Function(String value) onPrevious;
   final Function(String value) onNext;
 
-  const ClienteManterContatoEnderecoScreen({
+  const ClienteAdicionarDadosPrincipaisScreen({
     super.key,
     required this.onPrevious,
     required this.onNext,
   });
 
   @override
-  BaseScreenState<ClienteManterContatoEnderecoScreen> createState() =>
-      _ClienteManterContatoEnderecoScreenState();
+  BaseScreenState<ClienteAdicionarDadosPrincipaisScreen> createState() =>
+      _ClienteAdicionarDadosPrincipaisScreenState();
 }
 
-class _ClienteManterContatoEnderecoScreenState
-    extends BaseScreenState<ClienteManterContatoEnderecoScreen> {
-  late final ClienteManterContatoEnderecoControllers _controllers;
+class _ClienteAdicionarDadosPrincipaisScreenState
+    extends BaseScreenState<ClienteAdicionarDadosPrincipaisScreen> {
+  late final ClienteAdicionarDadosPrincipaisControllers _controllers;
   String _hydratedDraftKey = '';
 
   @override
   void initState() {
     super.initState();
-    _controllers = ClienteManterContatoEnderecoControllers();
+    _controllers = ClienteAdicionarDadosPrincipaisControllers();
   }
 
   @override
@@ -45,7 +50,7 @@ class _ClienteManterContatoEnderecoScreenState
 
   @override
   Widget buildContent(BuildContext context) {
-    final viewModel = ref.watch(clienteManterViewModelProvider);
+    final viewModel = ref.watch(clienteAdicionarViewModelProvider);
     final draft = viewModel.clienteDraft;
     final draftKey =
         '${draft?.codigoCliente ?? ''}|${draft?.nomeFantasia ?? ''}|${draft?.cnpjCpf ?? ''}';
@@ -121,7 +126,7 @@ class _ClienteManterContatoEnderecoScreenState
                                       ),
                                       CustomStepperItem(
                                         title: "Contato e Endereço",
-                                        active: true,
+                                        active: false,
                                         textStyle: kTestStyleRegularText12,
                                       ),
                                     ],
@@ -138,7 +143,7 @@ class _ClienteManterContatoEnderecoScreenState
                                         Row(
                                           children: [
                                             Text(
-                                              'Contatos',
+                                              'Dados Básicos',
                                               style: kTestStyleMediumText16
                                                   .copyWith(
                                                     fontWeight: FontWeight.bold,
@@ -148,71 +153,37 @@ class _ClienteManterContatoEnderecoScreenState
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 10),
-                                    buildTextField(
-                                      _controllers.numeroTelefonePrincipal,
-                                    ),
-                                    SizedBox(height: 10),
-                                    buildTextField(
-                                      _controllers.numeroTelefoneSecundario,
-                                    ),
-                                    SizedBox(height: 10),
-                                    buildTextField(_controllers.emailPrincipal),
-                                    SizedBox(height: 30),
                                     Text(
-                                      'Endereço',
+                                      'Preencha as informações principais do cliente.',
+                                      style: kTestStyleRegularText12.copyWith(
+                                        color: kColorStyleSecondinaryDark400,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    buildTextField(_controllers.codigoCliente),
+                                    SizedBox(height: 10),
+                                    buildTextField(
+                                      _controllers.razaoSocial,
+                                      isMandatory: true,
+                                    ),
+                                    SizedBox(height: 10),
+                                    buildTextField(_controllers.nomeFantasia),
+                                    SizedBox(height: 10),
+                                    buildTextField(_controllers.cnpjCpf),
+                                    SizedBox(height: 10),
+                                    buildTextField(_controllers.limiteCredito),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      'Vendedor Responsável',
                                       style: kTestStyleMediumText16.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
-                                    buildTextField(_controllers.cep),
-                                    SizedBox(height: 10),
-                                    buildTextField(_controllers.logradouro),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: buildTextField(
-                                            _controllers.logradouroNumero,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          flex: 2,
-                                          child: buildTextField(
-                                            _controllers.complemento,
-                                          ),
-                                        ),
-                                      ],
+                                    const SizedBox(height: 10),
+                                    _buildLoadingDropdownFieldVendedor(
+                                      viewModel,
                                     ),
-                                    SizedBox(height: 10),
-                                    buildTextField(_controllers.bairro),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: buildTextField(
-                                            _controllers.cidade,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: buildTextField(
-                                            _controllers.estado,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 30),
-                                    Text(
-                                      'Observações',
-                                      style: kTestStyleMediumText16.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    buildTextField(_controllers.observacao),
+                                    const SizedBox(height: 15),
                                   ],
                                 ),
                               ],
@@ -229,16 +200,16 @@ class _ClienteManterContatoEnderecoScreenState
                         children: [
                           Expanded(
                             child: CustomButtonSecondary(
-                              label: 'Voltar',
+                              label: 'Cancelar',
                               onPressed: () {
-                                widget.onPrevious('');
+                                context.pop(false);
                               },
                             ),
                           ),
                           const SizedBox(width: 20),
                           Expanded(
                             child: CustomButtonPrimary(
-                              label: 'Salvar',
+                              label: 'Próximo',
                               onPressed: () {
                                 _onNextPressed();
                               },
@@ -257,31 +228,60 @@ class _ClienteManterContatoEnderecoScreenState
     );
   }
 
+  Widget _buildLoadingDropdownFieldVendedor(ClienteAdicionarUiState viewModel) {
+    final notifier = ref.read(clienteAdicionarViewModelProvider.notifier);
+    return switch (notifier.vendedorDropdownState) {
+      DropdownLoadingState.loading => buildLoadingIndicator(),
+      DropdownLoadingState.ready => buildDropdownFieldVendedor(viewModel),
+      DropdownLoadingState.error => buildDropdownFieldVendedor(viewModel),
+    };
+  }
+
+  Widget buildDropdownFieldVendedor(ClienteAdicionarUiState viewModel) {
+    final notifier = ref.read(clienteAdicionarViewModelProvider.notifier);
+    final selectedVendedor =
+        viewModel.selectedVendedor ?? notifier.computedSelectedVendedor;
+
+    return CustomDropdownButtonFormField<VendedorResponse>(
+      prefixIcon: Padding(
+        padding: const EdgeInsetsDirectional.only(start: 12, end: 8),
+        child: Icon(
+          Icons.sell,
+          color: kColorStyleSecondinaryLight300,
+          size: 20,
+        ),
+      ),
+      hint: 'Selecione um Vendedor',
+      items: viewModel.vendedores ?? [],
+      itemLabelBuilder: (item) => item.nomeVendedor ?? '',
+      selectedValue: selectedVendedor,
+      validator: (value) {
+        if (value == null) {
+          return 'Por favor selecione um Vendedor.';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        notifier.selectVendedor(value);
+      },
+    );
+  }
+
   void _onNextPressed() {
     if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
 
     ref
-        .read(clienteManterViewModelProvider.notifier)
-        .salvarDadosContatoEndereco(
-          cep: _controllers.cep.controller.text.trim(),
-          logradouro: _controllers.logradouro.controller.text.trim(),
-          logradouroNumero: _controllers.logradouroNumero.controller.text
-              .trim(),
-          complemento: _controllers.complemento.controller.text.trim(),
-          bairro: _controllers.bairro.controller.text.trim(),
-          cidade: _controllers.cidade.controller.text.trim(),
-          estado: _controllers.estado.controller.text.trim(),
-          numeroTelefone: _controllers.numeroTelefonePrincipal.controller.text
-              .trim(),
-          numeroTelefoneSecundario: _controllers
-              .numeroTelefoneSecundario
-              .controller
-              .text
-              .trim(),
-          email: _controllers.emailPrincipal.controller.text.trim(),
-          observacao: _controllers.observacao.controller.text.trim(),
+        .read(clienteAdicionarViewModelProvider.notifier)
+        .salvarDadosBasicos(
+          codigoCliente: _controllers.codigoCliente.controller.text.trim(),
+          razaoSocial: _controllers.razaoSocial.controller.text.trim(),
+          nomeFantasia: _controllers.nomeFantasia.controller.text.trim(),
+          cnpjCpf: _controllers.cnpjCpf.controller.text.trim(),
+          limiteCredito: NumberUtil.parseDouble(
+            _controllers.limiteCredito.controller.text.trim(),
+          ),
         );
 
-    ref.read(clienteManterViewModelProvider.notifier).enviar();
+    widget.onNext('Contato e Meta');
   }
 }

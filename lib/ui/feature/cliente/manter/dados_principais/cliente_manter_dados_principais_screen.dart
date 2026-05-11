@@ -3,12 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
+import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
+import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart'
     show CustomStepperLine;
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
+import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_ui_state.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_view_model.dart';
 import 'package:tasko_mobile/ui/feature/cliente/manter/dados_principais/cliente_manter_dados_principais_controllers.dart';
 import 'package:tasko_mobile/util/number_util.dart';
@@ -169,6 +173,18 @@ class _ClienteManterDadosPrincipaisScreenState
                                     buildTextField(_controllers.cnpjCpf),
                                     SizedBox(height: 10),
                                     buildTextField(_controllers.limiteCredito),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      'Vendedor Responsável',
+                                      style: kTestStyleMediumText16.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    _buildLoadingDropdownFieldVendedor(
+                                      viewModel,
+                                    ),
+                                    const SizedBox(height: 15),
                                   ],
                                 ),
                               ],
@@ -210,6 +226,45 @@ class _ClienteManterDadosPrincipaisScreenState
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLoadingDropdownFieldVendedor(ClienteManterUiState viewModel) {
+    final notifier = ref.read(clienteManterViewModelProvider.notifier);
+    return switch (notifier.vendedorDropdownState) {
+      DropdownLoadingState.loading => buildLoadingIndicator(),
+      DropdownLoadingState.ready => buildDropdownFieldVendedor(viewModel),
+      DropdownLoadingState.error => buildDropdownFieldVendedor(viewModel),
+    };
+  }
+
+  Widget buildDropdownFieldVendedor(ClienteManterUiState viewModel) {
+    final notifier = ref.read(clienteManterViewModelProvider.notifier);
+    final selectedVendedor =
+        viewModel.selectedVendedor ?? notifier.computedSelectedVendedor;
+
+    return CustomDropdownButtonFormField<VendedorResponse>(
+      prefixIcon: Padding(
+        padding: const EdgeInsetsDirectional.only(start: 12, end: 8),
+        child: Icon(
+          Icons.sell,
+          color: kColorStyleSecondinaryLight300,
+          size: 20,
+        ),
+      ),
+      hint: 'Selecione um Vendedor',
+      items: viewModel.vendedores ?? [],
+      itemLabelBuilder: (item) => item.nomeVendedor ?? '',
+      selectedValue: selectedVendedor,
+      validator: (value) {
+        if (value == null) {
+          return 'Por favor selecione um Vendedor.';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        notifier.selectVendedor(value);
+      },
     );
   }
 

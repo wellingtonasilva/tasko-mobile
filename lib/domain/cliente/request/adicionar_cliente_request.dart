@@ -23,7 +23,7 @@ class AdicionarClienteRequest {
   final bool? bloqueado;
   final String? motivoBloqueio;
   final String? numeroTelefone;
-  final String? numeroSecundario;
+  final String? numeroTelefoneSecundario;
   final String? email;
   final String? observacao;
 
@@ -52,7 +52,7 @@ class AdicionarClienteRequest {
     this.bloqueado,
     this.motivoBloqueio,
     this.numeroTelefone,
-    this.numeroSecundario,
+    this.numeroTelefoneSecundario,
     this.email,
     this.observacao,
   });
@@ -83,7 +83,7 @@ class AdicionarClienteRequest {
       bloqueado: json['bloqueado'] as bool?,
       motivoBloqueio: json['motivoBloqueio'] as String?,
       numeroTelefone: json['numeroTelefone'] as String?,
-      numeroSecundario: json['numeroSecundario'] as String?,
+      numeroTelefoneSecundario: json['numeroTelefoneSecundario'] as String?,
       email: json['email'] as String?,
       observacao: json['observacao'] as String?,
     );
@@ -115,7 +115,7 @@ class AdicionarClienteRequest {
       'bloqueado': bloqueado,
       'motivoBloqueio': motivoBloqueio,
       'numeroTelefone': numeroTelefone,
-      'numeroSecundario': numeroSecundario,
+      'numeroTelefoneSecundario': numeroTelefoneSecundario,
       'email': email,
       'observacao': observacao,
     };

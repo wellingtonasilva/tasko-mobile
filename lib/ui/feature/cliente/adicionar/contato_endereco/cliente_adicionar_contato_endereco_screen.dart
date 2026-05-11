@@ -8,33 +8,33 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
-import 'package:tasko_mobile/ui/feature/cliente/manter/cliente_manter_view_model.dart';
-import 'package:tasko_mobile/ui/feature/cliente/manter/contato_endereco/cliente_manter_contato_endereco_controllers.dart';
+import 'package:tasko_mobile/ui/feature/cliente/adicionar/cliente_adicionar_view_model.dart';
+import 'package:tasko_mobile/ui/feature/cliente/adicionar/contato_endereco/cliente_adicionar_contato_endereco_controllers.dart';
 
-class ClienteManterContatoEnderecoScreen extends BaseScreen {
+class ClienteAdicionarContatoEnderecoScreen extends BaseScreen {
   final Function(String value) onPrevious;
   final Function(String value) onNext;
 
-  const ClienteManterContatoEnderecoScreen({
+  const ClienteAdicionarContatoEnderecoScreen({
     super.key,
     required this.onPrevious,
     required this.onNext,
   });
 
   @override
-  BaseScreenState<ClienteManterContatoEnderecoScreen> createState() =>
-      _ClienteManterContatoEnderecoScreenState();
+  BaseScreenState<ClienteAdicionarContatoEnderecoScreen> createState() =>
+      _ClienteAdicionarContatoEnderecoScreenState();
 }
 
-class _ClienteManterContatoEnderecoScreenState
-    extends BaseScreenState<ClienteManterContatoEnderecoScreen> {
-  late final ClienteManterContatoEnderecoControllers _controllers;
+class _ClienteAdicionarContatoEnderecoScreenState
+    extends BaseScreenState<ClienteAdicionarContatoEnderecoScreen> {
+  late final ClienteAdicionarContatoEnderecoControllers _controllers;
   String _hydratedDraftKey = '';
 
   @override
   void initState() {
     super.initState();
-    _controllers = ClienteManterContatoEnderecoControllers();
+    _controllers = ClienteAdicionarContatoEnderecoControllers();
   }
 
   @override
@@ -45,7 +45,7 @@ class _ClienteManterContatoEnderecoScreenState
 
   @override
   Widget buildContent(BuildContext context) {
-    final viewModel = ref.watch(clienteManterViewModelProvider);
+    final viewModel = ref.watch(clienteAdicionarViewModelProvider);
     final draft = viewModel.clienteDraft;
     final draftKey =
         '${draft?.codigoCliente ?? ''}|${draft?.nomeFantasia ?? ''}|${draft?.cnpjCpf ?? ''}';
@@ -261,7 +261,7 @@ class _ClienteManterContatoEnderecoScreenState
     if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
 
     ref
-        .read(clienteManterViewModelProvider.notifier)
+        .read(clienteAdicionarViewModelProvider.notifier)
         .salvarDadosContatoEndereco(
           cep: _controllers.cep.controller.text.trim(),
           logradouro: _controllers.logradouro.controller.text.trim(),
@@ -282,6 +282,6 @@ class _ClienteManterContatoEnderecoScreenState
           observacao: _controllers.observacao.controller.text.trim(),
         );
 
-    ref.read(clienteManterViewModelProvider.notifier).enviar();
+    ref.read(clienteAdicionarViewModelProvider.notifier).enviar();
   }
 }
