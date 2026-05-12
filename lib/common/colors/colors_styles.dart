@@ -90,3 +90,30 @@ const kColorStylePrimaryBasePalette600 = Color(0xFF1C8C6E);
 const kColorStylePrimaryBasePalette200 = Color(0xFFCEEFDF);
 const kColorStylePrimaryBasePalette80 = Color(0xFFECF8F0);
 const kColorStylePrimaryBasePalette = Color(0xFF27A376);
+
+// Agenda Visita
+const kColorStyleAgendaVisitaPrimary = Color(0xFF5B4CF0);
+const kColorStyleAgendaVisitaPrimaryLight = Color(0xFFEDEBFF);
+const kColorStyleAgendaVisitaPrimaryMedium = Color(0xFF7265F6);
+const kColorStyleAgendaVisitaBackground = Color(0xFFF5F6FA);
+const kColorStyleAgendaVisitaSurface = Color(0xFFFFFFFF);
+const kColorStyleAgendaVisitaTextPrimary = Color(0xFF1F1F28);
+const kColorStyleAgendaVisitaTextSecondary = Color(0xFF6F7280);
+const kColorStyleAgendaVisitaTextHint = Color(0xFFA0A3B1);
+const kColorStyleAgendaVisitaBorder = Color(0xFFE5E7EF);
+const kColorStyleAgendaVisitaFocusedBorder = Color(0xFF6C63FF);
+// Pendente
+const kColorStyleAgendaVisitaPendingBg = Color(0xFFFFF3D6);
+const kColorStyleAgendaVisitaPendingText = Color(0xFFC98900);
+// Finalizado
+const kColorStyleAgendaVisitaSuccessBg = Color(0xFFE7F8EC);
+const kColorStyleAgendaVisitaSuccessText = Color(0xFF18A957);
+// Cancelado
+const kColorStyleAgendaVisitaErrorBg = Color(0xFFFDEBEC);
+const kColorStyleAgendaVisitaErrorText = Color(0xFFE14D5A);
+// Botão secundário
+const kColorStyleAgendaVisitaSecondaryButtonBorder = Color(0xFF6C63FF);
+const kColorStyleAgendaVisitaSecondaryButtonText = Color(0xFF5B4CF0);
+const kColorStyleAgendaVisitaPrimaryGradient = LinearGradient(
+  colors: [Color(0xFF5B4CF0), Color(0xFF7265F6)],
+);
