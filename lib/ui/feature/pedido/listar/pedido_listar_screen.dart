@@ -4,12 +4,11 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/common/widgets/card/custom_simple_item_list_card.dart';
-import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_controllers.dart';
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/listar/widgets/custom_pedido_item_list_card.dart';
+import 'package:tasko_mobile/ui/feature/pedido/listar/widgets/pedido_item_status_helper.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class PedidoListarScreen extends BaseScreen {
@@ -53,7 +52,7 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
   @override
   Widget buildContent(BuildContext context) {
     final viewModel = ref.watch(pedidoListarViewModelProvider);
-    final pedidosFiltrados = _filtrarPedidos(viewModel.pedidos ?? []);
+    final pedidosFiltrados = _filtrarPedidos(viewModel.pedidos);
 
     return GestureDetector(
       onTap: () {
@@ -149,6 +148,10 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
                                         final pedido = pedidosFiltrados[index];
                                         return CustomPedidoItemListCard(
                                           pedido: pedido,
+                                          status:
+                                              PedidoItemStatusHelper.getStatus(
+                                                pedido: pedido,
+                                              ),
                                           onTap: _onCustomSimpleItemListCardTap,
                                         );
                                       },
@@ -166,27 +169,6 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
         ),
       ),
     );
-  }
-
-  void _excluirPedido(
-    int id,
-    int indexRemovido,
-    PedidoResponse pedidoRemovido,
-  ) async {
-    final viewModel = ref.read(pedidoListarViewModelProvider);
-
-    setState(() {
-      viewModel.pedidos.removeAt(indexRemovido);
-    });
-
-    await viewModel.excluirPedidoCommand.execute(id);
-    final result = viewModel.excluirPedidoCommand.result;
-
-    if (result is Failure && mounted) {
-      setState(() {
-        viewModel.pedidos.insert(indexRemovido, pedidoRemovido);
-      });
-    }
   }
 
   void _onPesquisarChanged() {
@@ -216,7 +198,7 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
     }
 
     return pedidos.where((pedido) {
-      final id = pedido.id?.toString().toLowerCase() ?? '';
+      final id = pedido.id.toString().toLowerCase();
       final nomeCliente = pedido.nomeFantasiaCliente?.toLowerCase() ?? '';
       final nomeVendedor = pedido.nomeVendedor?.toLowerCase() ?? '';
 
@@ -224,9 +206,5 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
           nomeCliente.contains(pesquisa) ||
           nomeVendedor.contains(pesquisa);
     }).toList();
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 }

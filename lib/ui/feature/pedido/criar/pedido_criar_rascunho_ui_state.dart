@@ -38,6 +38,7 @@ class PedidoCriarRascunhoUiState {
     bool? isEdicao,
     VendedorResponse? vendedor,
     bool clearPedido = false,
+    bool clearVendedor = false,
   }) {
     return PedidoCriarRascunhoUiState(
       criarRascunhoCommand: criarRascunhoCommand ?? this.criarRascunhoCommand,
@@ -45,7 +46,7 @@ class PedidoCriarRascunhoUiState {
           atualizarRascunhoCommand ?? this.atualizarRascunhoCommand,
       pedido: clearPedido ? null : pedido ?? this.pedido,
       isEdicao: isEdicao ?? this.isEdicao,
-      vendedor: vendedor ?? this.vendedor,
+      vendedor: clearVendedor ? null : vendedor ?? this.vendedor,
     );
   }
 }

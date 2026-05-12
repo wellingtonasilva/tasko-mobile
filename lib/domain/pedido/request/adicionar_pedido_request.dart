@@ -15,6 +15,8 @@ class AdicionarPedidoRequest {
   final int? condicaoPagamentoId;
   final double? latitude;
   final double? longitude;
+  final bool? sincronizado;
+  final bool? criadoOffline;
   final String? uuidOffline;
   final String? descricaoCondicaoPagamento;
   final String? descricaoFormaPagamento;
@@ -39,6 +41,8 @@ class AdicionarPedidoRequest {
     this.condicaoPagamentoId,
     this.latitude,
     this.longitude,
+    this.sincronizado,
+    this.criadoOffline,
     this.uuidOffline,
     this.descricaoCondicaoPagamento,
     this.descricaoFormaPagamento,
@@ -64,6 +68,8 @@ class AdicionarPedidoRequest {
     int? condicaoPagamentoId,
     double? latitude,
     double? longitude,
+    bool? sincronizado,
+    bool? criadoOffline,
     String? uuidOffline,
     String? descricaoCondicaoPagamento,
     String? descricaoFormaPagamento,
@@ -88,6 +94,8 @@ class AdicionarPedidoRequest {
       condicaoPagamentoId: condicaoPagamentoId ?? this.condicaoPagamentoId,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      sincronizado: sincronizado ?? this.sincronizado,
+      criadoOffline: criadoOffline ?? this.criadoOffline,
       uuidOffline: uuidOffline ?? this.uuidOffline,
       descricaoCondicaoPagamento:
           descricaoCondicaoPagamento ?? this.descricaoCondicaoPagamento,
@@ -117,6 +125,8 @@ class AdicionarPedidoRequest {
       condicaoPagamentoId: json['condicaoPagamentoId'] as int?,
       latitude: _toDouble(json['latitude']),
       longitude: _toDouble(json['longitude']),
+      sincronizado: json['sincronizado'] as bool?,
+      criadoOffline: json['criadoOffline'] as bool?,
       uuidOffline: json['uuidOffline'] as String?,
       descricaoCondicaoPagamento: json['descricaoCondicaoPagamento'] as String?,
       descricaoFormaPagamento: json['descricaoFormaPagamento'] as String?,
@@ -144,6 +154,8 @@ class AdicionarPedidoRequest {
       'condicaoPagamentoId': condicaoPagamentoId,
       'latitude': latitude,
       'longitude': longitude,
+      'sincronizado': sincronizado,
+      'criadoOffline': criadoOffline,
       'uuidOffline': uuidOffline,
       'descricaoCondicaoPagamento': descricaoCondicaoPagamento,
       'descricaoFormaPagamento': descricaoFormaPagamento,

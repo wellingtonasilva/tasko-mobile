@@ -172,7 +172,18 @@ class PedidoCriarRascunhoViewModel
   }
 
   void limpar() {
-    state = state.copyWith(clearPedido: true, isEdicao: false);
+    state = state.copyWith(
+      clearPedido: true,
+      clearVendedor: true,
+      isEdicao: false,
+    );
+  }
+
+  void resetFluxoCompleto() {
+    limpar();
+    ref.read(pedidoCriarClienteViewModelProvider.notifier).limparSelecao();
+    ref.read(pedidoCriarProdutoViewModelProvider.notifier).limparCarrinho();
+    ref.read(pedidoCriarPagamentoViewModelProvider.notifier).limparPagamento();
   }
 }
 

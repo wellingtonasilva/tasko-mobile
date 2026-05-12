@@ -17,11 +17,14 @@ class PedidoCriarClienteUiState {
     Command0<void>? listarClienteCommand,
     List<ClienteResponse>? clientes,
     ClienteResponse? selectedCliente,
+    bool clearSelectedCliente = false,
   }) {
     return PedidoCriarClienteUiState(
       listarClienteCommand: listarClienteCommand ?? this.listarClienteCommand,
       clientes: clientes ?? this.clientes,
-      selectedCliente: selectedCliente ?? this.selectedCliente,
+      selectedCliente: clearSelectedCliente
+          ? null
+          : selectedCliente ?? this.selectedCliente,
     );
   }
 }

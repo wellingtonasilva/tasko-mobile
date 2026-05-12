@@ -481,6 +481,10 @@ class _PedidoCriarPagamentoScreenState
     final formaPagamento = paymentMethods[effectivePaymentMethodIndex];
     final condicao = paymentConditions[effectivePaymentConditionIndex];
     final pedido = draftState.pedido!;
+    if (pedido.id == 0) {
+      showSnackBar('Rascunho inválido. Reinicie o fluxo.', isError: true);
+      return;
+    }
 
     final produtoState = ref.read(pedidoCriarProdutoViewModelProvider);
     final itens = produtoState.carrinhoQuantidades.entries.map((e) {
@@ -522,8 +526,7 @@ class _PedidoCriarPagamentoScreenState
       substituirItens: false,
     ));
 
-    final updated = ref.read(pedidoCriarRascunhoViewModelProvider);
-    if (updated.pedido != null && mounted) {
+    if (draftState.atualizarRascunhoCommand.completed && mounted) {
       widget.onNext('Pagamento');
     }
   }

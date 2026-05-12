@@ -71,6 +71,9 @@ class PedidoCriarResumoViewModel extends Notifier<PedidoCriarResumoUiState> {
         condicaoPagamentoId: rascunho.condicaoPagamentoId,
         latitude: rascunho.latitude,
         longitude: rascunho.longitude,
+        sincronizado: rascunho.sincronizado,
+        criadoOffline: rascunho.criadoOffline,
+        uuidOffline: rascunho.uuidOffline,
         empresaId:
             (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
                 ?.empresas
@@ -98,6 +101,9 @@ class PedidoCriarResumoViewModel extends Notifier<PedidoCriarResumoUiState> {
         condicaoPagamentoId: rascunho.condicaoPagamentoId,
         latitude: rascunho.latitude,
         longitude: rascunho.longitude,
+        sincronizado: rascunho.sincronizado,
+        criadoOffline: rascunho.criadoOffline,
+        uuidOffline: rascunho.uuidOffline,
         empresaId:
             (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
                 ?.empresas

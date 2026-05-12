@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static const _dbName = 'tasko_mobile.db';
-  static const _dbVersion = 8;
+  static const _dbVersion = 9;
 
   static const vendedoresTable = 'vendedores';
   static const syncQueueTable = 'sync_queue';
@@ -83,6 +83,23 @@ class DatabaseService {
     if (oldVersion < 8) {
       await _upgradeToV8(db);
     }
+
+    if (oldVersion < 9) {
+      await _upgradeToV9(db);
+    }
+  }
+
+  Future<void> _upgradeToV9(Database db) async {
+    await _addColumnIfNotExists(db, pedidosTable, 'sync_status', 'TEXT');
+    await db.execute('''
+      UPDATE $pedidosTable
+      SET sync_status = CASE
+        WHEN sync_error IS NOT NULL AND TRIM(sync_error) <> '' THEN 'error'
+        WHEN dirty = 1 OR sincronizado = 0 THEN 'pending'
+        ELSE 'synced'
+      END
+      WHERE sync_status IS NULL
+    ''');
   }
 
   Future<void> _upgradeToV8(Database db) async {
@@ -215,6 +232,7 @@ class DatabaseService {
         synced_at TEXT,
         dirty INTEGER NOT NULL DEFAULT 0,
         deleted INTEGER NOT NULL DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'synced',
         sync_error TEXT,
         sync_attempt_count INTEGER NOT NULL DEFAULT 0
       )

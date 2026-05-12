@@ -3,12 +3,19 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/widgets/tags/custom_tag.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
+import 'package:tasko_mobile/ui/feature/pedido/listar/widgets/pedido_item_status_helper.dart';
 
 class CustomPedidoItemListCard extends StatelessWidget {
   final PedidoResponse pedido;
   final Function(int id)? onTap;
+  final PedidoSyncStatus status;
 
-  const CustomPedidoItemListCard({super.key, required this.pedido, this.onTap});
+  const CustomPedidoItemListCard({
+    super.key,
+    required this.pedido,
+    required this.status,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -163,22 +170,47 @@ class CustomPedidoItemListCard extends StatelessWidget {
                         Expanded(
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.circle,
-                                color: pedido.sincronizado
-                                    ? kColorStyleSuccessDark500
-                                    : kColorStyleErrorLight300,
-                                size: 12,
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                pedido.sincronizado
-                                    ? 'Sincronizado'
-                                    : 'Não Sincronizado',
-                                style: kTestStyleMediumText12.copyWith(
-                                  color: kColorStyleSecondinaryDark400,
+                              if (status == PedidoSyncStatus.sincronizado) ...[
+                                Icon(
+                                  Icons.check_circle,
+                                  color: kColorStyleSuccessDark500,
+                                  size: 16,
                                 ),
-                              ),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Sincronizado',
+                                  style: kTestStyleMediumText12.copyWith(
+                                    color: kColorStyleSuccessDark500,
+                                  ),
+                                ),
+                              ] else if (status ==
+                                  PedidoSyncStatus.pendente) ...[
+                                Icon(
+                                  Icons.sync,
+                                  color: kColorStyleWarningDark500,
+                                  size: 16,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Pendente',
+                                  style: kTestStyleMediumText12.copyWith(
+                                    color: kColorStyleWarningDark500,
+                                  ),
+                                ),
+                              ] else if (status == PedidoSyncStatus.erro) ...[
+                                Icon(
+                                  Icons.error,
+                                  color: kColorStyleErrorDark500,
+                                  size: 16,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Erro de Sync',
+                                  style: kTestStyleMediumText12.copyWith(
+                                    color: kColorStyleErrorDark500,
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ),
@@ -197,21 +229,5 @@ class CustomPedidoItemListCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String getIniciais(String name) {
-    final trimmed = name.trim();
-
-    if (trimmed.isEmpty) return "";
-
-    final words = trimmed.split(RegExp(r'\s+'));
-
-    final initials = words
-        .where((w) => w.isNotEmpty)
-        .take(2)
-        .map((w) => w[0].toUpperCase())
-        .join();
-
-    return initials;
   }
 }
