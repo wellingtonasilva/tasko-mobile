@@ -15,7 +15,14 @@ class AdicionarPedidoRequest {
   final int? condicaoPagamentoId;
   final double? latitude;
   final double? longitude;
+  final bool? sincronizado;
+  final bool? criadoOffline;
   final String? uuidOffline;
+  final String? descricaoCondicaoPagamento;
+  final String? descricaoFormaPagamento;
+  final String? nomeVendedor;
+  final String? nomeFantasiaCliente;
+  final String? descricaoStatusTipo;
 
   AdicionarPedidoRequest({
     required this.clienteId,
@@ -34,8 +41,71 @@ class AdicionarPedidoRequest {
     this.condicaoPagamentoId,
     this.latitude,
     this.longitude,
+    this.sincronizado,
+    this.criadoOffline,
     this.uuidOffline,
+    this.descricaoCondicaoPagamento,
+    this.descricaoFormaPagamento,
+    this.nomeVendedor,
+    this.nomeFantasiaCliente,
+    this.descricaoStatusTipo,
   });
+
+  AdicionarPedidoRequest copyWith({
+    int? clienteId,
+    int? empresaId,
+    int? vendedorId,
+    int? pedidoStatusTipoId,
+    String? dataPedido,
+    String? dataEntregaPrevista,
+    String? observacao,
+    double? subtotal,
+    double? percentualDesconto,
+    double? valorDesconto,
+    double? valorFrete,
+    double? valorTotal,
+    int? formaPagamentoId,
+    int? condicaoPagamentoId,
+    double? latitude,
+    double? longitude,
+    bool? sincronizado,
+    bool? criadoOffline,
+    String? uuidOffline,
+    String? descricaoCondicaoPagamento,
+    String? descricaoFormaPagamento,
+    String? nomeVendedor,
+    String? nomeFantasiaCliente,
+    String? descricaoStatusTipo,
+  }) {
+    return AdicionarPedidoRequest(
+      clienteId: clienteId ?? this.clienteId,
+      empresaId: empresaId ?? this.empresaId,
+      vendedorId: vendedorId ?? this.vendedorId,
+      pedidoStatusTipoId: pedidoStatusTipoId ?? this.pedidoStatusTipoId,
+      dataPedido: dataPedido ?? this.dataPedido,
+      dataEntregaPrevista: dataEntregaPrevista ?? this.dataEntregaPrevista,
+      observacao: observacao ?? this.observacao,
+      subtotal: subtotal ?? this.subtotal,
+      percentualDesconto: percentualDesconto ?? this.percentualDesconto,
+      valorDesconto: valorDesconto ?? this.valorDesconto,
+      valorFrete: valorFrete ?? this.valorFrete,
+      valorTotal: valorTotal ?? this.valorTotal,
+      formaPagamentoId: formaPagamentoId ?? this.formaPagamentoId,
+      condicaoPagamentoId: condicaoPagamentoId ?? this.condicaoPagamentoId,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      sincronizado: sincronizado ?? this.sincronizado,
+      criadoOffline: criadoOffline ?? this.criadoOffline,
+      uuidOffline: uuidOffline ?? this.uuidOffline,
+      descricaoCondicaoPagamento:
+          descricaoCondicaoPagamento ?? this.descricaoCondicaoPagamento,
+      descricaoFormaPagamento:
+          descricaoFormaPagamento ?? this.descricaoFormaPagamento,
+      nomeVendedor: nomeVendedor ?? this.nomeVendedor,
+      nomeFantasiaCliente: nomeFantasiaCliente ?? this.nomeFantasiaCliente,
+      descricaoStatusTipo: descricaoStatusTipo ?? this.descricaoStatusTipo,
+    );
+  }
 
   factory AdicionarPedidoRequest.fromJson(Map<String, dynamic> json) {
     return AdicionarPedidoRequest(
@@ -55,7 +125,14 @@ class AdicionarPedidoRequest {
       condicaoPagamentoId: json['condicaoPagamentoId'] as int?,
       latitude: _toDouble(json['latitude']),
       longitude: _toDouble(json['longitude']),
+      sincronizado: json['sincronizado'] as bool?,
+      criadoOffline: json['criadoOffline'] as bool?,
       uuidOffline: json['uuidOffline'] as String?,
+      descricaoCondicaoPagamento: json['descricaoCondicaoPagamento'] as String?,
+      descricaoFormaPagamento: json['descricaoFormaPagamento'] as String?,
+      nomeVendedor: json['nomeVendedor'] as String?,
+      nomeFantasiaCliente: json['nomeFantasiaCliente'] as String?,
+      descricaoStatusTipo: json['descricaoStatusTipo'] as String?,
     );
   }
 
@@ -77,7 +154,14 @@ class AdicionarPedidoRequest {
       'condicaoPagamentoId': condicaoPagamentoId,
       'latitude': latitude,
       'longitude': longitude,
+      'sincronizado': sincronizado,
+      'criadoOffline': criadoOffline,
       'uuidOffline': uuidOffline,
+      'descricaoCondicaoPagamento': descricaoCondicaoPagamento,
+      'descricaoFormaPagamento': descricaoFormaPagamento,
+      'nomeVendedor': nomeVendedor,
+      'nomeFantasiaCliente': nomeFantasiaCliente,
+      'descricaoStatusTipo': descricaoStatusTipo,
     };
   }
 

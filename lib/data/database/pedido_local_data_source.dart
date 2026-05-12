@@ -9,6 +9,11 @@ import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class PedidoLocalDataSource {
+  static const syncStatusPending = 'pending';
+  static const syncStatusProcessing = 'processing';
+  static const syncStatusSynced = 'synced';
+  static const syncStatusError = 'error';
+
   PedidoLocalDataSource({required DatabaseService databaseService})
     : _databaseService = databaseService;
 
@@ -66,8 +71,14 @@ class PedidoLocalDataSource {
         'synced_at': null,
         'dirty': 0,
         'deleted': 0,
+        'sync_status': syncStatusPending,
         'sync_error': null,
         'sync_attempt_count': 0,
+        'descricao_condicao_pagamento': request.descricaoCondicaoPagamento,
+        'descricao_forma_pagamento': request.descricaoFormaPagamento,
+        'nome_vendedor': request.nomeVendedor,
+        'nome_fantasia_cliente': request.nomeFantasiaCliente,
+        'descricao_status_tipo': request.descricaoStatusTipo,
       };
 
       final createdItens = <PedidoItemResponse>[];
@@ -143,6 +154,14 @@ class PedidoLocalDataSource {
           uuidOffline: pedido.uuidOffline,
           auditoria: pedido.auditoria,
           itens: createdItens,
+          descricaoCondicaoPagamento: pedido.descricaoCondicaoPagamento,
+          descricaoFormaPagamento: pedido.descricaoFormaPagamento,
+          nomeVendedor: pedido.nomeVendedor,
+          nomeFantasiaCliente: pedido.nomeFantasiaCliente,
+          descricaoStatusTipo: pedido.descricaoStatusTipo,
+          syncStatus: pedido.syncStatus,
+          syncError: pedido.syncError,
+          syncAttemptCount: pedido.syncAttemptCount,
         ),
       );
     } on Exception catch (error) {
@@ -221,8 +240,14 @@ class PedidoLocalDataSource {
           'synced_at': null,
           'dirty': 0,
           'deleted': 0,
+          'sync_status': syncStatusPending,
           'sync_error': null,
           'sync_attempt_count': 0,
+          'descricao_condicao_pagamento': request.descricaoCondicaoPagamento,
+          'descricao_forma_pagamento': request.descricaoFormaPagamento,
+          'nome_vendedor': request.nomeVendedor,
+          'nome_fantasia_cliente': request.nomeFantasiaCliente,
+          'descricao_status_tipo': request.descricaoStatusTipo,
         };
 
         await txn.update(
@@ -314,6 +339,12 @@ class PedidoLocalDataSource {
                 (existingRow['auditoria_indicador_ativo'] as int?) == 1,
           ),
           itens: itensRows.map(_itemFromRow).toList(),
+          descricaoCondicaoPagamento: request.descricaoCondicaoPagamento,
+          descricaoFormaPagamento: request.descricaoFormaPagamento,
+          nomeVendedor: request.nomeVendedor,
+          nomeFantasiaCliente: request.nomeFantasiaCliente,
+          descricaoStatusTipo: request.descricaoStatusTipo,
+          syncStatus: syncStatusPending,
         );
       });
 
@@ -370,6 +401,14 @@ class PedidoLocalDataSource {
             uuidOffline: pedido.uuidOffline,
             auditoria: pedido.auditoria,
             itens: itens,
+            descricaoCondicaoPagamento: pedido.descricaoCondicaoPagamento,
+            descricaoFormaPagamento: pedido.descricaoFormaPagamento,
+            nomeVendedor: pedido.nomeVendedor,
+            nomeFantasiaCliente: pedido.nomeFantasiaCliente,
+            descricaoStatusTipo: pedido.descricaoStatusTipo,
+            syncStatus: pedido.syncStatus,
+            syncError: pedido.syncError,
+            syncAttemptCount: pedido.syncAttemptCount,
           ),
         );
       }
@@ -428,6 +467,14 @@ class PedidoLocalDataSource {
           uuidOffline: pedido.uuidOffline,
           auditoria: pedido.auditoria,
           itens: itens,
+          descricaoCondicaoPagamento: pedido.descricaoCondicaoPagamento,
+          descricaoFormaPagamento: pedido.descricaoFormaPagamento,
+          nomeVendedor: pedido.nomeVendedor,
+          nomeFantasiaCliente: pedido.nomeFantasiaCliente,
+          descricaoStatusTipo: pedido.descricaoStatusTipo,
+          syncStatus: pedido.syncStatus,
+          syncError: pedido.syncError,
+          syncAttemptCount: pedido.syncAttemptCount,
         ),
       );
     } on Exception catch (error) {
@@ -501,8 +548,14 @@ class PedidoLocalDataSource {
         'synced_at': null,
         'dirty': 1,
         'deleted': 0,
+        'sync_status': syncStatusPending,
         'sync_error': null,
         'sync_attempt_count': 0,
+        'descricao_condicao_pagamento': request.descricaoCondicaoPagamento,
+        'descricao_forma_pagamento': request.descricaoFormaPagamento,
+        'nome_vendedor': request.nomeVendedor,
+        'nome_fantasia_cliente': request.nomeFantasiaCliente,
+        'descricao_status_tipo': request.descricaoStatusTipo,
       };
 
       final createdItens = <PedidoItemResponse>[];
@@ -576,6 +629,14 @@ class PedidoLocalDataSource {
           criadoOffline: pedido.criadoOffline,
           uuidOffline: pedido.uuidOffline,
           auditoria: pedido.auditoria,
+          descricaoCondicaoPagamento: pedido.descricaoCondicaoPagamento,
+          descricaoFormaPagamento: pedido.descricaoFormaPagamento,
+          nomeVendedor: pedido.nomeVendedor,
+          nomeFantasiaCliente: pedido.nomeFantasiaCliente,
+          descricaoStatusTipo: pedido.descricaoStatusTipo,
+          syncStatus: pedido.syncStatus,
+          syncError: pedido.syncError,
+          syncAttemptCount: pedido.syncAttemptCount,
           itens: createdItens,
         ),
       );
@@ -639,6 +700,7 @@ class PedidoLocalDataSource {
         {
           'deleted': 1,
           'dirty': 1,
+          'sync_status': syncStatusPending,
           'local_updated_at': DateTime.now().toUtc().toIso8601String(),
         },
         where: 'id = ?',
@@ -654,11 +716,45 @@ class PedidoLocalDataSource {
     try {
       final db = await _databaseService.database;
       await db.transaction((txn) async {
-        await txn.delete(DatabaseService.pedidoItensTable);
-        await txn.delete(DatabaseService.pedidosTable);
+        final protectedRows = await txn.query(
+          DatabaseService.pedidosTable,
+          columns: ['id'],
+          where:
+              'deleted = 1 OR dirty = 1 OR is_draft = 1 OR sincronizado = 0 OR sync_status IN (?, ?, ?)',
+          whereArgs: [syncStatusPending, syncStatusProcessing, syncStatusError],
+        );
+
+        final protectedIds = protectedRows
+            .map((row) => row['id'])
+            .whereType<int>()
+            .toSet();
+
+        if (protectedIds.isEmpty) {
+          await txn.delete(DatabaseService.pedidoItensTable);
+          await txn.delete(DatabaseService.pedidosTable);
+        } else {
+          final placeholders = List.filled(protectedIds.length, '?').join(', ');
+          final whereClause = 'pedido_id NOT IN ($placeholders)';
+          final wherePedidoClause = 'id NOT IN ($placeholders)';
+
+          await txn.delete(
+            DatabaseService.pedidoItensTable,
+            where: whereClause,
+            whereArgs: protectedIds.toList(),
+          );
+          await txn.delete(
+            DatabaseService.pedidosTable,
+            where: wherePedidoClause,
+            whereArgs: protectedIds.toList(),
+          );
+        }
 
         final nowIso = DateTime.now().toUtc().toIso8601String();
         for (final pedido in pedidos) {
+          if (protectedIds.contains(pedido.id)) {
+            continue;
+          }
+
           await txn.insert(
             DatabaseService.pedidosTable,
             _toRow(pedido, nowIso, markAsDirty: false),
@@ -675,6 +771,41 @@ class PedidoLocalDataSource {
         }
       });
 
+      return Result.success(null);
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
+  Future<Result<void>> updateSyncState({
+    required int pedidoId,
+    required String syncStatus,
+    required bool sincronizado,
+    String? syncError,
+    int? syncAttemptCount,
+    bool? dirty,
+    DateTime? syncedAt,
+    bool clearSyncError = false,
+  }) async {
+    try {
+      final db = await _databaseService.database;
+      final values = <String, Object?>{
+        'sync_status': syncStatus,
+        'sincronizado': sincronizado ? 1 : 0,
+        'sync_attempt_count': syncAttemptCount,
+        'dirty': dirty,
+        'synced_at': syncedAt?.toUtc().toIso8601String(),
+        'local_updated_at': DateTime.now().toUtc().toIso8601String(),
+      };
+      if (clearSyncError || syncError != null) {
+        values['sync_error'] = syncError;
+      }
+      await db.update(
+        DatabaseService.pedidosTable,
+        values..removeWhere((key, value) => value == null),
+        where: 'id = ?',
+        whereArgs: [pedidoId],
+      );
       return Result.success(null);
     } on Exception catch (error) {
       return Result.failure([error.toString()]);
@@ -751,7 +882,7 @@ class PedidoLocalDataSource {
       'condicao_pagamento_nome': pedido.condicaoPagamentoNome,
       'latitude': pedido.latitude,
       'longitude': pedido.longitude,
-      'sincronizado': pedido.sincronizado ? 1 : 0,
+      'sincronizado': markAsDirty ? 0 : 1,
       'criado_offline': pedido.criadoOffline ? 1 : 0,
       'uuid_offline': pedido.uuidOffline,
       'auditoria_criado_em': pedido.auditoria?.criadoEm
@@ -770,8 +901,16 @@ class PedidoLocalDataSource {
       'synced_at': markAsDirty ? null : nowIso,
       'dirty': markAsDirty ? 1 : 0,
       'deleted': 0,
+      'sync_status': markAsDirty
+          ? (pedido.syncStatus ?? syncStatusPending)
+          : syncStatusSynced,
       'sync_error': null,
       'sync_attempt_count': markAsDirty ? 1 : 0,
+      'descricao_condicao_pagamento': pedido.descricaoCondicaoPagamento,
+      'descricao_forma_pagamento': pedido.descricaoFormaPagamento,
+      'nome_vendedor': pedido.nomeVendedor,
+      'nome_fantasia_cliente': pedido.nomeFantasiaCliente,
+      'descricao_status_tipo': pedido.descricaoStatusTipo,
     };
   }
 
@@ -806,6 +945,15 @@ class PedidoLocalDataSource {
         atualizadoEm: _toDateTime(row['auditoria_atualizado_em']),
         indicadorAtivo: (row['auditoria_indicador_ativo'] as int?) == 1,
       ),
+      descricaoCondicaoPagamento:
+          row['descricao_condicao_pagamento'] as String?,
+      descricaoFormaPagamento: row['descricao_forma_pagamento'] as String?,
+      nomeVendedor: row['nome_vendedor'] as String?,
+      nomeFantasiaCliente: row['nome_fantasia_cliente'] as String?,
+      descricaoStatusTipo: row['descricao_status_tipo'] as String?,
+      syncStatus: row['sync_status'] as String?,
+      syncError: row['sync_error'] as String?,
+      syncAttemptCount: (row['sync_attempt_count'] as int?) ?? 0,
     );
   }
 

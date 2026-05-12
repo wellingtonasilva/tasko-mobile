@@ -1,6 +1,12 @@
 // Regular
 import 'package:flutter/material.dart';
 
+const kTestStyleRegularText10 = TextStyle(
+  fontFamily: 'Manrope',
+  fontSize: 10,
+  fontWeight: FontWeight.w400,
+);
+
 const kTestStyleRegularText12 = TextStyle(
   fontFamily: 'Manrope',
   fontSize: 12,

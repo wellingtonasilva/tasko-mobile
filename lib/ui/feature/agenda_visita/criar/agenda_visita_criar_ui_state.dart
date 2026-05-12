@@ -1,9 +1,78 @@
+import 'package:tasko_mobile/domain/agenda_visita/request/adicionar_agenda_visita_request.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_response.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_status_response.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/util/command.dart';
 
+class AgendaVisitaCriarUiState {
+  final Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>
+  adicionarCommand;
+  final Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>
+  salvarVisitaCommand;
+
+  // Vendedor
+  final Command0<void> listarVendedorCommand;
+  List<VendedorResponse>? vendedores;
+  VendedorResponse? selectedVendedor;
+
+  // Cliente
+  final Command0<void> listarClienteCommand;
+  List<ClienteResponse>? clientes;
+  ClienteResponse? selectedCliente;
+
+  // Status
+  final Command0<void> listarStatusCommand;
+  List<AgendaVisitaStatusResponse>? statusList;
+  AgendaVisitaStatusResponse? selectedStatus;
+
+  AgendaVisitaCriarUiState({
+    required this.adicionarCommand,
+    required this.salvarVisitaCommand,
+    required this.listarVendedorCommand,
+    this.vendedores,
+    this.selectedVendedor,
+    required this.listarClienteCommand,
+    this.clientes,
+    this.selectedCliente,
+    required this.listarStatusCommand,
+    this.statusList,
+    this.selectedStatus,
+  });
+
+  AgendaVisitaCriarUiState copyWith({
+    Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>?
+    adicionarCommand,
+    Command0<void>? listarVendedorCommand,
+    List<VendedorResponse>? vendedores,
+    VendedorResponse? selectedVendedor,
+    Command0<void>? listarClienteCommand,
+    List<ClienteResponse>? clientes,
+    ClienteResponse? selectedCliente,
+    Command0<void>? listarStatusCommand,
+    List<AgendaVisitaStatusResponse>? statusList,
+    AgendaVisitaStatusResponse? selectedStatus,
+    Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>?
+    salvarVisitaCommand,
+  }) {
+    return AgendaVisitaCriarUiState(
+      listarClienteCommand: listarClienteCommand ?? this.listarClienteCommand,
+      clientes: clientes ?? this.clientes,
+      selectedCliente: selectedCliente ?? this.selectedCliente,
+      adicionarCommand: adicionarCommand ?? this.adicionarCommand,
+      listarVendedorCommand:
+          listarVendedorCommand ?? this.listarVendedorCommand,
+      vendedores: vendedores ?? this.vendedores,
+      selectedVendedor: selectedVendedor ?? this.selectedVendedor,
+      listarStatusCommand: listarStatusCommand ?? this.listarStatusCommand,
+      statusList: statusList ?? this.statusList,
+      selectedStatus: selectedStatus ?? this.selectedStatus,
+      salvarVisitaCommand: salvarVisitaCommand ?? this.salvarVisitaCommand,
+    );
+  }
+}
+
+/*
 class AgendaVisitaCriarUiState {
   final List<ClienteResponse> clientes;
   final ClienteResponse? clienteSelecionado;
@@ -77,3 +146,5 @@ class AgendaVisitaCriarUiState {
     );
   }
 }
+
+*/

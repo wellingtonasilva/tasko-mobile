@@ -22,6 +22,13 @@ class PedidoCriarPagamentoViewModel
       condicaoPagamentoNome: condicaoNome,
     );
   }
+
+  void limparPagamento() {
+    state = state.copyWith(
+      clearFormaPagamento: true,
+      clearCondicaoPagamento: true,
+    );
+  }
 }
 
 final pedidoCriarPagamentoViewModelProvider =

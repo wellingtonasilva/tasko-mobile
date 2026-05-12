@@ -227,6 +227,12 @@ class _PedidoCriarClienteScreenState
                             child: CustomButtonSecondary(
                               label: 'Cancelar',
                               onPressed: () {
+                                ref
+                                    .read(
+                                      pedidoCriarRascunhoViewModelProvider
+                                          .notifier,
+                                    )
+                                    .resetFluxoCompleto();
                                 widget.onPrevious(
                                   _controllers.pesquisaCliente.controller.text,
                                 );
@@ -264,17 +270,6 @@ class _PedidoCriarClienteScreenState
       return;
     }
 
-    final vendedorId = 2;
-    /*
-        ref.read(vendedorSelecionadoIdProvider) ?? cliente.vendedorId;
-    if (vendedorId == null) {
-      showSnackBar(
-        'Selecione um vendedor antes de criar o pedido',
-        isError: true,
-      );
-      return;
-    }
-    */
     final request = AdicionarPedidoRequest(
       empresaId:
           (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
@@ -283,7 +278,11 @@ class _PedidoCriarClienteScreenState
               ?.empresaId ??
           0,
       clienteId: cliente.id,
-      vendedorId: vendedorId,
+      vendedorId:
+          (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
+              ?.vendedor
+              ?.id ??
+          0,
       dataPedido: DateTime.now().toUtc().toIso8601String(),
       subtotal: 0,
       valorTotal: 0,
@@ -292,9 +291,18 @@ class _PedidoCriarClienteScreenState
     );
 
     final draftState = ref.read(pedidoCriarRascunhoViewModelProvider);
-    if (draftState.pedido == null) {
+    final shouldCreateDraft =
+        draftState.pedido == null ||
+        (!draftState.isEdicao && draftState.pedido!.id == 0);
+
+    if (shouldCreateDraft) {
       await draftState.criarRascunhoCommand.execute(request);
     } else {
+      if (draftState.pedido!.id == 0) {
+        showSnackBar('Rascunho inválido. Reinicie o fluxo.', isError: true);
+        return;
+      }
+
       await draftState.atualizarRascunhoCommand.execute((
         pedidoId: draftState.pedido!.id,
         request: request,
@@ -306,8 +314,11 @@ class _PedidoCriarClienteScreenState
       ));
     }
 
-    final updatedDraftState = ref.read(pedidoCriarRascunhoViewModelProvider);
-    if (updatedDraftState.pedido != null) {
+    final comandoCompletou = shouldCreateDraft
+        ? draftState.criarRascunhoCommand.completed
+        : draftState.atualizarRascunhoCommand.completed;
+
+    if (comandoCompletou && mounted) {
       widget.onNext(_controllers.pesquisaCliente.controller.text);
     }
   }

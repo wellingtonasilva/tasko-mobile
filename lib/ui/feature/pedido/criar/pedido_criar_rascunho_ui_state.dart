@@ -1,6 +1,7 @@
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_item_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/util/command.dart';
 
 typedef AtualizarPedidoRascunhoArgs = ({
@@ -19,12 +20,14 @@ class PedidoCriarRascunhoUiState {
   atualizarRascunhoCommand;
   final PedidoResponse? pedido;
   final bool isEdicao;
+  final VendedorResponse? vendedor;
 
   const PedidoCriarRascunhoUiState({
     required this.criarRascunhoCommand,
     required this.atualizarRascunhoCommand,
     this.pedido,
     this.isEdicao = false,
+    this.vendedor,
   });
 
   PedidoCriarRascunhoUiState copyWith({
@@ -33,7 +36,9 @@ class PedidoCriarRascunhoUiState {
     atualizarRascunhoCommand,
     PedidoResponse? pedido,
     bool? isEdicao,
+    VendedorResponse? vendedor,
     bool clearPedido = false,
+    bool clearVendedor = false,
   }) {
     return PedidoCriarRascunhoUiState(
       criarRascunhoCommand: criarRascunhoCommand ?? this.criarRascunhoCommand,
@@ -41,6 +46,7 @@ class PedidoCriarRascunhoUiState {
           atualizarRascunhoCommand ?? this.atualizarRascunhoCommand,
       pedido: clearPedido ? null : pedido ?? this.pedido,
       isEdicao: isEdicao ?? this.isEdicao,
+      vendedor: clearVendedor ? null : vendedor ?? this.vendedor,
     );
   }
 }

@@ -49,6 +49,10 @@ class PedidoCriarProdutoViewModel extends Notifier<PedidoCriarProdutoUiState> {
     };
     state = state.copyWith(carrinhoQuantidades: quantidades);
   }
+
+  void limparCarrinho() {
+    state = state.copyWith(carrinhoQuantidades: {});
+  }
 }
 
 final pedidoCriarProdutoViewModelProvider =

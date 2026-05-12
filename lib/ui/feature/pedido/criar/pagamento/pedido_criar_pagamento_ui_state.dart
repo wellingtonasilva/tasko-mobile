@@ -10,11 +10,16 @@ class PedidoCriarPagamentoUiState {
   PedidoCriarPagamentoUiState copyWith({
     String? formaPagamentoNome,
     String? condicaoPagamentoNome,
+    bool clearFormaPagamento = false,
+    bool clearCondicaoPagamento = false,
   }) {
     return PedidoCriarPagamentoUiState(
-      formaPagamentoNome: formaPagamentoNome ?? this.formaPagamentoNome,
-      condicaoPagamentoNome:
-          condicaoPagamentoNome ?? this.condicaoPagamentoNome,
+      formaPagamentoNome: clearFormaPagamento
+          ? null
+          : formaPagamentoNome ?? this.formaPagamentoNome,
+      condicaoPagamentoNome: clearCondicaoPagamento
+          ? null
+          : condicaoPagamentoNome ?? this.condicaoPagamentoNome,
     );
   }
 }

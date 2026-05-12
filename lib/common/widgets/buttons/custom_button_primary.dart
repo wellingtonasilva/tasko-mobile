@@ -8,6 +8,7 @@ class CustomButtonPrimary extends StatelessWidget {
   final IconData? leadingIcon;
   final IconData? trailingIcon;
   final double height;
+  final Color? backgroundColor;
 
   const CustomButtonPrimary({
     super.key,
@@ -16,6 +17,7 @@ class CustomButtonPrimary extends StatelessWidget {
     this.leadingIcon,
     this.trailingIcon,
     this.height = 50.0,
+    this.backgroundColor,
   });
 
   @override
@@ -23,10 +25,10 @@ class CustomButtonPrimary extends StatelessWidget {
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: kColorStylePrimaryNeutralPaletteDarkDefault,
+        color: backgroundColor ?? kColorStylePrimaryNeutralPaletteDarkDefault,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: kColorStylePrimaryNeutralPaletteDark600,
+          color: backgroundColor ?? kColorStylePrimaryNeutralPaletteDark600,
           width: 1,
         ),
       ),

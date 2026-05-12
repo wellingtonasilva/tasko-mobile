@@ -156,6 +156,7 @@ abstract class BaseScreenState<T extends BaseScreen> extends ConsumerState<T> {
     bool isShowHint = false,
     double topPadding = 10,
     bool isMandatory = false,
+    bool showBorder = true,
   }) {
     return Padding(
       padding: EdgeInsets.only(top: topPadding),
@@ -173,6 +174,7 @@ abstract class BaseScreenState<T extends BaseScreen> extends ConsumerState<T> {
             hintText: isShowHint ? field.hintText : null,
             inputFormatters: field.inputFormatters,
             keyboardType: field.keyboardType,
+            showBorder: showBorder,
           ),
         ],
       ),

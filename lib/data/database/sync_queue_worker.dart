@@ -93,10 +93,12 @@ class SyncQueueWorker {
       if (markProcessingResult is Failure<void>) {
         continue;
       }
+      await _syncPedidoStateProcessing(item);
 
       final processResult = await _processItem(item);
       if (processResult is Success<void>) {
         await _queue.markDone(item.id);
+        await _syncPedidoStateDone(item);
         continue;
       }
 
@@ -113,6 +115,7 @@ class SyncQueueWorker {
           attemptCount: nextAttemptCount,
           error: errorMessage,
         );
+        await _syncPedidoStateError(item, errorMessage, nextAttemptCount);
         continue;
       }
 
@@ -122,6 +125,7 @@ class SyncQueueWorker {
         delay: _computeBackoff(nextAttemptCount),
         error: errorMessage,
       );
+      await _syncPedidoStatePending(item, errorMessage, nextAttemptCount);
     }
 
     return Result.success(null);
@@ -189,6 +193,94 @@ class SyncQueueWorker {
     } on Exception catch (error) {
       return Result.failure([error.toString()]);
     }
+  }
+
+  Future<void> _syncPedidoStateProcessing(SyncQueueItem item) async {
+    if (item.entityType != _entityTypePedido) {
+      return;
+    }
+
+    final pedidoId = int.tryParse(item.entityId);
+    if (pedidoId == null) {
+      return;
+    }
+
+    await _pedidoLocal.updateSyncState(
+      pedidoId: pedidoId,
+      syncStatus: PedidoLocalDataSource.syncStatusProcessing,
+      sincronizado: false,
+      dirty: true,
+      clearSyncError: true,
+    );
+  }
+
+  Future<void> _syncPedidoStatePending(
+    SyncQueueItem item,
+    String errorMessage,
+    int attemptCount,
+  ) async {
+    if (item.entityType != _entityTypePedido) {
+      return;
+    }
+
+    final pedidoId = int.tryParse(item.entityId);
+    if (pedidoId == null) {
+      return;
+    }
+
+    await _pedidoLocal.updateSyncState(
+      pedidoId: pedidoId,
+      syncStatus: PedidoLocalDataSource.syncStatusPending,
+      sincronizado: false,
+      syncError: errorMessage,
+      syncAttemptCount: attemptCount,
+      dirty: true,
+    );
+  }
+
+  Future<void> _syncPedidoStateError(
+    SyncQueueItem item,
+    String errorMessage,
+    int attemptCount,
+  ) async {
+    if (item.entityType != _entityTypePedido) {
+      return;
+    }
+
+    final pedidoId = int.tryParse(item.entityId);
+    if (pedidoId == null) {
+      return;
+    }
+
+    await _pedidoLocal.updateSyncState(
+      pedidoId: pedidoId,
+      syncStatus: PedidoLocalDataSource.syncStatusError,
+      sincronizado: false,
+      syncError: errorMessage,
+      syncAttemptCount: attemptCount,
+      dirty: true,
+    );
+  }
+
+  Future<void> _syncPedidoStateDone(SyncQueueItem item) async {
+    if (item.entityType != _entityTypePedido || item.operation == 'add') {
+      return;
+    }
+
+    final pedidoId = int.tryParse(item.entityId);
+    if (pedidoId == null) {
+      return;
+    }
+
+    await _pedidoLocal.updateSyncState(
+      pedidoId: pedidoId,
+      syncStatus: PedidoLocalDataSource.syncStatusSynced,
+      sincronizado: true,
+      syncAttemptCount: 0,
+      dirty: false,
+      syncedAt: DateTime.now().toUtc(),
+      clearSyncError: true,
+    );
   }
 
   Future<Result<void>> _processClienteAdd(

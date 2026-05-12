@@ -12,6 +12,8 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
   final void Function(T?)? onSaved;
   final T? selectedValue;
   final Widget? prefixIcon;
+  final bool showBorder;
+  final double? edgeInsetsDirectionalStart;
 
   const CustomDropdownButtonFormField({
     super.key,
@@ -23,6 +25,8 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
     this.onSaved,
     this.selectedValue,
     this.prefixIcon,
+    this.showBorder = true,
+    this.edgeInsetsDirectionalStart,
   });
 
   @override
@@ -32,13 +36,22 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
       decoration: InputDecoration(
         fillColor: kColorStylePrimary0,
         filled: true,
-        contentPadding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+        contentPadding: EdgeInsetsDirectional.fromSTEB(
+          edgeInsetsDirectionalStart ?? 10,
+          10,
+          0,
+          10,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.white, width: 2),
+          borderSide: showBorder
+              ? const BorderSide(color: Colors.white, width: 2)
+              : BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 2),
+          borderSide: showBorder
+              ? const BorderSide(color: Color(0xFFE5E7EB), width: 2)
+              : BorderSide.none,
           borderRadius: BorderRadius.circular(8),
         ),
         prefixIcon: prefixIcon,
@@ -87,7 +100,7 @@ class CustomDropdownButtonFormField<T> extends StatelessWidget {
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
       ),
       menuItemStyleData: const MenuItemStyleData(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 10),
       ),
     );
   }

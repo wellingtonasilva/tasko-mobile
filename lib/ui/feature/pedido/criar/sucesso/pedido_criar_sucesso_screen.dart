@@ -4,6 +4,7 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
 
 class PedidoCriarSucessoScreen extends BaseScreen {
   const PedidoCriarSucessoScreen({super.key});
@@ -117,6 +118,9 @@ class _PedidoCriarSucessoScreenState
                         ),
                       ),
                       onPressed: () {
+                        ref
+                            .read(pedidoCriarRascunhoViewModelProvider.notifier)
+                            .resetFluxoCompleto();
                         context.go('/pedidos');
                       },
                     ),

@@ -84,6 +84,6 @@ class PedidoListarViewModel extends Notifier<PedidoListarUiState> {
 }
 
 final pedidoListarViewModelProvider =
-    NotifierProvider<PedidoListarViewModel, PedidoListarUiState>(
+    NotifierProvider.autoDispose<PedidoListarViewModel, PedidoListarUiState>(
       PedidoListarViewModel.new,
     );

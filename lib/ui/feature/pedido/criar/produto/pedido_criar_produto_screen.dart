@@ -317,6 +317,11 @@ class _PedidoCriarProdutoScreenState
     }
 
     final pedido = draftState.pedido!;
+    if (pedido.id == 0) {
+      showSnackBar('Rascunho inválido. Reinicie o fluxo.', isError: true);
+      return;
+    }
+
     final itens = produtoState.carrinhoQuantidades.entries.map((e) {
       final produto = produtoState.produtos!.firstWhere((p) => p.id == e.key);
       final preco = produto.precoSugerido ?? 0;
@@ -338,8 +343,8 @@ class _PedidoCriarProdutoScreenState
               ?.firstOrNull
               ?.empresaId ??
           0,
-      clienteId: pedido.clienteId ?? 0,
-      vendedorId: pedido.vendedorId ?? 0,
+      clienteId: pedido.clienteId,
+      vendedorId: pedido.vendedorId,
       dataPedido: pedido.dataPedido.toIso8601String(),
       subtotal: subtotal,
       valorTotal: subtotal,
@@ -348,7 +353,7 @@ class _PedidoCriarProdutoScreenState
     );
 
     final args = (
-      pedidoId: pedido.id ?? 0,
+      pedidoId: pedido.id,
       request: request,
       itens: itens,
       formaPagamentoNome: pedido.formaPagamentoNome,
@@ -357,13 +362,9 @@ class _PedidoCriarProdutoScreenState
       substituirItens: true,
     );
 
-    await ref
-        .read(pedidoCriarRascunhoViewModelProvider)
-        .atualizarRascunhoCommand
-        .execute(args);
+    await draftState.atualizarRascunhoCommand.execute(args);
 
-    final updatedDraft = ref.read(pedidoCriarRascunhoViewModelProvider);
-    if (updatedDraft.pedido != null && mounted) {
+    if (draftState.atualizarRascunhoCommand.completed && mounted) {
       widget.onNext('Produto');
     }
   }

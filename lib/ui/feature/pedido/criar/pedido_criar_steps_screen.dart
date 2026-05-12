@@ -29,14 +29,19 @@ class _PedidoCriarStepsScreenState
     super.initState();
     _controllers = PedidoCriarStepsControllers();
 
-    if (widget.pedidoId != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (!mounted) return;
-        await ref
-            .read(pedidoCriarRascunhoViewModelProvider.notifier)
-            .carregarParaEdicao(widget.pedidoId!);
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+
+      final draftNotifier = ref.read(
+        pedidoCriarRascunhoViewModelProvider.notifier,
+      );
+
+      draftNotifier.resetFluxoCompleto();
+
+      if (widget.pedidoId != null) {
+        await draftNotifier.carregarParaEdicao(widget.pedidoId!);
+      }
+    });
   }
 
   @override

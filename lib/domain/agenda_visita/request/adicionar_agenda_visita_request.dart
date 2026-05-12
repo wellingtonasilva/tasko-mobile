@@ -3,8 +3,8 @@ class AdicionarAgendaVisitaRequest {
   final int? duracaoPrevista;
   final String? objetivo;
   final String? observacao;
-  final int vendedorId;
-  final int empresaId;
+  final int? vendedorId;
+  final int? empresaId;
   final int? clienteId;
   final int? agendaVisitaStatusId;
   final double? latitude;
@@ -14,11 +14,11 @@ class AdicionarAgendaVisitaRequest {
 
   AdicionarAgendaVisitaRequest({
     required this.dataAgendada,
-    required this.empresaId,
+    this.empresaId,
     this.duracaoPrevista,
     this.objetivo,
     this.observacao,
-    required this.vendedorId,
+    this.vendedorId,
     this.clienteId,
     this.agendaVisitaStatusId,
     this.latitude,
@@ -26,6 +26,36 @@ class AdicionarAgendaVisitaRequest {
     this.criadoOffline,
     this.uuidOffline,
   });
+
+  AdicionarAgendaVisitaRequest copyWith({
+    String? dataAgendada,
+    int? duracaoPrevista,
+    String? objetivo,
+    String? observacao,
+    int? vendedorId,
+    int? empresaId,
+    int? clienteId,
+    int? agendaVisitaStatusId,
+    double? latitude,
+    double? longitude,
+    bool? criadoOffline,
+    String? uuidOffline,
+  }) {
+    return AdicionarAgendaVisitaRequest(
+      dataAgendada: dataAgendada ?? this.dataAgendada,
+      duracaoPrevista: duracaoPrevista ?? this.duracaoPrevista,
+      objetivo: objetivo ?? this.objetivo,
+      observacao: observacao ?? this.observacao,
+      vendedorId: vendedorId ?? this.vendedorId,
+      empresaId: empresaId ?? this.empresaId,
+      clienteId: clienteId ?? this.clienteId,
+      agendaVisitaStatusId: agendaVisitaStatusId ?? this.agendaVisitaStatusId,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      criadoOffline: criadoOffline ?? this.criadoOffline,
+      uuidOffline: uuidOffline ?? this.uuidOffline,
+    );
+  }
 
   factory AdicionarAgendaVisitaRequest.fromJson(Map<String, dynamic> json) {
     return AdicionarAgendaVisitaRequest(

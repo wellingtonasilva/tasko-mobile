@@ -342,77 +342,82 @@ class _PedidoCriarPagamentoScreenState
                                   },
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 150,
-                          width: double.infinity,
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.grey.shade300),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              SizedBox(height: 10),
-                              Text(
-                                "Resumo do pedido",
-                                style: kTestStyleMediumText14.copyWith(
-                                  color: kColorStyleSecondinaryDark400,
+                              const SizedBox(height: 25),
+                              Container(
+                                height: 150,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      "Subtotal (${produtoViewModel.totalItens} iten${produtoViewModel.totalItens == 1 ? '' : 's'})",
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    SizedBox(height: 10),
+                                    Text(
+                                      "Resumo do pedido",
                                       style: kTestStyleMediumText14.copyWith(
                                         color: kColorStyleSecondinaryDark400,
                                       ),
                                     ),
-                                  ),
-                                  Text(
-                                    "R\$ ${produtoViewModel.valorTotal.toStringAsFixed(2)}",
-                                    style: kTestStyleMediumText14.copyWith(
-                                      color: kColorStyleSecondinaryDark400,
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            "Subtotal (${produtoViewModel.totalItens} iten${produtoViewModel.totalItens == 1 ? '' : 's'})",
+                                            style: kTestStyleMediumText14.copyWith(
+                                              color:
+                                                  kColorStyleSecondinaryDark400,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          "R\$ ${produtoViewModel.valorTotal.toStringAsFixed(2)}",
+                                          style: kTestStyleMediumText14.copyWith(
+                                            color:
+                                                kColorStyleSecondinaryDark400,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Divider(color: kColorStyleSecondinaryLight200),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      "Total do pedido",
-                                      style: kTestStyleMediumText18.copyWith(
-                                        color:
-                                            kColorStyleSecondinaryDarkDefault,
-                                      ),
+                                    SizedBox(height: 10),
+                                    Divider(
+                                      color: kColorStyleSecondinaryLight200,
                                     ),
-                                  ),
-                                  Text(
-                                    "R\$ ${produtoViewModel.valorTotal.toStringAsFixed(2)}",
-                                    style: kTestStyleBoldText18.copyWith(
-                                      color:
-                                          kColorStylePrimaryNeutralPaletteDark500,
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            "Total do pedido",
+                                            style: kTestStyleMediumText18.copyWith(
+                                              color:
+                                                  kColorStyleSecondinaryDarkDefault,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          "R\$ ${produtoViewModel.valorTotal.toStringAsFixed(2)}",
+                                          style: kTestStyleBoldText18.copyWith(
+                                            color:
+                                                kColorStylePrimaryNeutralPaletteDark500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
+
                       Divider(color: kColorStyleSecondinaryLight200),
                       const SizedBox(height: 5),
                       //buildSubmitButton(context),
@@ -476,6 +481,10 @@ class _PedidoCriarPagamentoScreenState
     final formaPagamento = paymentMethods[effectivePaymentMethodIndex];
     final condicao = paymentConditions[effectivePaymentConditionIndex];
     final pedido = draftState.pedido!;
+    if (pedido.id == 0) {
+      showSnackBar('Rascunho inválido. Reinicie o fluxo.', isError: true);
+      return;
+    }
 
     final produtoState = ref.read(pedidoCriarProdutoViewModelProvider);
     final itens = produtoState.carrinhoQuantidades.entries.map((e) {
@@ -517,8 +526,7 @@ class _PedidoCriarPagamentoScreenState
       substituirItens: false,
     ));
 
-    final updated = ref.read(pedidoCriarRascunhoViewModelProvider);
-    if (updated.pedido != null && mounted) {
+    if (draftState.atualizarRascunhoCommand.completed && mounted) {
       widget.onNext('Pagamento');
     }
   }

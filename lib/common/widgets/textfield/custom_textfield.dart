@@ -13,6 +13,7 @@ class CustomTextfield extends StatelessWidget {
   final String? hintText;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
+  final bool showBorder;
 
   const CustomTextfield({
     super.key,
@@ -25,6 +26,7 @@ class CustomTextfield extends StatelessWidget {
     this.hintText,
     this.inputFormatters,
     this.keyboardType,
+    this.showBorder = true,
   });
 
   @override
@@ -43,26 +45,43 @@ class CustomTextfield extends StatelessWidget {
           labelStyle: kTestStyleMediumText16.copyWith(
             color: kColorStyleSecondinaryLight300,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color(0xFFE0E3E7), width: 2),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: kColorStyleSecondinaryLight200,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color(0xFFFF5963), width: 2),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color(0xFFFF5963), width: 2),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          filled: true,
+          enabledBorder: showBorder
+              ? OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    color: Color(0xFFE0E3E7),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                )
+              : InputBorder.none,
+          focusedBorder: showBorder
+              ? OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    color: kColorStyleSecondinaryLight200,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                )
+              : InputBorder.none,
+          errorBorder: showBorder
+              ? OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    color: Color(0xFFFF5963),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                )
+              : InputBorder.none,
+          focusedErrorBorder: showBorder
+              ? OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    color: Color(0xFFFF5963),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                )
+              : InputBorder.none,
+          filled: false,
           fillColor: disabled
               ? kColorStyleSecondinaryLight200
               : kColorStylePrimary0,
