@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
+import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
-import 'package:tasko_mobile/common/widgets/textfield/custom_textfield_medium.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_textfield_multiline.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_status_response.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_controllers.dart';
+import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_ui_state.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_view_model.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/criar/widgets/agenda_visita_container_group.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/criar/widgets/agenda_visita_icone_group.dart';
@@ -34,6 +35,38 @@ class _AgendaVisitaCriarScreenState
     super.initState();
 
     _controllers = AgendaVisitaCriarControllers();
+    final viewModel = ref.read(agendaVisitaCriarViewModelProvider.notifier);
+    viewModel.showSnackBar = (String message, Result result) {
+      if (mounted) {
+        if (result is Success) {
+          showSnackBar(message);
+        } else if (result is Failure) {
+          showSnackBar(message, isError: true);
+        }
+      }
+    };
+
+    viewModel.onAdicionarSucesso = () {
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    };
+
+    viewModel.onStartEvent = () {
+      if (mounted) {
+        showLoading();
+      }
+    };
+    viewModel.onFinishEvent = () {
+      if (mounted) {
+        hideLoading();
+      }
+    };
+
+    ref
+        .read(agendaVisitaCriarViewModelProvider)
+        .listarVendedorCommand
+        .execute();
   }
 
   @override
@@ -156,45 +189,38 @@ class _AgendaVisitaCriarScreenState
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.grey.shade300),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "20/08/2024",
-                                style: kTestStyleMediumText16.copyWith(
-                                  color: kColorStyleAgendaVisitaTextPrimary,
-                                ),
-                              ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: buildTextField(
+                              _controllers.dataAgendadaData,
+                              showBorder: false,
+                              isShowHint: true,
                             ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                              ),
-                              width: 0.9,
-                              height: 20,
-                              color: Colors.grey.shade300,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                            width: 0.9,
+                            height: 20,
+                            color: Colors.grey.shade300,
+                          ),
+                          SizedBox(width: 5),
+                          Expanded(
+                            child: buildTextField(
+                              _controllers.dataAgendadaHora,
+                              showBorder: false,
+                              isShowHint: true,
                             ),
-                            SizedBox(width: 5),
-                            Expanded(
-                              child: Text(
-                                "19:30",
-                                style: kTestStyleMediumText16.copyWith(
-                                  color: kColorStyleAgendaVisitaTextPrimary,
-                                ),
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.access_time,
+                              size: 25,
+                              color: kColorStyleAgendaVisitaPrimary,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.access_time,
-                                size: 25,
-                                color: kColorStyleAgendaVisitaPrimary,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -231,14 +257,9 @@ class _AgendaVisitaCriarScreenState
                         color: kColorStyleAgendaVisitaPrimary,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Vendedor 1",
-                      style: kTestStyleMediumText16.copyWith(
-                        color: kColorStyleAgendaVisitaTextPrimary,
-                      ),
+                    _buildLoadingDropdownFieldVendedor(
+                      ref.watch(agendaVisitaCriarViewModelProvider),
                     ),
-                    const SizedBox(height: 5),
                   ],
                 ),
               ),
@@ -272,14 +293,9 @@ class _AgendaVisitaCriarScreenState
                         color: kColorStyleAgendaVisitaPrimary,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Cliente 1",
-                      style: kTestStyleMediumText16.copyWith(
-                        color: kColorStyleAgendaVisitaTextPrimary,
-                      ),
+                    _buildLoadingDropdownFieldCliente(
+                      ref.watch(agendaVisitaCriarViewModelProvider),
                     ),
-                    const SizedBox(height: 5),
                   ],
                 ),
               ),
@@ -313,14 +329,9 @@ class _AgendaVisitaCriarScreenState
                         color: kColorStyleAgendaVisitaPrimary,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Pendente",
-                      style: kTestStyleMediumText16.copyWith(
-                        color: kColorStyleAgendaVisitaTextPrimary,
-                      ),
+                    _buildLoadingDropdownFieldStatus(
+                      ref.watch(agendaVisitaCriarViewModelProvider),
                     ),
-                    const SizedBox(height: 5),
                   ],
                 ),
               ),
@@ -348,20 +359,60 @@ class _AgendaVisitaCriarScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(width: 5),
-                    Text(
-                      "Duração Prevista",
-                      style: kTestStyleMediumText12.copyWith(
-                        color: kColorStyleAgendaVisitaPrimary,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Duração Prevista (min)",
+                            style: kTestStyleMediumText12.copyWith(
+                              color: kColorStyleAgendaVisitaPrimary,
+                            ),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              size: 16,
+                              color: kColorStyleAgendaVisitaTextSecondary,
+                            ),
+                            Text(
+                              "Tempo estimado",
+                              style: kTestStyleRegularText10.copyWith(
+                                color: kColorStyleAgendaVisitaTextSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 5),
+                      ],
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      "30 minutos",
-                      style: kTestStyleMediumText16.copyWith(
-                        color: kColorStyleAgendaVisitaTextPrimary,
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: buildTextField(
+                              _controllers.duracaoPrevista,
+                              showBorder: false,
+                              isShowHint: true,
+                            ),
+                          ),
+                          Text(
+                            "min",
+                            style: kTestStyleMediumText12.copyWith(
+                              color: kColorStyleAgendaVisitaPrimary,
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 5),
                   ],
                 ),
               ),
@@ -410,7 +461,7 @@ class _AgendaVisitaCriarScreenState
             ],
           ),
         ),
-        Divider(color: kColorStyleSecondinaryLight200),
+        Divider(color: kColorStyleSecondinaryLight200, thickness: .8),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -447,6 +498,110 @@ class _AgendaVisitaCriarScreenState
           ),
         ),
       ],
+    );
+  }
+
+  // -- Vendedor Dropdown
+  Widget _buildLoadingDropdownFieldVendedor(
+    AgendaVisitaCriarUiState viewModel,
+  ) {
+    final notifier = ref.read(agendaVisitaCriarViewModelProvider.notifier);
+    return switch (notifier.vendedorDropdownState) {
+      DropdownLoadingState.loading => buildLoadingIndicator(),
+      DropdownLoadingState.ready => buildDropdownFieldVendedor(viewModel),
+      DropdownLoadingState.error => buildDropdownFieldVendedor(viewModel),
+    };
+  }
+
+  Widget buildDropdownFieldVendedor(AgendaVisitaCriarUiState viewModel) {
+    final notifier = ref.read(agendaVisitaCriarViewModelProvider.notifier);
+    final selectedVendedor =
+        viewModel.selectedVendedor ?? notifier.computedSelectedVendedor;
+
+    return CustomDropdownButtonFormField<VendedorResponse>(
+      edgeInsetsDirectionalStart: -10,
+      showBorder: false,
+      hint: 'Selecione um Vendedor',
+      items: viewModel.vendedores ?? [],
+      itemLabelBuilder: (item) => item.nomeVendedor ?? '',
+      selectedValue: selectedVendedor,
+      validator: (value) {
+        if (value == null) {
+          return 'Por favor selecione um Vendedor.';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        notifier.selectVendedor(value);
+      },
+    );
+  }
+
+  // -- Cliente Dropdown
+  Widget _buildLoadingDropdownFieldCliente(AgendaVisitaCriarUiState viewModel) {
+    final notifier = ref.read(agendaVisitaCriarViewModelProvider.notifier);
+    return switch (notifier.clienteDropdownState) {
+      DropdownLoadingState.loading => buildLoadingIndicator(),
+      DropdownLoadingState.ready => buildDropdownFieldCliente(viewModel),
+      DropdownLoadingState.error => buildDropdownFieldCliente(viewModel),
+    };
+  }
+
+  Widget buildDropdownFieldCliente(AgendaVisitaCriarUiState viewModel) {
+    final notifier = ref.read(agendaVisitaCriarViewModelProvider.notifier);
+    final selectedCliente =
+        viewModel.selectedCliente ?? notifier.computedSelectedCliente;
+
+    return CustomDropdownButtonFormField<ClienteResponse>(
+      edgeInsetsDirectionalStart: -10,
+      showBorder: false,
+      hint: 'Selecione um Cliente',
+      items: viewModel.clientes ?? [],
+      itemLabelBuilder: (item) => item.razaoSocial ?? '',
+      selectedValue: selectedCliente,
+      validator: (value) {
+        if (value == null) {
+          return 'Por favor selecione um Cliente.';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        notifier.selectCliente(value);
+      },
+    );
+  }
+
+  // -- Status Dropdown
+  Widget _buildLoadingDropdownFieldStatus(AgendaVisitaCriarUiState viewModel) {
+    final notifier = ref.read(agendaVisitaCriarViewModelProvider.notifier);
+    return switch (notifier.statusDropdownState) {
+      DropdownLoadingState.loading => buildLoadingIndicator(),
+      DropdownLoadingState.ready => buildDropdownFieldStatus(viewModel),
+      DropdownLoadingState.error => buildDropdownFieldStatus(viewModel),
+    };
+  }
+
+  Widget buildDropdownFieldStatus(AgendaVisitaCriarUiState viewModel) {
+    final notifier = ref.read(agendaVisitaCriarViewModelProvider.notifier);
+    final selectedStatus =
+        viewModel.selectedStatus ?? notifier.computedSelectedStatus;
+
+    return CustomDropdownButtonFormField<AgendaVisitaStatusResponse>(
+      edgeInsetsDirectionalStart: -10,
+      showBorder: false,
+      hint: 'Selecione um Status',
+      items: viewModel.statusList ?? [],
+      itemLabelBuilder: (item) => item.descricaoVisitaStatus ?? '',
+      selectedValue: selectedStatus,
+      validator: (value) {
+        if (value == null) {
+          return 'Por favor selecione um Status.';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        notifier.selectStatus(value);
+      },
     );
   }
 

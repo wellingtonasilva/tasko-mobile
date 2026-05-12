@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_form_field_data.dart';
 
 class AgendaVisitaCriarControllers {
@@ -16,7 +17,14 @@ class AgendaVisitaCriarControllers {
     dataAgendadaData = CustomFormFieldData(
       controller: TextEditingController(),
       focusNode: FocusNode(),
-      labelText: 'Data Agendada - Data',
+      labelText: null,
+      hintText: 'Data',
+      inputFormatters: [
+        MaskTextInputFormatter(
+          mask: '##/##/####',
+          filter: {'#': RegExp(r'[0-9]')},
+        ),
+      ],
       validator: (context, val) => val == null || val.isEmpty
           ? 'Por favor informe a Data Agendada.'
           : null,
@@ -24,7 +32,11 @@ class AgendaVisitaCriarControllers {
     dataAgendadaHora = CustomFormFieldData(
       controller: TextEditingController(),
       focusNode: FocusNode(),
-      labelText: 'Data Agendada - Hora',
+      labelText: null,
+      hintText: 'Hora',
+      inputFormatters: [
+        MaskTextInputFormatter(mask: '##:##', filter: {'#': RegExp(r'[0-9]')}),
+      ],
       validator: (context, val) => val == null || val.isEmpty
           ? 'Por favor informe a Hora Agendada.'
           : null,
@@ -54,7 +66,8 @@ class AgendaVisitaCriarControllers {
     duracaoPrevista = CustomFormFieldData(
       controller: TextEditingController(),
       focusNode: FocusNode(),
-      labelText: 'Duração Prevista (minutos)',
+      hintText: 'Duração Prevista',
+      labelText: null,
     );
     objetivo = CustomFormFieldData(
       controller: TextEditingController(),

@@ -1,10 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tasko_mobile/common/core/auth_local_storage.dart';
-import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
+import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/data/repositories/agenda_visita/agenda_visita_repository_hybrid.dart';
-import 'package:tasko_mobile/data/repositories/cliente/cliente_repository_hybrid.dart';
-import 'package:tasko_mobile/data/repositories/vendedor/vendedor_repository_hybrid.dart';
-import 'package:tasko_mobile/data/service/agenda_visita_status_service.dart';
+import 'package:tasko_mobile/data/repositories/agenda_visita_status/agenda_visita_status_repository_remote.dart';
+import 'package:tasko_mobile/data/repositories/cliente/cliente_repository_remote.dart';
+import 'package:tasko_mobile/data/repositories/vendedor/vendedor_repository_remote.dart';
 import 'package:tasko_mobile/domain/agenda_visita/request/adicionar_agenda_visita_request.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_response.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_status_response.dart';
@@ -14,6 +13,176 @@ import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
 
+class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
+  void Function(String, Result result)? showSnackBar;
+  void Function()? onAdicionarSucesso;
+  void Function()? onStartEvent;
+  void Function()? onFinishEvent;
+
+  @override
+  AgendaVisitaCriarUiState build() {
+    return AgendaVisitaCriarUiState(
+      adicionarAgendaVisitaDraft: null,
+      adicionarCommand:
+          Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>(
+            _adicionar,
+          ),
+      listarVendedorCommand: Command0<void>(_listarVendedor)..execute(),
+      listarClienteCommand: Command0<void>(_listarCliente)..execute(),
+      listarStatusCommand: Command0<void>(_listarStatus)..execute(),
+    );
+  }
+
+  Future<Result<AgendaVisitaResponse>> _adicionar(
+    AdicionarAgendaVisitaRequest request,
+  ) async {
+    final result = await ref
+        .read(agendaVisitaRepositoryHybridProvider)
+        .adicionar(request);
+
+    if (result is Success<AgendaVisitaResponse>) {
+      showSnackBar?.call('Visita adicionada com sucesso!', result);
+      onAdicionarSucesso?.call();
+    } else if (result is Failure<AgendaVisitaResponse>) {
+      showSnackBar?.call(
+        result.errors?[0] ?? 'An unknown error occurred',
+        result,
+      );
+    }
+    return result;
+  }
+
+  //------------------- Vendedor ------------------
+  Future<Result<List<VendedorResponse>>> _listarVendedor() async {
+    onStartEvent?.call();
+    final result = await ref.read(vendedorRepositoryRemoteProvider).listar();
+    if (result is Success<List<VendedorResponse>>) {
+      state = state.copyWith(vendedores: result.value);
+    } else if (result is Failure<List<VendedorResponse>>) {
+      showSnackBar?.call(
+        (result).errors?[0] ?? 'An unknown error occurred',
+        result,
+      );
+    }
+    onFinishEvent?.call();
+
+    return result;
+  }
+
+  VendedorResponse? get computedSelectedVendedor {
+    final vendedorId = state.adicionarAgendaVisitaDraft?.vendedorId;
+    if (vendedorId == null || state.vendedores == null) return null;
+
+    final found = state.vendedores!.firstWhere(
+      (v) => v.id == vendedorId,
+      orElse: () => VendedorResponse(id: -1),
+    );
+    return found.id == -1 ? null : found;
+  }
+
+  DropdownLoadingState get vendedorDropdownState {
+    if (state.listarVendedorCommand.running) {
+      return DropdownLoadingState.loading;
+    }
+    if (state.listarVendedorCommand.completed) {
+      return DropdownLoadingState.ready;
+    }
+    return DropdownLoadingState.error;
+  }
+
+  void selectVendedor(VendedorResponse? vendedor) {
+    state = state.copyWith(selectedVendedor: vendedor);
+  }
+
+  //------------------- Cliente ------------------
+  Future<Result<List<ClienteResponse>>> _listarCliente() async {
+    onStartEvent?.call();
+    final result = await ref.read(clienteRepositoryRemoteProvider).listar();
+    if (result is Success<List<ClienteResponse>>) {
+      state = state.copyWith(clientes: result.value);
+    } else if (result is Failure<List<ClienteResponse>>) {
+      showSnackBar?.call(
+        (result).errors?[0] ?? 'An unknown error occurred',
+        result,
+      );
+    }
+    onFinishEvent?.call();
+
+    return result;
+  }
+
+  ClienteResponse? get computedSelectedCliente {
+    final clienteId = state.adicionarAgendaVisitaDraft?.clienteId;
+    if (clienteId == null || state.clientes == null) return null;
+
+    final found = state.clientes!.firstWhere(
+      (c) => c.id == clienteId,
+      orElse: () => ClienteResponse(id: -1, razaoSocial: ''),
+    );
+    return found.id == -1 ? null : found;
+  }
+
+  DropdownLoadingState get clienteDropdownState {
+    if (state.listarClienteCommand.running) {
+      return DropdownLoadingState.loading;
+    }
+    if (state.listarClienteCommand.completed) {
+      return DropdownLoadingState.ready;
+    }
+    return DropdownLoadingState.error;
+  }
+
+  void selectCliente(ClienteResponse? cliente) {
+    state = state.copyWith(selectedCliente: cliente);
+  }
+
+  //------------------- Status ------------------
+  Future<Result<List<AgendaVisitaStatusResponse>>> _listarStatus() async {
+    onStartEvent?.call();
+    final result = await ref
+        .read(agendaVisitaStatusRepositoryRemoteProvider)
+        .listar();
+    if (result is Success<List<AgendaVisitaStatusResponse>>) {
+      state = state.copyWith(statusList: result.value);
+    } else if (result is Failure<List<AgendaVisitaStatusResponse>>) {
+      showSnackBar?.call(
+        (result).errors?[0] ?? 'An unknown error occurred',
+        result,
+      );
+    }
+    onFinishEvent?.call();
+
+    return result;
+  }
+
+  AgendaVisitaStatusResponse? get computedSelectedStatus {
+    final statusId = state.adicionarAgendaVisitaDraft?.agendaVisitaStatusId;
+    if (statusId == null || state.statusList == null) return null;
+
+    final found = state.statusList!.firstWhere(
+      (s) => s.id == statusId,
+      orElse: () =>
+          AgendaVisitaStatusResponse(id: -1, descricaoVisitaStatus: ''),
+    );
+    return found.id == -1 ? null : found;
+  }
+
+  DropdownLoadingState get statusDropdownState {
+    if (state.listarStatusCommand.running) {
+      return DropdownLoadingState.loading;
+    }
+    if (state.listarStatusCommand.completed) {
+      return DropdownLoadingState.ready;
+    }
+    return DropdownLoadingState.error;
+  }
+
+  void selectStatus(AgendaVisitaStatusResponse? status) {
+    state = state.copyWith(selectedStatus: status);
+  }
+}
+
+/*
 class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
   void Function(String, Result result)? showSnackBar;
   void Function()? onSalvarSucesso;
@@ -147,6 +316,7 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
     return result;
   }
 }
+*/
 
 final agendaVisitaCriarViewModelProvider =
     NotifierProvider<AgendaVisitaCriarViewModel, AgendaVisitaCriarUiState>(
