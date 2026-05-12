@@ -16,6 +16,11 @@ class AdicionarPedidoRequest {
   final double? latitude;
   final double? longitude;
   final String? uuidOffline;
+  final String? descricaoCondicaoPagamento;
+  final String? descricaoFormaPagamento;
+  final String? nomeVendedor;
+  final String? nomeFantasiaCliente;
+  final String? descricaoStatusTipo;
 
   AdicionarPedidoRequest({
     required this.clienteId,
@@ -35,6 +40,11 @@ class AdicionarPedidoRequest {
     this.latitude,
     this.longitude,
     this.uuidOffline,
+    this.descricaoCondicaoPagamento,
+    this.descricaoFormaPagamento,
+    this.nomeVendedor,
+    this.nomeFantasiaCliente,
+    this.descricaoStatusTipo,
   });
 
   AdicionarPedidoRequest copyWith({
@@ -55,6 +65,11 @@ class AdicionarPedidoRequest {
     double? latitude,
     double? longitude,
     String? uuidOffline,
+    String? descricaoCondicaoPagamento,
+    String? descricaoFormaPagamento,
+    String? nomeVendedor,
+    String? nomeFantasiaCliente,
+    String? descricaoStatusTipo,
   }) {
     return AdicionarPedidoRequest(
       clienteId: clienteId ?? this.clienteId,
@@ -74,6 +89,13 @@ class AdicionarPedidoRequest {
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       uuidOffline: uuidOffline ?? this.uuidOffline,
+      descricaoCondicaoPagamento:
+          descricaoCondicaoPagamento ?? this.descricaoCondicaoPagamento,
+      descricaoFormaPagamento:
+          descricaoFormaPagamento ?? this.descricaoFormaPagamento,
+      nomeVendedor: nomeVendedor ?? this.nomeVendedor,
+      nomeFantasiaCliente: nomeFantasiaCliente ?? this.nomeFantasiaCliente,
+      descricaoStatusTipo: descricaoStatusTipo ?? this.descricaoStatusTipo,
     );
   }
 
@@ -96,6 +118,11 @@ class AdicionarPedidoRequest {
       latitude: _toDouble(json['latitude']),
       longitude: _toDouble(json['longitude']),
       uuidOffline: json['uuidOffline'] as String?,
+      descricaoCondicaoPagamento: json['descricaoCondicaoPagamento'] as String?,
+      descricaoFormaPagamento: json['descricaoFormaPagamento'] as String?,
+      nomeVendedor: json['nomeVendedor'] as String?,
+      nomeFantasiaCliente: json['nomeFantasiaCliente'] as String?,
+      descricaoStatusTipo: json['descricaoStatusTipo'] as String?,
     );
   }
 
@@ -118,6 +145,11 @@ class AdicionarPedidoRequest {
       'latitude': latitude,
       'longitude': longitude,
       'uuidOffline': uuidOffline,
+      'descricaoCondicaoPagamento': descricaoCondicaoPagamento,
+      'descricaoFormaPagamento': descricaoFormaPagamento,
+      'nomeVendedor': nomeVendedor,
+      'nomeFantasiaCliente': nomeFantasiaCliente,
+      'descricaoStatusTipo': descricaoStatusTipo,
     };
   }
 

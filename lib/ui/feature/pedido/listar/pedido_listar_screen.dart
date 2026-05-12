@@ -4,9 +4,12 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
+import 'package:tasko_mobile/common/widgets/card/custom_simple_item_list_card.dart';
 import 'package:tasko_mobile/common/widgets/list/custom_list_view.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
+import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_controllers.dart';
 import 'package:tasko_mobile/ui/feature/pedido/listar/pedido_listar_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/listar/widgets/custom_pedido_item_list_card.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class PedidoListarScreen extends BaseScreen {
@@ -18,9 +21,7 @@ class PedidoListarScreen extends BaseScreen {
 }
 
 class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
-  }
+  late final PedidoListarControllers _controllers;
 
   @override
   bool get useScaffold => false;
@@ -37,11 +38,22 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
         showSnackBar(message, isError: true);
       }
     };
+
+    _controllers = PedidoListarControllers();
+    _controllers.pesquisar.controller.addListener(_onPesquisarChanged);
+  }
+
+  @override
+  void dispose() {
+    _controllers.pesquisar.controller.removeListener(_onPesquisarChanged);
+    _controllers.dispose();
+    super.dispose();
   }
 
   @override
   Widget buildContent(BuildContext context) {
     final viewModel = ref.watch(pedidoListarViewModelProvider);
+    final pedidosFiltrados = _filtrarPedidos(viewModel.pedidos ?? []);
 
     return GestureDetector(
       onTap: () {
@@ -90,64 +102,60 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(minHeight: 200),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: kColorStyleSecondinaryDark200,
-                              width: 1,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 10, left: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Lista de Pedidos',
-                                  style: kTestStyleBoldText16,
-                                ),
-                                const SizedBox(height: 20),
-                                viewModel.listarPedidosCommand.running
-                                    ? const Center(
-                                        child: CircularProgressIndicator(),
-                                      )
-                                    : CustomListView<PedidoResponse>(
-                                        values: viewModel.pedidos,
-                                        onTap: (value) {
-                                          context.pushNamed(
-                                            'pedidos-detalhe',
-                                            pathParameters: {
-                                              'id': value.id.toString(),
-                                            },
-                                          );
-                                        },
-                                        getTitle: (value) =>
-                                            value.numeroPedido ??
-                                            'Pedido #${value.id}',
-                                        getSubtitle: (value) =>
-                                            _formatDate(value.dataPedido),
-                                        getSubtitle1: (value) =>
-                                            value.pedidoStatusTipoNome ?? '-',
-                                        getSubtitle2: (value) =>
-                                            'R\$ ${value.valorTotal.toStringAsFixed(2)}',
-                                        onDelete: (pedido, index) {
-                                          _excluirPedido(
-                                            pedido.id,
-                                            index,
-                                            pedido,
-                                          );
-                                        },
+                      child: buildTextField(
+                        _controllers.pesquisar,
+                        isShowHint: true,
+                        topPadding: 0,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //Listaagem
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              viewModel.listarPedidosCommand.running
+                                  ? const Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : pedidosFiltrados.isEmpty
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 24.0,
                                       ),
-                              ],
-                            ),
+                                      child: Center(
+                                        child: Text(
+                                          _controllers.pesquisar.controller.text
+                                                  .trim()
+                                                  .isEmpty
+                                              ? 'Nenhum pedido encontrado.'
+                                              : 'Nenhum pedido encontrado para a pesquisa.',
+                                          style: kTestStyleRegularText14,
+                                        ),
+                                      ),
+                                    )
+                                  : ListView.builder(
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.zero,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: pedidosFiltrados.length,
+                                      itemBuilder: (context, index) {
+                                        final pedido = pedidosFiltrados[index];
+                                        return CustomPedidoItemListCard(
+                                          pedido: pedido,
+                                          onTap: _onCustomSimpleItemListCardTap,
+                                        );
+                                      },
+                                    ),
+                            ],
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ],
@@ -179,5 +187,46 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
         viewModel.pedidos.insert(indexRemovido, pedidoRemovido);
       });
     }
+  }
+
+  void _onPesquisarChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _onCustomSimpleItemListCardTap(int id) async {
+    final atualizado = await context.pushNamed<bool>(
+      'pedidos-detalhe',
+      pathParameters: {'id': id.toString()},
+    );
+    if (atualizado == true) {
+      showSnackBar('Pedido atualizado com sucesso!');
+      ref.read(pedidoListarViewModelProvider).listarPedidosCommand.execute();
+    }
+  }
+
+  List<PedidoResponse> _filtrarPedidos(List<PedidoResponse> pedidos) {
+    final pesquisa = _controllers.pesquisar.controller.text
+        .trim()
+        .toLowerCase();
+
+    if (pesquisa.isEmpty) {
+      return pedidos;
+    }
+
+    return pedidos.where((pedido) {
+      final id = pedido.id?.toString().toLowerCase() ?? '';
+      final nomeCliente = pedido.nomeFantasiaCliente?.toLowerCase() ?? '';
+      final nomeVendedor = pedido.nomeVendedor?.toLowerCase() ?? '';
+
+      return id.contains(pesquisa) ||
+          nomeCliente.contains(pesquisa) ||
+          nomeVendedor.contains(pesquisa);
+    }).toList();
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 }

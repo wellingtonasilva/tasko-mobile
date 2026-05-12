@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static const _dbName = 'tasko_mobile.db';
-  static const _dbVersion = 7;
+  static const _dbVersion = 8;
 
   static const vendedoresTable = 'vendedores';
   static const syncQueueTable = 'sync_queue';
@@ -79,6 +79,38 @@ class DatabaseService {
     if (oldVersion < 7) {
       await _upgradeToV7(db);
     }
+
+    if (oldVersion < 8) {
+      await _upgradeToV8(db);
+    }
+  }
+
+  Future<void> _upgradeToV8(Database db) async {
+    await _addColumnIfNotExists(
+      db,
+      pedidosTable,
+      'descricao_condicao_pagamento',
+      'TEXT',
+    );
+    await _addColumnIfNotExists(
+      db,
+      pedidosTable,
+      'descricao_forma_pagamento',
+      'TEXT',
+    );
+    await _addColumnIfNotExists(db, pedidosTable, 'nome_vendedor', 'TEXT');
+    await _addColumnIfNotExists(
+      db,
+      pedidosTable,
+      'nome_fantasia_cliente',
+      'TEXT',
+    );
+    await _addColumnIfNotExists(
+      db,
+      pedidosTable,
+      'descricao_status_tipo',
+      'TEXT',
+    );
   }
 
   Future<void> _upgradeToV3(Database db) async {

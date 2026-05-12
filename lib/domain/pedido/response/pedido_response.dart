@@ -28,6 +28,11 @@ class PedidoResponse {
   final String? uuidOffline;
   final Auditoria? auditoria;
   final List<PedidoItemResponse> itens;
+  final String? descricaoCondicaoPagamento;
+  final String? descricaoFormaPagamento;
+  final String? nomeVendedor;
+  final String? nomeFantasiaCliente;
+  final String? descricaoStatusTipo;
 
   PedidoResponse({
     required this.id,
@@ -56,6 +61,11 @@ class PedidoResponse {
     this.uuidOffline,
     this.auditoria,
     this.itens = const [],
+    this.descricaoCondicaoPagamento,
+    this.descricaoFormaPagamento,
+    this.nomeVendedor,
+    this.nomeFantasiaCliente,
+    this.descricaoStatusTipo,
   });
 
   factory PedidoResponse.fromJson(Map<String, dynamic> json) {
@@ -86,6 +96,11 @@ class PedidoResponse {
       uuidOffline: json['uuidOffline'] as String?,
       auditoria: _toAuditoria(json['auditoria']),
       itens: _toItens(json['itens']),
+      descricaoCondicaoPagamento: json['descricaoCondicaoPagamento'] as String?,
+      descricaoFormaPagamento: json['descricaoFormaPagamento'] as String?,
+      nomeVendedor: json['nomeVendedor'] as String?,
+      nomeFantasiaCliente: json['nomeFantasiaCliente'] as String?,
+      descricaoStatusTipo: json['descricaoStatusTipo'] as String?,
     );
   }
 
@@ -123,6 +138,10 @@ class PedidoResponse {
               'indicadorAtivo': auditoria?.indicadorAtivo,
             },
       'itens': itens.map((item) => item.toJson()).toList(),
+      'descricaoCondicaoPagamento': descricaoCondicaoPagamento,
+      'descricaoFormaPagamento': descricaoFormaPagamento,
+      'nomeVendedor': nomeVendedor,
+      'nomeFantasiaCliente': nomeFantasiaCliente,
     };
   }
 

@@ -68,6 +68,11 @@ class PedidoLocalDataSource {
         'deleted': 0,
         'sync_error': null,
         'sync_attempt_count': 0,
+        'descricao_condicao_pagamento': request.descricaoCondicaoPagamento,
+        'descricao_forma_pagamento': request.descricaoFormaPagamento,
+        'nome_vendedor': request.nomeVendedor,
+        'nome_fantasia_cliente': request.nomeFantasiaCliente,
+        'descricao_status_tipo': request.descricaoStatusTipo,
       };
 
       final createdItens = <PedidoItemResponse>[];
@@ -143,6 +148,11 @@ class PedidoLocalDataSource {
           uuidOffline: pedido.uuidOffline,
           auditoria: pedido.auditoria,
           itens: createdItens,
+          descricaoCondicaoPagamento: pedido.descricaoCondicaoPagamento,
+          descricaoFormaPagamento: pedido.descricaoFormaPagamento,
+          nomeVendedor: pedido.nomeVendedor,
+          nomeFantasiaCliente: pedido.nomeFantasiaCliente,
+          descricaoStatusTipo: pedido.descricaoStatusTipo,
         ),
       );
     } on Exception catch (error) {
@@ -223,6 +233,11 @@ class PedidoLocalDataSource {
           'deleted': 0,
           'sync_error': null,
           'sync_attempt_count': 0,
+          'descricao_condicao_pagamento': request.descricaoCondicaoPagamento,
+          'descricao_forma_pagamento': request.descricaoFormaPagamento,
+          'nome_vendedor': request.nomeVendedor,
+          'nome_fantasia_cliente': request.nomeFantasiaCliente,
+          'descricao_status_tipo': request.descricaoStatusTipo,
         };
 
         await txn.update(
@@ -314,6 +329,11 @@ class PedidoLocalDataSource {
                 (existingRow['auditoria_indicador_ativo'] as int?) == 1,
           ),
           itens: itensRows.map(_itemFromRow).toList(),
+          descricaoCondicaoPagamento: request.descricaoCondicaoPagamento,
+          descricaoFormaPagamento: request.descricaoFormaPagamento,
+          nomeVendedor: request.nomeVendedor,
+          nomeFantasiaCliente: request.nomeFantasiaCliente,
+          descricaoStatusTipo: request.descricaoStatusTipo,
         );
       });
 
@@ -370,6 +390,11 @@ class PedidoLocalDataSource {
             uuidOffline: pedido.uuidOffline,
             auditoria: pedido.auditoria,
             itens: itens,
+            descricaoCondicaoPagamento: pedido.descricaoCondicaoPagamento,
+            descricaoFormaPagamento: pedido.descricaoFormaPagamento,
+            nomeVendedor: pedido.nomeVendedor,
+            nomeFantasiaCliente: pedido.nomeFantasiaCliente,
+            descricaoStatusTipo: pedido.descricaoStatusTipo,
           ),
         );
       }
@@ -428,6 +453,11 @@ class PedidoLocalDataSource {
           uuidOffline: pedido.uuidOffline,
           auditoria: pedido.auditoria,
           itens: itens,
+          descricaoCondicaoPagamento: pedido.descricaoCondicaoPagamento,
+          descricaoFormaPagamento: pedido.descricaoFormaPagamento,
+          nomeVendedor: pedido.nomeVendedor,
+          nomeFantasiaCliente: pedido.nomeFantasiaCliente,
+          descricaoStatusTipo: pedido.descricaoStatusTipo,
         ),
       );
     } on Exception catch (error) {
@@ -503,6 +533,11 @@ class PedidoLocalDataSource {
         'deleted': 0,
         'sync_error': null,
         'sync_attempt_count': 0,
+        'descricao_condicao_pagamento': request.descricaoCondicaoPagamento,
+        'descricao_forma_pagamento': request.descricaoFormaPagamento,
+        'nome_vendedor': request.nomeVendedor,
+        'nome_fantasia_cliente': request.nomeFantasiaCliente,
+        'descricao_status_tipo': request.descricaoStatusTipo,
       };
 
       final createdItens = <PedidoItemResponse>[];
@@ -576,6 +611,11 @@ class PedidoLocalDataSource {
           criadoOffline: pedido.criadoOffline,
           uuidOffline: pedido.uuidOffline,
           auditoria: pedido.auditoria,
+          descricaoCondicaoPagamento: pedido.descricaoCondicaoPagamento,
+          descricaoFormaPagamento: pedido.descricaoFormaPagamento,
+          nomeVendedor: pedido.nomeVendedor,
+          nomeFantasiaCliente: pedido.nomeFantasiaCliente,
+          descricaoStatusTipo: pedido.descricaoStatusTipo,
           itens: createdItens,
         ),
       );
@@ -772,6 +812,11 @@ class PedidoLocalDataSource {
       'deleted': 0,
       'sync_error': null,
       'sync_attempt_count': markAsDirty ? 1 : 0,
+      'descricao_condicao_pagamento': pedido.descricaoCondicaoPagamento,
+      'descricao_forma_pagamento': pedido.descricaoFormaPagamento,
+      'nome_vendedor': pedido.nomeVendedor,
+      'nome_fantasia_cliente': pedido.nomeFantasiaCliente,
+      'descricao_status_tipo': pedido.descricaoStatusTipo,
     };
   }
 
@@ -806,6 +851,12 @@ class PedidoLocalDataSource {
         atualizadoEm: _toDateTime(row['auditoria_atualizado_em']),
         indicadorAtivo: (row['auditoria_indicador_ativo'] as int?) == 1,
       ),
+      descricaoCondicaoPagamento:
+          row['descricao_condicao_pagamento'] as String?,
+      descricaoFormaPagamento: row['descricao_forma_pagamento'] as String?,
+      nomeVendedor: row['nome_vendedor'] as String?,
+      nomeFantasiaCliente: row['nome_fantasia_cliente'] as String?,
+      descricaoStatusTipo: row['descricao_status_tipo'] as String?,
     );
   }
 
