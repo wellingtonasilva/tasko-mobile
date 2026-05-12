@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tasko_mobile/common/core/auth_local_storage.dart';
 import 'package:tasko_mobile/common/domain/dropdown_loading_state.dart';
 import 'package:tasko_mobile/data/repositories/agenda_visita/agenda_visita_repository_hybrid.dart';
 import 'package:tasko_mobile/data/repositories/agenda_visita_status/agenda_visita_status_repository_remote.dart';
@@ -22,15 +23,64 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
   @override
   AgendaVisitaCriarUiState build() {
     return AgendaVisitaCriarUiState(
-      adicionarAgendaVisitaDraft: null,
       adicionarCommand:
           Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>(
             _adicionar,
+          ),
+      salvarVisitaCommand:
+          Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>(
+            _salvarVisita,
           ),
       listarVendedorCommand: Command0<void>(_listarVendedor)..execute(),
       listarClienteCommand: Command0<void>(_listarCliente)..execute(),
       listarStatusCommand: Command0<void>(_listarStatus)..execute(),
     );
+  }
+
+  Future<Result<AgendaVisitaResponse>> _salvarVisita(
+    AdicionarAgendaVisitaRequest adicionarRequest,
+  ) async {
+    final now = DateTime.now();
+    final uuidOffline = 'av-${now.toUtc().microsecondsSinceEpoch}';
+
+    final request = adicionarRequest.copyWith(
+      empresaId: await ref
+          .read(authLocalStorageProvider)
+          .getUsuarioLoginResponse()
+          .then((value) => value?.empresas?.first.empresaId ?? 0),
+      vendedorId: state.selectedVendedor?.id,
+      clienteId: state.selectedCliente?.id,
+      agendaVisitaStatusId: state.selectedStatus?.id,
+      criadoOffline: true,
+      uuidOffline: uuidOffline,
+    );
+    /*
+    AdicionarAgendaVisitaRequest(
+      empresaId: await ref
+          .read(authLocalStorageProvider)
+          .getUsuarioLoginResponse()
+          .then((value) => value?.empresas?.first.empresaId ?? 0),
+      dataAgendada: state.dataAgendada.toUtc().toIso8601String(),
+      duracaoPrevista: state.duracaoPrevista,
+      objetivo: state.objetivo,
+      observacao: state.observacao,
+      
+      criadoOffline: true,
+      uuidOffline: uuidOffline,
+    );
+    */
+
+    final repository = ref.read(agendaVisitaRepositoryHybridProvider);
+    final result = await repository.adicionar(request);
+
+    if (result is Success<AgendaVisitaResponse>) {
+      showSnackBar?.call('Visita agendada com sucesso!', result);
+      onAdicionarSucesso?.call();
+    } else if (result is Failure<AgendaVisitaResponse>) {
+      showSnackBar?.call(result.errors?[0] ?? 'Erro ao agendar visita', result);
+    }
+
+    return result;
   }
 
   Future<Result<AgendaVisitaResponse>> _adicionar(
@@ -70,7 +120,7 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
   }
 
   VendedorResponse? get computedSelectedVendedor {
-    final vendedorId = state.adicionarAgendaVisitaDraft?.vendedorId;
+    final vendedorId = state.selectedVendedor?.id;
     if (vendedorId == null || state.vendedores == null) return null;
 
     final found = state.vendedores!.firstWhere(
@@ -112,7 +162,7 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
   }
 
   ClienteResponse? get computedSelectedCliente {
-    final clienteId = state.adicionarAgendaVisitaDraft?.clienteId;
+    final clienteId = state.selectedCliente?.id;
     if (clienteId == null || state.clientes == null) return null;
 
     final found = state.clientes!.firstWhere(
@@ -156,7 +206,7 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
   }
 
   AgendaVisitaStatusResponse? get computedSelectedStatus {
-    final statusId = state.adicionarAgendaVisitaDraft?.agendaVisitaStatusId;
+    final statusId = state.selectedStatus?.id;
     if (statusId == null || state.statusList == null) return null;
 
     final found = state.statusList!.firstWhere(

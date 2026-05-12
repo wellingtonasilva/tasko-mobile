@@ -6,9 +6,10 @@ import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
 import 'package:tasko_mobile/util/command.dart';
 
 class AgendaVisitaCriarUiState {
-  AdicionarAgendaVisitaRequest? adicionarAgendaVisitaDraft;
   final Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>
   adicionarCommand;
+  final Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>
+  salvarVisitaCommand;
 
   // Vendedor
   final Command0<void> listarVendedorCommand;
@@ -27,8 +28,8 @@ class AgendaVisitaCriarUiState {
 
   AgendaVisitaCriarUiState({
     required this.adicionarCommand,
+    required this.salvarVisitaCommand,
     required this.listarVendedorCommand,
-    this.adicionarAgendaVisitaDraft,
     this.vendedores,
     this.selectedVendedor,
     required this.listarClienteCommand,
@@ -40,7 +41,6 @@ class AgendaVisitaCriarUiState {
   });
 
   AgendaVisitaCriarUiState copyWith({
-    AdicionarAgendaVisitaRequest? adicionarAgendaVisitaDraft,
     Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>?
     adicionarCommand,
     Command0<void>? listarVendedorCommand,
@@ -52,13 +52,13 @@ class AgendaVisitaCriarUiState {
     Command0<void>? listarStatusCommand,
     List<AgendaVisitaStatusResponse>? statusList,
     AgendaVisitaStatusResponse? selectedStatus,
+    Command1<AgendaVisitaResponse, AdicionarAgendaVisitaRequest>?
+    salvarVisitaCommand,
   }) {
     return AgendaVisitaCriarUiState(
       listarClienteCommand: listarClienteCommand ?? this.listarClienteCommand,
       clientes: clientes ?? this.clientes,
       selectedCliente: selectedCliente ?? this.selectedCliente,
-      adicionarAgendaVisitaDraft:
-          adicionarAgendaVisitaDraft ?? this.adicionarAgendaVisitaDraft,
       adicionarCommand: adicionarCommand ?? this.adicionarCommand,
       listarVendedorCommand:
           listarVendedorCommand ?? this.listarVendedorCommand,
@@ -67,6 +67,7 @@ class AgendaVisitaCriarUiState {
       listarStatusCommand: listarStatusCommand ?? this.listarStatusCommand,
       statusList: statusList ?? this.statusList,
       selectedStatus: selectedStatus ?? this.selectedStatus,
+      salvarVisitaCommand: salvarVisitaCommand ?? this.salvarVisitaCommand,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
@@ -8,6 +9,7 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/custom_dropdown_button_form_field.dart';
 import 'package:tasko_mobile/common/widgets/textfield/custom_textfield_multiline.dart';
+import 'package:tasko_mobile/domain/agenda_visita/request/adicionar_agenda_visita_request.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_status_response.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
@@ -93,6 +95,7 @@ class _AgendaVisitaCriarScreenState
                 right: 15.0,
               ),
               child: Form(
+                key: _controllers.formKey,
                 autovalidateMode: AutovalidateMode.disabled,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -449,6 +452,7 @@ class _AgendaVisitaCriarScreenState
                     const SizedBox(height: 8),
                     SizedBox(
                       child: CustomTextfieldMultiline(
+                        controller: _controllers.objetivo.controller,
                         hintText: "Descreva o objetivo da visita...",
                         maxLines: 3,
                         minLines: 2,
@@ -485,6 +489,7 @@ class _AgendaVisitaCriarScreenState
                     const SizedBox(height: 8),
                     SizedBox(
                       child: CustomTextfieldMultiline(
+                        controller: _controllers.observacao.controller,
                         hintText: "Observações adicionais (opcional)...",
                         maxLines: 3,
                         minLines: 2,
@@ -609,7 +614,44 @@ class _AgendaVisitaCriarScreenState
     Navigator.of(context).pop();
   }
 
-  void _handleSalvarPressed() {}
+  String? _buildDataAgendadaIso() {
+    final data = _controllers.dataAgendadaData.controller.text.trim();
+    final hora = _controllers.dataAgendadaHora.controller.text.trim();
+
+    try {
+      final parsed = DateFormat('dd/MM/yyyy HH:mm').parseStrict('$data $hora');
+      return DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parsed);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void _handleSalvarPressed() {
+    if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
+
+    final dataAgendada = _buildDataAgendadaIso();
+    if (dataAgendada == null) {
+      showSnackBar(
+        'Informe Data e Hora validas (dd/MM/yyyy e HH:mm).',
+        isError: true,
+      );
+      return;
+    }
+
+    ref
+        .read(agendaVisitaCriarViewModelProvider)
+        .salvarVisitaCommand
+        .execute(
+          AdicionarAgendaVisitaRequest(
+            dataAgendada: dataAgendada,
+            duracaoPrevista: int.tryParse(
+              _controllers.duracaoPrevista.controller.text,
+            ),
+            objetivo: _controllers.objetivo.controller.text,
+            observacao: _controllers.observacao.controller.text,
+          ),
+        );
+  }
 }
 
 /*

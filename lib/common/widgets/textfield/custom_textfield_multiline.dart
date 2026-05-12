@@ -5,18 +5,20 @@ class CustomTextfieldMultiline extends StatelessWidget {
   final String hintText;
   final int maxLines;
   final int minLines;
+  final TextEditingController? controller;
 
   const CustomTextfieldMultiline({
     super.key,
     required this.hintText,
     this.maxLines = 2,
     this.minLines = 1,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      //controller: _model.descriptionTextController,
+      controller: controller,
       //focusNode: _model.descriptionFocusNode,
       autofocus: false,
       textCapitalization: TextCapitalization.words,
