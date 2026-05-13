@@ -59,7 +59,31 @@ class AgendaVisitaManterViewModel extends Notifier<AgendaVisitaManterUiState> {
   ) async {
     onStartEvent?.call();
     final repository = ref.read(agendaVisitaRepositoryHybridProvider);
-    final result = await repository.atualizar(state.visita!.id, request);
+    final result = await repository.atualizar(
+      state.visita!.id,
+      request.copyWith(
+        id: state.visita!.id,
+        dataAgendada: request.dataAgendada,
+        dataRealizada: request.dataRealizada,
+        duracaoPrevista: request.duracaoPrevista,
+        duracaoReal: request.duracaoReal,
+        objetivo: request.objetivo,
+        observacao: request.observacao,
+        resultado: request.resultado,
+        vendedorId: state.selectedVendedor?.id ?? state.visita?.vendedorId,
+        clienteId: state.selectedCliente?.id ?? state.visita?.clienteId,
+        agendaVisitaStatusId:
+            state.selectedStatus?.id ?? state.visita?.agendaVisitaStatusId,
+        latitude: state.visita?.latitude,
+        longitude: state.visita?.longitude,
+        pedidoGerado: state.visita?.pedidoGerado,
+        pedidoId: state.visita?.pedidoId,
+        valorPedido: state.visita?.valorPedido,
+        sincronizado: state.visita?.sincronizado,
+        criadoOffline: state.visita?.criadoOffline,
+        uuidOffline: state.visita?.uuidOffline,
+      ),
+    );
     if (result is Success<AgendaVisitaResponse>) {
       state = state.copyWith(visita: result.value);
       onManterSucesso?.call();

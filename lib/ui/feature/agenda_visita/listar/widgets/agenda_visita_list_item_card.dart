@@ -3,6 +3,7 @@ import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/widgets/tags/custom_tag.dart';
 import 'package:tasko_mobile/domain/agenda_visita/response/agenda_visita_response.dart';
+import 'package:tasko_mobile/ui/feature/agenda_visita/listar/widgets/agenda_visita_custom_status_tag.dart';
 import 'package:tasko_mobile/ui/feature/pedido/listar/widgets/pedido_item_status_helper.dart';
 
 class AgendaVisitaListItemCard extends StatelessWidget {
@@ -120,7 +121,7 @@ class AgendaVisitaListItemCard extends StatelessWidget {
                             Text(
                               visita?.duracaoPrevista != null
                                   ? '${visita.duracaoPrevista} min'
-                                  : 'Duração Não Informada',
+                                  : '-',
                               style: kTestStyleMediumText14.copyWith(
                                 color: kColorStyleSecondinaryDark400,
                               ),
@@ -130,11 +131,7 @@ class AgendaVisitaListItemCard extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 8),
-                    CustomTag(
-                      text: visita.descricaoVisitaStatus ?? '',
-                      textColor: kColorStyleInformationDark900,
-                      backgroundColor: kColorStyleInformationLightDefault,
-                    ),
+                    AgendaVisitaCustomStatusTag(visita: visita),
                   ],
                 ),
               ),

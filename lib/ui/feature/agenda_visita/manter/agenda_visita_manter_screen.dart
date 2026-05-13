@@ -157,7 +157,7 @@ class _AgendaVisitaManterScreenState
                         Expanded(
                           child: CustomButtonPrimary(
                             backgroundColor: kColorStyleAgendaVisitaPrimary,
-                            label: 'Agendar Visita',
+                            label: 'Atualizar Visita',
                             onPressed: () {
                               _handleSalvarPressed();
                             },
