@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static const _dbName = 'tasko_mobile.db';
-  static const _dbVersion = 9;
+  static const _dbVersion = 14;
 
   static const vendedoresTable = 'vendedores';
   static const syncQueueTable = 'sync_queue';
@@ -87,6 +87,74 @@ class DatabaseService {
     if (oldVersion < 9) {
       await _upgradeToV9(db);
     }
+
+    if (oldVersion < 10) {
+      await _upgradeToV10(db);
+    }
+
+    if (oldVersion < 10) {
+      await _upgradeToV10(db);
+    }
+
+    if (oldVersion < 11) {
+      await _upgradeToV11(db);
+    }
+
+    if (oldVersion < 12) {
+      await _upgradeToV12(db);
+    }
+
+    if (oldVersion < 13) {
+      await _upgradeToV13(db);
+    }
+
+    if (oldVersion < 14) {
+      await _upgradeToV14(db);
+    }
+  }
+
+  Future<void> _upgradeToV14(Database db) async {
+    await _addColumnIfNotExists(
+      db,
+      pedidosTable,
+      'descricao_condicao_pagamento',
+      'TEXT',
+    );
+    await _addColumnIfNotExists(
+      db,
+      pedidosTable,
+      'descricao_forma_pagamento',
+      'TEXT',
+    );
+    await _addColumnIfNotExists(db, pedidosTable, 'nome_vendedor', 'TEXT');
+    await _addColumnIfNotExists(
+      db,
+      pedidosTable,
+      'nome_fantasia_cliente',
+      'TEXT',
+    );
+    await _addColumnIfNotExists(
+      db,
+      pedidosTable,
+      'descricao_status_tipo',
+      'TEXT',
+    );
+  }
+
+  Future<void> _upgradeToV13(Database db) async {
+    await _addColumnIfNotExists(db, pedidosTable, 'sync_status', 'INTEGER');
+  }
+
+  Future<void> _upgradeToV12(Database db) async {
+    await _addColumnIfNotExists(db, pedidosTable, 'empresa_id', 'INTEGER');
+  }
+
+  Future<void> _upgradeToV11(Database db) async {
+    await _addColumnIfNotExists(db, clientesTable, 'empresa_id', 'INTEGER');
+  }
+
+  Future<void> _upgradeToV10(Database db) async {
+    await _addColumnIfNotExists(db, pedidosTable, 'empresa_id', 'INTEGER');
   }
 
   Future<void> _upgradeToV9(Database db) async {

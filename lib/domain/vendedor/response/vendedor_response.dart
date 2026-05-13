@@ -7,7 +7,7 @@ part 'vendedor_response.g.dart';
 
 @JsonSerializable()
 class VendedorResponse {
-  final int id;
+  final int? id;
   final int? empresaId;
   final String? codigoVendedor;
   final String? nomeVendedor;
@@ -23,7 +23,7 @@ class VendedorResponse {
   final Auditoria? auditoria;
 
   VendedorResponse({
-    required this.id,
+    this.id,
     this.empresaId,
     this.codigoVendedor,
     this.nomeVendedor,
@@ -76,4 +76,41 @@ class VendedorResponse {
   factory VendedorResponse.fromJson(Map<String, dynamic> json) =>
       _$VendedorResponseFromJson(json);
   Map<String, dynamic> toJson() => _$VendedorResponseToJson(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is VendedorResponse &&
+        other.id == id &&
+        other.empresaId == empresaId &&
+        other.codigoVendedor == codigoVendedor &&
+        other.nomeVendedor == nomeVendedor &&
+        other.numeroCPF == numeroCPF &&
+        other.email == email &&
+        other.numeroTelefone == numeroTelefone &&
+        other.valorMetaMensal == valorMetaMensal &&
+        other.percentualComissao == percentualComissao &&
+        other.ultimoSincronismo == ultimoSincronismo &&
+        other.codigoDispositivo == codigoDispositivo &&
+        other.supervisor == supervisor &&
+        other.territorio == territorio &&
+        other.auditoria == auditoria;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      empresaId.hashCode ^
+      codigoVendedor.hashCode ^
+      nomeVendedor.hashCode ^
+      numeroCPF.hashCode ^
+      email.hashCode ^
+      numeroTelefone.hashCode ^
+      valorMetaMensal.hashCode ^
+      percentualComissao.hashCode ^
+      ultimoSincronismo.hashCode ^
+      codigoDispositivo.hashCode ^
+      supervisor.hashCode ^
+      territorio.hashCode ^
+      auditoria.hashCode;
 }

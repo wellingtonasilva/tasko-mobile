@@ -64,11 +64,6 @@ class _AgendaVisitaCriarScreenState
         hideLoading();
       }
     };
-
-    ref
-        .read(agendaVisitaCriarViewModelProvider)
-        .listarVendedorCommand
-        .execute();
   }
 
   @override

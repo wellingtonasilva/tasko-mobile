@@ -84,7 +84,7 @@ class VendedorRepositoryHybrid implements VendedorRepository {
 
     final localVendedor = (localResult as Success<VendedorResponse>).value;
 
-    if (localVendedor.id < 0) {
+    if (localVendedor.id == null || localVendedor.id! < 0) {
       final addPayload = AdicionarVendedorRequest(
         codigoVendedor: localVendedor.codigoVendedor ?? '',
         nomeVendedor: localVendedor.nomeVendedor ?? '',

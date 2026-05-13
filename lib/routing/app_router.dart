@@ -358,8 +358,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const AgendaVisitaListarScreen(),
           ),
           GoRoute(
-            path: '/agenda/criar',
-            name: 'agenda-criar',
+            path: '/agenda-visita-adicionar',
+            name: 'agenda-visita-adicionar',
             builder: (context, state) => const AgendaVisitaCriarScreen(),
           ),
           GoRoute(

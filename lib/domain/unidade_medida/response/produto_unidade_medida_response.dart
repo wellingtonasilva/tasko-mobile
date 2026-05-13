@@ -29,4 +29,19 @@ class ProdutoUnidadeMedidaResponse {
     if (value is int) return value;
     return int.tryParse(value?.toString() ?? '');
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ProdutoUnidadeMedidaResponse &&
+        other.id == id &&
+        other.descricaoUnidadeMedida == descricaoUnidadeMedida &&
+        other.codigo == codigo;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^ descricaoUnidadeMedida.hashCode ^ codigo.hashCode;
+  }
 }

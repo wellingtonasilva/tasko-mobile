@@ -46,4 +46,23 @@ class ProdutoEstoqueLocalizacaoResponse {
     if (value is int) return value.toDouble();
     return double.tryParse(value.toString());
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ProdutoEstoqueLocalizacaoResponse &&
+        other.id == id &&
+        other.produtoId == produtoId &&
+        other.localizacao == localizacao &&
+        other.quantidadeDisponivel == quantidadeDisponivel &&
+        other.quantidadeReservada == quantidadeReservada;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      produtoId.hashCode ^
+      (localizacao?.hashCode ?? 0) ^
+      (quantidadeDisponivel?.hashCode ?? 0) ^
+      (quantidadeReservada?.hashCode ?? 0);
 }
