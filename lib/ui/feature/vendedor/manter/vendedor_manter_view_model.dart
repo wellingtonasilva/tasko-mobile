@@ -102,7 +102,7 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
     if (draft == null) return;
 
     final request = AtualizarVendedorRequest(
-      id: draft.id,
+      id: draft.id ?? -1,
       empresaId: draft.empresaId,
       codigoVendedor: draft.codigoVendedor ?? '',
       nomeVendedor: draft.nomeVendedor ?? '',
@@ -119,7 +119,7 @@ class VendedorManterViewModel extends Notifier<VendedorManterUiState> {
       indicadorAtivo: draft.auditoria?.indicadorAtivo ?? true,
     );
 
-    await state.atualizarCommand.execute((draft.id, request));
+    await state.atualizarCommand.execute((draft.id ?? -1, request));
   }
 
   VendedorSupervisorResponse? get computedSelectedSupervisor {

@@ -266,6 +266,7 @@ class ProdutoAdicionarViewModel extends Notifier<ProdutoAdicionarUiState> {
 }
 
 final produtoAdicionarViewModelProvider =
-    NotifierProvider<ProdutoAdicionarViewModel, ProdutoAdicionarUiState>(
-      () => ProdutoAdicionarViewModel(),
-    );
+    NotifierProvider.autoDispose<
+      ProdutoAdicionarViewModel,
+      ProdutoAdicionarUiState
+    >(() => ProdutoAdicionarViewModel());

@@ -233,6 +233,7 @@ class AgendaVisitaCriarViewModel extends Notifier<AgendaVisitaCriarUiState> {
 }
 
 final agendaVisitaCriarViewModelProvider =
-    NotifierProvider<AgendaVisitaCriarViewModel, AgendaVisitaCriarUiState>(
-      AgendaVisitaCriarViewModel.new,
-    );
+    NotifierProvider.autoDispose<
+      AgendaVisitaCriarViewModel,
+      AgendaVisitaCriarUiState
+    >(AgendaVisitaCriarViewModel.new);
