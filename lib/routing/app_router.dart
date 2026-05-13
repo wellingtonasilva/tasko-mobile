@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/core/vendedor_sessao_provider.dart';
 import 'package:tasko_mobile/common/widgets/scaffold/app_shell_scaffold.dart';
+import 'package:tasko_mobile/ui/feature/agenda_visita/manter/agenda_visita_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/create_new_password_v3_mobile_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/alterar_senha/reset_password_success_v3_smartphone_screen.dart';
 import 'package:tasko_mobile/ui/feature/autenticacao/criar_conta/criar_conta_screen.dart';
@@ -25,7 +26,6 @@ import 'package:tasko_mobile/ui/feature/grupo/listar/grupo_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/grupo/manter/grupo_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/home_screen.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/criar/agenda_visita_criar_screen.dart';
-import 'package:tasko_mobile/ui/feature/agenda_visita/detalhe/agenda_visita_detalhe_screen.dart';
 import 'package:tasko_mobile/ui/feature/agenda_visita/listar/agenda_visita_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/home/modulo_placeholder_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_steps_screen.dart';
@@ -363,8 +363,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const AgendaVisitaCriarScreen(),
           ),
           GoRoute(
-            path: '/agenda/:id',
-            name: 'agenda-detalhe',
+            path: '/agenda-visita-manter/:id',
+            name: 'agenda-visita-manter',
             builder: (context, state) {
               final agendaVisitaId = int.tryParse(
                 state.pathParameters['id'] ?? '',
@@ -372,7 +372,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               if (agendaVisitaId == null) {
                 return const AgendaVisitaListarScreen();
               }
-              return AgendaVisitaDetalheScreen(agendaVisitaId: agendaVisitaId);
+              return AgendaVisitaManterScreen(id: agendaVisitaId);
             },
           ),
           GoRoute(
