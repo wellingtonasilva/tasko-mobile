@@ -23,6 +23,9 @@ class AgendaVisitaResponse {
   final bool criadoOffline;
   final String? uuidOffline;
   final Auditoria? auditoria;
+  final String? razaoSocial;
+  final String? nomeVendedor;
+  final String? descricaoVisitaStatus;
 
   AgendaVisitaResponse({
     required this.id,
@@ -47,6 +50,9 @@ class AgendaVisitaResponse {
     required this.criadoOffline,
     this.uuidOffline,
     this.auditoria,
+    this.razaoSocial,
+    this.nomeVendedor,
+    this.descricaoVisitaStatus,
   });
 
   factory AgendaVisitaResponse.fromJson(Map<String, dynamic> json) {
@@ -73,6 +79,9 @@ class AgendaVisitaResponse {
       criadoOffline: (json['criadoOffline'] as bool?) ?? false,
       uuidOffline: json['uuidOffline'] as String?,
       auditoria: _toAuditoria(json['auditoria']),
+      razaoSocial: json['razaoSocial'] as String?,
+      nomeVendedor: json['nomeVendedor'] as String?,
+      descricaoVisitaStatus: json['descricaoVisitaStatus'] as String?,
     );
   }
 
@@ -106,6 +115,9 @@ class AgendaVisitaResponse {
               'atualizadoEm': auditoria?.atualizadoEm?.toIso8601String(),
               'indicadorAtivo': auditoria?.indicadorAtivo,
             },
+      'razaoSocial': razaoSocial,
+      'nomeVendedor': nomeVendedor,
+      'descricaoVisitaStatus': descricaoVisitaStatus,
     };
   }
 
