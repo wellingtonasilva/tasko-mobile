@@ -90,6 +90,10 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
                             'pedidos-criar',
                           );
                           if (adicionado == true) {
+                            showSnackBar(
+                              'Pedido adicionado com sucesso!',
+                              isError: false,
+                            );
                             await ref
                                 .read(pedidoListarViewModelProvider)
                                 .listarPedidosCommand
@@ -183,7 +187,7 @@ class _PedidoListarScreenState extends BaseScreenState<PedidoListarScreen> {
       pathParameters: {'id': id.toString()},
     );
     if (atualizado == true) {
-      showSnackBar('Pedido atualizado com sucesso!');
+      showSnackBar('Pedido atualizado com sucesso!', isError: false);
       ref.read(pedidoListarViewModelProvider).listarPedidosCommand.execute();
     }
   }

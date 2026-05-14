@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:tasko_mobile/common/domain/auditoria.dart';
 
-class AgendaVisitaCheckinResponse {
+class AgendaVisitaCheckinResponse extends Equatable {
   final int id;
   final int agendaVisitaId;
   final int vendedorId;
@@ -16,7 +17,7 @@ class AgendaVisitaCheckinResponse {
   final String? uuidOffline;
   final Auditoria? auditoria;
 
-  AgendaVisitaCheckinResponse({
+  const AgendaVisitaCheckinResponse({
     required this.id,
     required this.agendaVisitaId,
     required this.vendedorId,
@@ -96,5 +97,25 @@ class AgendaVisitaCheckinResponse {
       atualizadoEm: _toDate(value['atualizadoEm']),
       indicadorAtivo: (value['indicadorAtivo'] as bool?) ?? true,
     );
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      agendaVisitaId,
+      vendedorId,
+      clienteId,
+      checkinTipoId,
+      checkinTipoNome,
+      observacao,
+      latitude,
+      longitude,
+      distanciaCliente,
+      dentroRaioPermitido,
+      sincronizado,
+      uuidOffline,
+      auditoria,
+    ];
   }
 }

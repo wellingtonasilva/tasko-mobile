@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:tasko_mobile/common/domain/auditoria.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_codigo_barras_response.dart';
 
-class ProdutoResponse {
+class ProdutoResponse extends Equatable {
   final int? id;
   final int? empresaId;
   final String? codigoProduto;
@@ -35,75 +36,6 @@ class ProdutoResponse {
   final String? descricaoUnidadeMedida;
   final String? descricaoUnidadeMedidaCodigo;
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is ProdutoResponse &&
-        other.id == id &&
-        other.empresaId == empresaId &&
-        other.codigoProduto == codigoProduto &&
-        other.nomeProduto == nomeProduto &&
-        other.descricaoProduto == descricaoProduto &&
-        other.unidadeMedidaId == unidadeMedidaId &&
-        other.unidadeMedidaNome == unidadeMedidaNome &&
-        other.grupoId == grupoId &&
-        other.grupoNome == grupoNome &&
-        other.subgrupoId == subgrupoId &&
-        other.subgrupoNome == subgrupoNome &&
-        other.pesoLiquido == pesoLiquido &&
-        other.marca == marca &&
-        other.fornecedor == fornecedor &&
-        other.aliquotaIcms == aliquotaIcms &&
-        other.aliquotaIpi == aliquotaIpi &&
-        other.dimensaoAltura == dimensaoAltura &&
-        other.dimensaoLargura == dimensaoLargura &&
-        other.dimensaoProfundidade == dimensaoProfundidade &&
-        other.precoCusto == precoCusto &&
-        other.precoSugerido == precoSugerido &&
-        other.margemMinima == margemMinima &&
-        other.quantidadeDisponivel == quantidadeDisponivel &&
-        other.quantidadeReservada == quantidadeReservada &&
-        _listEquals(other.codigosBarras, codigosBarras) &&
-        other.auditoria == auditoria &&
-        other.descricaoGrupo == descricaoGrupo &&
-        other.descricaoSubgrupo == descricaoSubgrupo &&
-        other.descricaoUnidadeMedida == descricaoUnidadeMedida &&
-        other.descricaoUnidadeMedidaCodigo == descricaoUnidadeMedidaCodigo;
-  }
-
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      empresaId.hashCode ^
-      (codigoProduto?.hashCode ?? 0) ^
-      (nomeProduto?.hashCode ?? 0) ^
-      (descricaoProduto?.hashCode ?? 0) ^
-      (unidadeMedidaId?.hashCode ?? 0) ^
-      (unidadeMedidaNome?.hashCode ?? 0) ^
-      (grupoId?.hashCode ?? 0) ^
-      (grupoNome?.hashCode ?? 0) ^
-      (subgrupoId?.hashCode ?? 0) ^
-      (subgrupoNome?.hashCode ?? 0) ^
-      (pesoLiquido?.hashCode ?? 0) ^
-      (marca?.hashCode ?? 0) ^
-      (fornecedor?.hashCode ?? 0) ^
-      (aliquotaIcms?.hashCode ?? 0) ^
-      (aliquotaIpi?.hashCode ?? 0) ^
-      (dimensaoAltura?.hashCode ?? 0) ^
-      (dimensaoLargura?.hashCode ?? 0) ^
-      (dimensaoProfundidade?.hashCode ?? 0) ^
-      (precoCusto?.hashCode ?? 0) ^
-      (precoSugerido?.hashCode ?? 0) ^
-      (margemMinima?.hashCode ?? 0) ^
-      (quantidadeDisponivel?.hashCode ?? 0) ^
-      (quantidadeReservada?.hashCode ?? 0) ^
-      (codigosBarras == null ? 0 : codigosBarras.hashCode) ^
-      (auditoria?.hashCode ?? 0) ^
-      (descricaoGrupo?.hashCode ?? 0) ^
-      (descricaoSubgrupo?.hashCode ?? 0) ^
-      (descricaoUnidadeMedida?.hashCode ?? 0) ^
-      (descricaoUnidadeMedidaCodigo?.hashCode ?? 0);
-
   bool _listEquals(List? a, List? b) {
     if (a == null && b == null) return true;
     if (a == null || b == null) return false;
@@ -114,7 +46,7 @@ class ProdutoResponse {
     return true;
   }
 
-  ProdutoResponse({
+  const ProdutoResponse({
     this.id,
     this.empresaId,
     this.codigoProduto,
@@ -342,4 +274,38 @@ class ProdutoResponse {
 
     return const [];
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    empresaId,
+    codigoProduto,
+    nomeProduto,
+    descricaoProduto,
+    unidadeMedidaId,
+    unidadeMedidaNome,
+    grupoId,
+    grupoNome,
+    subgrupoId,
+    subgrupoNome,
+    pesoLiquido,
+    marca,
+    fornecedor,
+    aliquotaIcms,
+    aliquotaIpi,
+    dimensaoAltura,
+    dimensaoLargura,
+    dimensaoProfundidade,
+    precoCusto,
+    precoSugerido,
+    margemMinima,
+    quantidadeDisponivel,
+    quantidadeReservada,
+    codigosBarras,
+    auditoria,
+    descricaoGrupo,
+    descricaoSubgrupo,
+    descricaoUnidadeMedida,
+    descricaoUnidadeMedidaCodigo,
+  ];
 }
