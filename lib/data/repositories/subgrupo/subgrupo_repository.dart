@@ -1,4 +1,5 @@
 import 'package:tasko_mobile/domain/subgrupo/request/adicionar_produto_subgrupo2_request.dart';
+import 'package:tasko_mobile/domain/subgrupo/request/atualizar_produto_subgrupo_request.dart';
 import 'package:tasko_mobile/domain/subgrupo/response/produto_subgrupo_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -10,7 +11,7 @@ abstract class ProdutoSubgrupoRepository {
   );
   Future<Result<ProdutoSubgrupoResponse>> atualizar(
     int id,
-    AdicionarProdutoSubgrupoRequest request,
+    AtualizarProdutoSubgrupoRequest request,
   );
   Future<Result<void>> excluir(int id);
 }

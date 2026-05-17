@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:tasko_mobile/config/config_api.dart';
 import 'package:tasko_mobile/config/http_client_config.dart';
 import 'package:tasko_mobile/domain/subgrupo/request/adicionar_produto_subgrupo2_request.dart';
+import 'package:tasko_mobile/domain/subgrupo/request/atualizar_produto_subgrupo_request.dart';
 import 'package:tasko_mobile/domain/subgrupo/response/produto_subgrupo_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -56,7 +57,7 @@ class ProdutoSubgrupoService {
 
   Future<Result<ProdutoSubgrupoResponse>> atualizar(
     int id,
-    AdicionarProdutoSubgrupoRequest request,
+    AtualizarProdutoSubgrupoRequest request,
   ) async {
     final url = Uri.https(_configApi.baseUrl, '$_path/$id');
 
