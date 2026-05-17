@@ -4,28 +4,29 @@ import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
-import 'package:tasko_mobile/domain/grupo/request/adicionar_produto_grupo_request.dart';
-import 'package:tasko_mobile/ui/feature/grupo/adicionar/grupo_adicionar_controllers.dart';
-import 'package:tasko_mobile/ui/feature/grupo/adicionar/grupo_adicionar_view_model.dart';
+import 'package:tasko_mobile/domain/subgrupo/request/adicionar_produto_subgrupo2_request.dart';
+import 'package:tasko_mobile/ui/feature/subgrupo/adicionar/subgrupo_adicionar_controllers.dart';
+import 'package:tasko_mobile/ui/feature/subgrupo/adicionar/subgrupo_adicionar_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
 
-class GrupoAdicionarScreen extends BaseScreen {
-  const GrupoAdicionarScreen({super.key});
+class SubgrupoAdicionarScreen extends BaseScreen {
+  const SubgrupoAdicionarScreen({super.key});
 
   @override
-  BaseScreenState<GrupoAdicionarScreen> createState() =>
-      _GrupoAdicionarScreenState();
+  BaseScreenState<SubgrupoAdicionarScreen> createState() =>
+      _SubgrupoAdicionarScreenState();
 }
 
-class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
-  late final GrupoAdicionarControllers _controllers;
+class _SubgrupoAdicionarScreenState
+    extends BaseScreenState<SubgrupoAdicionarScreen> {
+  late final SubgrupoAdicionarControllers _controllers;
 
   @override
   void initState() {
     super.initState();
-    _controllers = GrupoAdicionarControllers();
+    _controllers = SubgrupoAdicionarControllers();
 
-    final viewModel = ref.read(grupoAdicionarViewModelProvider.notifier);
+    final viewModel = ref.read(subgrupoAdicionarViewModelProvider.notifier);
     viewModel.showSnackBar = (String message, Result result) {
       if (mounted) {
         if (result is Success) {
@@ -62,7 +63,7 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
 
   @override
   Widget buildContent(BuildContext context) {
-    final viewModel = ref.watch(grupoAdicionarViewModelProvider);
+    final viewModel = ref.watch(subgrupoAdicionarViewModelProvider);
 
     return GestureDetector(
       onTap: () {
@@ -96,7 +97,7 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CustomTituloBarDefault(
-                          title: 'Adicionar Grupo',
+                          title: 'Adicionar Subgrupo',
                           onClosePressed: () {
                             Navigator.of(context).pop();
                           },
@@ -110,7 +111,7 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
                             children: [
                               SizedBox(height: 10),
                               buildTextField(
-                                _controllers.descricaoGrupo,
+                                _controllers.descricaoSubgrupo,
                                 isMandatory: true,
                               ),
                             ],
@@ -160,13 +161,13 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
   void _handleSalvarPressed() {
     if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
 
-    final request = AdicionarProdutoGrupoRequest(
-      descricaoGrupo: _controllers.descricaoGrupo.controller.text.trim(),
+    final request = AdicionarProdutoSubgrupoRequest(
+      descricaoSubgrupo: _controllers.descricaoSubgrupo.controller.text.trim(),
     );
 
     ref
-        .read(grupoAdicionarViewModelProvider)
-        .adicionarProdutoGrupoCommand
+        .read(subgrupoAdicionarViewModelProvider)
+        .adicionarProdutoSubgrupoCommand
         .execute(request);
   }
 }

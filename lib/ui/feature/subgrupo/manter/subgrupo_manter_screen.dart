@@ -4,28 +4,31 @@ import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
-import 'package:tasko_mobile/domain/grupo/request/adicionar_produto_grupo_request.dart';
-import 'package:tasko_mobile/ui/feature/grupo/adicionar/grupo_adicionar_controllers.dart';
-import 'package:tasko_mobile/ui/feature/grupo/adicionar/grupo_adicionar_view_model.dart';
+import 'package:tasko_mobile/domain/subgrupo/request/atualizar_produto_subgrupo_request.dart';
+import 'package:tasko_mobile/ui/feature/subgrupo/manter/subgrupo_manter_controllers.dart';
+import 'package:tasko_mobile/ui/feature/subgrupo/manter/subgrupo_manter_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
 
-class GrupoAdicionarScreen extends BaseScreen {
-  const GrupoAdicionarScreen({super.key});
+class SubgrupoManterScreen extends BaseScreen {
+  final int subgrupoId;
+
+  const SubgrupoManterScreen({super.key, required this.subgrupoId});
 
   @override
-  BaseScreenState<GrupoAdicionarScreen> createState() =>
-      _GrupoAdicionarScreenState();
+  BaseScreenState<SubgrupoManterScreen> createState() =>
+      _SubgrupoManterScreenState();
 }
 
-class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
-  late final GrupoAdicionarControllers _controllers;
+class _SubgrupoManterScreenState extends BaseScreenState<SubgrupoManterScreen> {
+  late final SubgrupoManterControllers _controllers;
+  int? _lastHydratedSubgrupoId;
 
   @override
   void initState() {
     super.initState();
-    _controllers = GrupoAdicionarControllers();
+    _controllers = SubgrupoManterControllers();
 
-    final viewModel = ref.read(grupoAdicionarViewModelProvider.notifier);
+    final viewModel = ref.read(subgrupoManterViewModelProvider.notifier);
     viewModel.showSnackBar = (String message, Result result) {
       if (mounted) {
         if (result is Success) {
@@ -36,7 +39,7 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
       }
     };
 
-    viewModel.onAdicionarSucesso = () {
+    viewModel.onManterSucesso = () {
       if (mounted) {
         Navigator.of(context).pop(true);
       }
@@ -52,6 +55,10 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
         hideLoading();
       }
     };
+
+    ref.read(subgrupoManterViewModelProvider).obterPorIdCommand.execute((
+      widget.subgrupoId,
+    ));
   }
 
   @override
@@ -62,7 +69,12 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
 
   @override
   Widget buildContent(BuildContext context) {
-    final viewModel = ref.watch(grupoAdicionarViewModelProvider);
+    final viewModel = ref.watch(subgrupoManterViewModelProvider);
+    final subgrupoAtual = viewModel.subgrupo;
+    if (subgrupoAtual != null && _lastHydratedSubgrupoId != subgrupoAtual.id) {
+      _controllers.updateFormFields(subgrupoAtual);
+      _lastHydratedSubgrupoId = subgrupoAtual.id;
+    }
 
     return GestureDetector(
       onTap: () {
@@ -96,7 +108,7 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CustomTituloBarDefault(
-                          title: 'Adicionar Grupo',
+                          title: 'Manter Subgrupo',
                           onClosePressed: () {
                             Navigator.of(context).pop();
                           },
@@ -110,7 +122,7 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
                             children: [
                               SizedBox(height: 10),
                               buildTextField(
-                                _controllers.descricaoGrupo,
+                                _controllers.descricaoSubgrupo,
                                 isMandatory: true,
                               ),
                             ],
@@ -160,13 +172,14 @@ class _GrupoAdicionarScreenState extends BaseScreenState<GrupoAdicionarScreen> {
   void _handleSalvarPressed() {
     if (!(_controllers.formKey.currentState?.validate() ?? false)) return;
 
-    final request = AdicionarProdutoGrupoRequest(
-      descricaoGrupo: _controllers.descricaoGrupo.controller.text.trim(),
+    final request = AtualizarProdutoSubgrupoRequest(
+      id: widget.subgrupoId,
+      descricaoSubgrupo: _controllers.descricaoSubgrupo.controller.text.trim(),
     );
 
-    ref
-        .read(grupoAdicionarViewModelProvider)
-        .adicionarProdutoGrupoCommand
-        .execute(request);
+    ref.read(subgrupoManterViewModelProvider).atualizarCommand.execute((
+      request.id,
+      request,
+    ));
   }
 }

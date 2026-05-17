@@ -34,6 +34,9 @@ import 'package:tasko_mobile/ui/feature/produto/adicionar/produto_adicionar_scre
 import 'package:tasko_mobile/ui/feature/produto/manter/produto_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/produto/listar/produto_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/sobre_aplicativo/sobre_aplicativo_screen.dart';
+import 'package:tasko_mobile/ui/feature/subgrupo/adicionar/subgrupo_adicionar_screen.dart';
+import 'package:tasko_mobile/ui/feature/subgrupo/listar/subgrupo_listar_screen.dart';
+import 'package:tasko_mobile/ui/feature/subgrupo/manter/subgrupo_manter_screen.dart';
 import 'package:tasko_mobile/ui/feature/supervisor/adicionar/supervisor_adicionar_screen.dart';
 import 'package:tasko_mobile/ui/feature/supervisor/listar/supervisor_listar_screen.dart';
 import 'package:tasko_mobile/ui/feature/supervisor/manter/supervisor_manter_screen.dart';
@@ -330,6 +333,31 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               }
               return GrupoManterScreen(grupoId: grupoId);
             },
+          ),
+          GoRoute(
+            path: '/subgrupos',
+            name: 'subgrupos',
+            builder: (context, state) => const SubgrupoListarScreen(),
+            routes: [
+              GoRoute(
+                path: '/subgrupos/adicionar',
+                name: 'subgrupos-adicionar',
+                builder: (context, state) => const SubgrupoAdicionarScreen(),
+              ),
+              GoRoute(
+                path: '/subgrupos/:id',
+                name: 'subgrupos-manter',
+                builder: (context, state) {
+                  final subgrupoId = int.tryParse(
+                    state.pathParameters['id'] ?? '',
+                  );
+                  if (subgrupoId == null) {
+                    return const SubgrupoListarScreen();
+                  }
+                  return SubgrupoManterScreen(subgrupoId: subgrupoId);
+                },
+              ),
+            ],
           ),
           GoRoute(
             path: '/pedidos',

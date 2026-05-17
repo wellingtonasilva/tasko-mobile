@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/routing/app_router.dart';
 import 'package:tasko_mobile/util/deep_link_service.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tasko_mobile/ui/seller_home/seller_home_layout.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

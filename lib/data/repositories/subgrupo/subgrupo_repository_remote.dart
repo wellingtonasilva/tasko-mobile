@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/data/repositories/subgrupo/subgrupo_repository.dart';
 import 'package:tasko_mobile/data/service/produto_subgrupo_service.dart';
 import 'package:tasko_mobile/domain/subgrupo/request/adicionar_produto_subgrupo2_request.dart';
+import 'package:tasko_mobile/domain/subgrupo/request/atualizar_produto_subgrupo_request.dart';
 import 'package:tasko_mobile/domain/subgrupo/response/produto_subgrupo_response.dart';
 import 'package:tasko_mobile/util/result.dart';
 
@@ -21,7 +22,7 @@ class SubgrupoRepositoryRemote implements ProdutoSubgrupoRepository {
   @override
   Future<Result<ProdutoSubgrupoResponse>> atualizar(
     int id,
-    AdicionarProdutoSubgrupoRequest request,
+    AtualizarProdutoSubgrupoRequest request,
   ) {
     return _service.atualizar(id, request);
   }
