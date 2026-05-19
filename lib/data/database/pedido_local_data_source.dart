@@ -38,7 +38,6 @@ class PedidoLocalDataSource {
 
       final pedidoRow = {
         'id': localId,
-        'empresa_id': request.empresaId,
         'local_uuid': localUuid,
         'numero_pedido': null,
         'cliente_id': request.clienteId,
