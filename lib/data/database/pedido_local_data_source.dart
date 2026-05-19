@@ -359,8 +359,8 @@ class PedidoLocalDataSource {
       final rows = await db.query(
         DatabaseService.pedidosTable,
         where: vendedorId == null
-            ? 'deleted = 0'
-            : 'deleted = 0 AND vendedor_id = ?',
+            ? 'deleted = 0 AND is_draft = 0'
+            : 'deleted = 0 AND is_draft = 0 AND vendedor_id = ?',
         whereArgs: vendedorId == null ? null : [vendedorId],
         orderBy: 'data_pedido DESC',
       );
@@ -486,11 +486,41 @@ class PedidoLocalDataSource {
       final db = await _databaseService.database;
       final nowIso = DateTime.now().toUtc().toIso8601String();
 
-      await db.insert(
-        DatabaseService.pedidosTable,
-        _toRow(pedido, nowIso, markAsDirty: false),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+      await db.transaction((txn) async {
+        final uuidOffline = pedido.uuidOffline;
+        if (uuidOffline != null && uuidOffline.isNotEmpty) {
+          final draftRows = await txn.query(
+            DatabaseService.pedidosTable,
+            columns: ['id'],
+            where: 'uuid_offline = ? AND is_draft = 1',
+            whereArgs: [uuidOffline],
+          );
+
+          for (final row in draftRows) {
+            final draftId = row['id'] as int?;
+            if (draftId == null) {
+              continue;
+            }
+            await txn.delete(
+              DatabaseService.pedidoItensTable,
+              where: 'pedido_id = ?',
+              whereArgs: [draftId],
+            );
+          }
+
+          await txn.delete(
+            DatabaseService.pedidosTable,
+            where: 'uuid_offline = ? AND is_draft = 1',
+            whereArgs: [uuidOffline],
+          );
+        }
+
+        await txn.insert(
+          DatabaseService.pedidosTable,
+          _toRow(pedido, nowIso, markAsDirty: false),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      });
 
       return Result.success(null);
     } on Exception catch (error) {
@@ -508,62 +538,89 @@ class PedidoLocalDataSource {
     try {
       final db = await _databaseService.database;
       final now = DateTime.now().toUtc();
-      final localId = -now.microsecondsSinceEpoch;
-      final localUuid = 'ped-local-${now.microsecondsSinceEpoch}';
-      final uuidOffline = request.uuidOffline ?? localUuid;
+      final generatedLocalId = -now.microsecondsSinceEpoch;
+      final generatedLocalUuid = 'ped-local-${now.microsecondsSinceEpoch}';
+      final uuidOffline = request.uuidOffline ?? generatedLocalUuid;
       final nowIso = now.toIso8601String();
 
-      final pedidoRow = {
-        'id': localId,
-        'empresa_id': request.empresaId,
-        'local_uuid': localUuid,
-        'numero_pedido': null,
-        'cliente_id': request.clienteId,
-        'vendedor_id': request.vendedorId,
-        'pedido_status_tipo_id': request.pedidoStatusTipoId,
-        'pedido_status_tipo_nome': pedidoStatusTipoNome,
-        'data_pedido': request.dataPedido,
-        'data_entrega_prevista': request.dataEntregaPrevista,
-        'observacao': request.observacao,
-        'subtotal': request.subtotal,
-        'percentual_desconto': request.percentualDesconto,
-        'valor_desconto': request.valorDesconto,
-        'valor_frete': request.valorFrete,
-        'valor_total': request.valorTotal,
-        'forma_pagamento_id': request.formaPagamentoId,
-        'forma_pagamento_nome': formaPagamentoNome,
-        'condicao_pagamento_id': request.condicaoPagamentoId,
-        'condicao_pagamento_nome': condicaoPagamentoNome,
-        'latitude': request.latitude,
-        'longitude': request.longitude,
-        'sincronizado': 0,
-        'criado_offline': 1,
-        'uuid_offline': uuidOffline,
-        'auditoria_criado_em': nowIso,
-        'auditoria_atualizado_em': nowIso,
-        'auditoria_indicador_ativo': 1,
-        'local_updated_at': nowIso,
-        'server_updated_at': null,
-        'synced_at': null,
-        'dirty': 1,
-        'deleted': 0,
-        'sync_status': syncStatusPending,
-        'sync_error': null,
-        'sync_attempt_count': 0,
-        'descricao_condicao_pagamento': request.descricaoCondicaoPagamento,
-        'descricao_forma_pagamento': request.descricaoFormaPagamento,
-        'nome_vendedor': request.nomeVendedor,
-        'nome_fantasia_cliente': request.nomeFantasiaCliente,
-        'descricao_status_tipo': request.descricaoStatusTipo,
-      };
+      int localId = generatedLocalId;
+      String localUuid = generatedLocalUuid;
 
       final createdItens = <PedidoItemResponse>[];
+      late final Map<String, Object?> pedidoRow;
 
       await db.transaction((txn) async {
+        final draftRows = await txn.query(
+          DatabaseService.pedidosTable,
+          where: 'uuid_offline = ? AND is_draft = 1 AND deleted = 0',
+          whereArgs: [uuidOffline],
+          limit: 1,
+        );
+
+        final existingDraft = draftRows.isNotEmpty ? draftRows.first : null;
+        if (existingDraft != null) {
+          localId = (existingDraft['id'] as int?) ?? generatedLocalId;
+          localUuid =
+              (existingDraft['local_uuid'] as String?) ?? generatedLocalUuid;
+        }
+
+        pedidoRow = {
+          'id': localId,
+          'empresa_id': request.empresaId,
+          'local_uuid': localUuid,
+          'numero_pedido': null,
+          'cliente_id': request.clienteId,
+          'vendedor_id': request.vendedorId,
+          'pedido_status_tipo_id': request.pedidoStatusTipoId,
+          'pedido_status_tipo_nome': pedidoStatusTipoNome,
+          'data_pedido': request.dataPedido,
+          'data_entrega_prevista': request.dataEntregaPrevista,
+          'observacao': request.observacao,
+          'subtotal': request.subtotal,
+          'percentual_desconto': request.percentualDesconto,
+          'valor_desconto': request.valorDesconto,
+          'valor_frete': request.valorFrete,
+          'valor_total': request.valorTotal,
+          'forma_pagamento_id': request.formaPagamentoId,
+          'forma_pagamento_nome': formaPagamentoNome,
+          'condicao_pagamento_id': request.condicaoPagamentoId,
+          'condicao_pagamento_nome': condicaoPagamentoNome,
+          'latitude': request.latitude,
+          'longitude': request.longitude,
+          'sincronizado': 0,
+          'criado_offline': 1,
+          'is_draft': 0,
+          'uuid_offline': uuidOffline,
+          'auditoria_criado_em':
+              existingDraft?['auditoria_criado_em'] as String? ?? nowIso,
+          'auditoria_atualizado_em': nowIso,
+          'auditoria_indicador_ativo':
+              (existingDraft?['auditoria_indicador_ativo'] as int?) ?? 1,
+          'local_updated_at': nowIso,
+          'server_updated_at': null,
+          'synced_at': null,
+          'dirty': 1,
+          'deleted': 0,
+          'sync_status': syncStatusPending,
+          'sync_error': null,
+          'sync_attempt_count': 0,
+          'descricao_condicao_pagamento': request.descricaoCondicaoPagamento,
+          'descricao_forma_pagamento': request.descricaoFormaPagamento,
+          'nome_vendedor': request.nomeVendedor,
+          'nome_fantasia_cliente': request.nomeFantasiaCliente,
+          'descricao_status_tipo': request.descricaoStatusTipo,
+        };
+
         await txn.insert(
           DatabaseService.pedidosTable,
           pedidoRow,
           conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+
+        await txn.delete(
+          DatabaseService.pedidoItensTable,
+          where: 'pedido_id = ?',
+          whereArgs: [localId],
         );
 
         for (final item in itens) {
