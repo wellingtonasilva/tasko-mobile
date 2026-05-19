@@ -1,8 +1,13 @@
-class AgendaVisitaStatusResponse {
+import 'package:equatable/equatable.dart';
+
+class AgendaVisitaStatusResponse extends Equatable {
   final int id;
   final String? descricaoVisitaStatus;
 
-  AgendaVisitaStatusResponse({required this.id, this.descricaoVisitaStatus});
+  const AgendaVisitaStatusResponse({
+    required this.id,
+    this.descricaoVisitaStatus,
+  });
 
   factory AgendaVisitaStatusResponse.fromJson(Map<String, dynamic> json) {
     return AgendaVisitaStatusResponse(
@@ -14,4 +19,7 @@ class AgendaVisitaStatusResponse {
   Map<String, dynamic> toJson() {
     return {'id': id, 'descricaoVisitaStatus': descricaoVisitaStatus};
   }
+
+  @override
+  List<Object?> get props => [id, descricaoVisitaStatus];
 }

@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tasko_mobile/common/domain/auditoria.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_supervisor_response.dart';
@@ -5,7 +6,7 @@ import 'package:tasko_mobile/domain/vendedor/response/vendedor_supervisor_respon
 part 'vendedor_territorio_response.g.dart';
 
 @JsonSerializable()
-class VendedorTerritorioResponse {
+class VendedorTerritorioResponse extends Equatable {
   final int id;
   final String? nomeTerritorio;
   final String? descricaoTerritorio;
@@ -15,7 +16,7 @@ class VendedorTerritorioResponse {
   final VendedorSupervisorResponse? supervisor;
   final Auditoria? auditoria;
 
-  VendedorTerritorioResponse({
+  const VendedorTerritorioResponse({
     required this.id,
     this.nomeTerritorio,
     this.descricaoTerritorio,
@@ -29,4 +30,16 @@ class VendedorTerritorioResponse {
   factory VendedorTerritorioResponse.fromJson(Map<String, dynamic> json) =>
       _$VendedorTerritorioResponseFromJson(json);
   Map<String, dynamic> toJson() => _$VendedorTerritorioResponseToJson(this);
+
+  @override
+  List<Object?> get props => [
+    id,
+    nomeTerritorio,
+    descricaoTerritorio,
+    nomeRegiao,
+    estado,
+    coordenadasPoligono,
+    supervisor,
+    auditoria,
+  ];
 }

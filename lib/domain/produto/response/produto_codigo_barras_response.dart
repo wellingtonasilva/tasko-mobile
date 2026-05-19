@@ -1,10 +1,12 @@
-class ProdutoCodigoBarrasResponse {
+import 'package:equatable/equatable.dart';
+
+class ProdutoCodigoBarrasResponse extends Equatable {
   final int id;
   final int? produtoId;
   final String codigo;
   final String? tipo;
 
-  ProdutoCodigoBarrasResponse({
+  const ProdutoCodigoBarrasResponse({
     required this.id,
     this.produtoId,
     required this.codigo,
@@ -40,6 +42,5 @@ class ProdutoCodigoBarrasResponse {
   }
 
   @override
-  int get hashCode =>
-      id.hashCode ^ produtoId.hashCode ^ codigo.hashCode ^ tipo.hashCode;
+  List<Object?> get props => [id, produtoId, codigo, tipo];
 }

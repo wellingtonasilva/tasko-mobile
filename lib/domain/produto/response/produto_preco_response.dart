@@ -1,11 +1,13 @@
-class ProdutoPrecoResponse {
+import 'package:equatable/equatable.dart';
+
+class ProdutoPrecoResponse extends Equatable {
   final int id;
   final int produtoId;
   final int? tabelaPrecoId;
   final String? descricaoTabelaPreco;
   final double? valor;
 
-  ProdutoPrecoResponse({
+  const ProdutoPrecoResponse({
     required this.id,
     required this.produtoId,
     this.tabelaPrecoId,
@@ -57,10 +59,11 @@ class ProdutoPrecoResponse {
   }
 
   @override
-  int get hashCode =>
-      id.hashCode ^
-      produtoId.hashCode ^
-      (tabelaPrecoId?.hashCode ?? 0) ^
-      (descricaoTabelaPreco?.hashCode ?? 0) ^
-      (valor?.hashCode ?? 0);
+  List<Object?> get props => [
+    id,
+    produtoId,
+    tabelaPrecoId,
+    descricaoTabelaPreco,
+    valor,
+  ];
 }

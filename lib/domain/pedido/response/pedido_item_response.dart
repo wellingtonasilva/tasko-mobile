@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:tasko_mobile/common/domain/auditoria.dart';
 
-class PedidoItemResponse {
+class PedidoItemResponse extends Equatable {
   final int id;
   final int pedidoId;
   final int produtoId;
@@ -11,7 +12,7 @@ class PedidoItemResponse {
   final double valorTotal;
   final Auditoria? auditoria;
 
-  PedidoItemResponse({
+  const PedidoItemResponse({
     required this.id,
     required this.pedidoId,
     required this.produtoId,
@@ -77,4 +78,16 @@ class PedidoItemResponse {
       indicadorAtivo: (value['indicadorAtivo'] as bool?) ?? true,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    pedidoId,
+    produtoId,
+    quantidade,
+    precoUnitario,
+    percentualDesconto,
+    valorDesconto,
+    valorTotal,
+  ];
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
@@ -60,7 +61,17 @@ class _HomeScreenState extends BaseScreenState<HomeScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: CustomButtonPrimary(
                         label: 'Adicionar Pedido',
-                        onPressed: () async {},
+                        onPressed: () async {
+                          final adicionado = await context.pushNamed<bool>(
+                            'pedidos-criar',
+                          );
+                          if (adicionado == true) {
+                            showSnackBar(
+                              'Pedido adicionado com sucesso!',
+                              isError: false,
+                            );
+                          }
+                        },
                         trailingIcon: Icons.add,
                       ),
                     ),

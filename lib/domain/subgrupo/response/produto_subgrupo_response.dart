@@ -1,8 +1,13 @@
-class ProdutoSubgrupoResponse {
+import 'package:equatable/equatable.dart';
+
+class ProdutoSubgrupoResponse extends Equatable {
   final int id;
   final String descricaoSubgrupo;
 
-  ProdutoSubgrupoResponse({required this.id, required this.descricaoSubgrupo});
+  const ProdutoSubgrupoResponse({
+    required this.id,
+    required this.descricaoSubgrupo,
+  });
 
   factory ProdutoSubgrupoResponse.fromJson(Map<String, dynamic> json) {
     return ProdutoSubgrupoResponse(
@@ -30,4 +35,7 @@ class ProdutoSubgrupoResponse {
     if (value is int) return value;
     return int.tryParse(value?.toString() ?? '');
   }
+
+  @override
+  List<Object?> get props => [id, descricaoSubgrupo];
 }

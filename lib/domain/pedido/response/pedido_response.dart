@@ -1,7 +1,8 @@
 import 'package:tasko_mobile/common/domain/auditoria.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
+import 'package:equatable/equatable.dart';
 
-class PedidoResponse {
+class PedidoResponse extends Equatable {
   final int id;
   final int empresaId;
   final String? numeroPedido;
@@ -185,4 +186,42 @@ class PedidoResponse {
         .map((e) => PedidoItemResponse.fromJson(e as Map<String, dynamic>))
         .toList();
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    empresaId,
+    numeroPedido,
+    clienteId,
+    vendedorId,
+    pedidoStatusTipoId,
+    pedidoStatusTipoNome,
+    dataPedido,
+    dataEntregaPrevista,
+    observacao,
+    subtotal,
+    percentualDesconto,
+    valorDesconto,
+    valorFrete,
+    valorTotal,
+    formaPagamentoId,
+    formaPagamentoNome,
+    condicaoPagamentoId,
+    condicaoPagamentoNome,
+    latitude,
+    longitude,
+    sincronizado,
+    criadoOffline,
+    uuidOffline,
+    auditoria,
+    itens,
+    descricaoCondicaoPagamento,
+    descricaoFormaPagamento,
+    nomeVendedor,
+    nomeFantasiaCliente,
+    descricaoStatusTipo,
+    syncStatus,
+    syncError,
+    syncAttemptCount,
+  ];
 }

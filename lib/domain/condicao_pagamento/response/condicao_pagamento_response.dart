@@ -1,16 +1,17 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'condicao_pagamento_response.g.dart';
 
 @JsonSerializable()
-class CondicaoPagamentoResponse {
+class CondicaoPagamentoResponse extends Equatable {
   final int id;
   final int empresaId;
   final int? formaPagamentoId;
   final String? descricaoCondicaoPagamento;
   final String? condicaoPagamento;
 
-  CondicaoPagamentoResponse({
+  const CondicaoPagamentoResponse({
     required this.id,
     required this.empresaId,
     this.formaPagamentoId,
@@ -22,4 +23,13 @@ class CondicaoPagamentoResponse {
       _$CondicaoPagamentoResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$CondicaoPagamentoResponseToJson(this);
+
+  @override
+  List<Object?> get props => [
+    id,
+    empresaId,
+    formaPagamentoId,
+    descricaoCondicaoPagamento,
+    condicaoPagamento,
+  ];
 }

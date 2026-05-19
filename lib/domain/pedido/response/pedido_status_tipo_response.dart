@@ -1,8 +1,10 @@
-class PedidoStatusTipoResponse {
+import 'package:equatable/equatable.dart';
+
+class PedidoStatusTipoResponse extends Equatable {
   final int id;
   final String? nome;
 
-  PedidoStatusTipoResponse({required this.id, this.nome});
+  const PedidoStatusTipoResponse({required this.id, this.nome});
 
   factory PedidoStatusTipoResponse.fromJson(Map<String, dynamic> json) {
     return PedidoStatusTipoResponse(
@@ -14,4 +16,7 @@ class PedidoStatusTipoResponse {
   Map<String, dynamic> toJson() {
     return {'id': id, 'nome': nome};
   }
+
+  @override
+  List<Object?> get props => [id, nome];
 }
