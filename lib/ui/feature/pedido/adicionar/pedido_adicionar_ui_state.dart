@@ -24,6 +24,23 @@ class PedidoAdicionarUiState {
   // produtoId → quantidade
   final Map<int, double> carrinhoQuantidades;
 
+  int get totalItens =>
+      carrinhoQuantidades.values.fold(0, (sum, q) => sum + q.toInt());
+
+  double get valorTotal {
+    if (produtos == null || produtos!.isEmpty) return 0;
+    double total = 0;
+    for (final entry in carrinhoQuantidades.entries) {
+      final idx = produtos!.indexWhere((p) => p.id == entry.key);
+      if (idx < 0) {
+        continue;
+      }
+      final produto = produtos![idx];
+      total += (produto.precoSugerido ?? 0) * entry.value;
+    }
+    return total;
+  }
+
   PedidoAdicionarUiState({
     required this.criarRascunhoCommand,
     required this.atualizarRascunhoCommand,

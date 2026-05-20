@@ -105,7 +105,7 @@ class _PedidoAdicionarScreenState
     if (currentStep < 4) {
       setState(() => currentStep++);
       _controllers.pageController.nextPage(
-        duration: Duration(milliseconds: 10),
+        duration: Duration(milliseconds: 1),
         curve: Curves.ease,
       );
     }
@@ -115,7 +115,7 @@ class _PedidoAdicionarScreenState
     if (currentStep > 0) {
       setState(() => currentStep--);
       _controllers.pageController.previousPage(
-        duration: Duration(milliseconds: 10),
+        duration: Duration(milliseconds: 1),
         curve: Curves.ease,
       );
     }
