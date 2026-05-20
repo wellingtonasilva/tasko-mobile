@@ -5,14 +5,14 @@ import 'package:tasko_mobile/common/core/auth_persistence.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_controllers.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/cliente/pedido_criar_cliente_controllers.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/widgets/cliente_card.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_rascunho_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/cliente/pedido_criar_cliente_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/cliente/widgets/cliente_card.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class PedidoCriarClienteScreen extends BaseScreen {

@@ -6,10 +6,10 @@ import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/pedido_criar_pagamento_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_ui_state.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/cliente/pedido_criar_cliente_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pagamento/pedido_criar_pagamento_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_rascunho_ui_state.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/produto/pedido_criar_produto_view_model.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
 

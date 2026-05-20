@@ -8,9 +8,9 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/resumo/pedido_criar_resumo_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/cliente/pedido_criar_cliente_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/produto/pedido_criar_produto_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/resumo/pedido_criar_resumo_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class PedidoCriarResumoScreen extends BaseScreen {

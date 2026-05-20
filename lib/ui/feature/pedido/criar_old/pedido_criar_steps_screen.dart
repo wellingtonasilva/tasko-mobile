@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_steps_controllers.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_screen.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_screen.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/pedido_criar_pagamento_screen.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/resumo/pedido_criar_resumo_screen.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/sucesso/pedido_criar_sucesso_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_rascunho_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_steps_controllers.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/cliente/pedido_criar_cliente_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/produto/pedido_criar_produto_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pagamento/pedido_criar_pagamento_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/resumo/pedido_criar_resumo_screen.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/sucesso/pedido_criar_sucesso_screen.dart';
 
 class PedidoCriarStepsScreen extends BaseScreen {
   final int? pedidoId;
