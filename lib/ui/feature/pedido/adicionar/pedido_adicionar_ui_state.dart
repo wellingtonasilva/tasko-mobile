@@ -2,10 +2,16 @@ import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
+import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_rascunho_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 
 class PedidoAdicionarUiState {
   final Command1<PedidoResponse, AdicionarPedidoRequest> criarRascunhoCommand;
+  final Command1<PedidoResponse, AtualizarPedidoRascunhoArgs>
+  atualizarRascunhoCommand;
+  final PedidoResponse? pedido;
+  final VendedorResponse? vendedor;
 
   // Clientes
   final Command0<void> listarClienteCommand;
@@ -20,16 +26,21 @@ class PedidoAdicionarUiState {
 
   PedidoAdicionarUiState({
     required this.criarRascunhoCommand,
+    required this.atualizarRascunhoCommand,
     required this.listarClienteCommand,
     required this.listarProdutoCommand,
     this.clientes,
     this.selectedCliente,
     this.produtos,
     Map<int, double>? carrinhoQuantidades,
+    this.vendedor,
+    this.pedido,
   }) : carrinhoQuantidades = carrinhoQuantidades ?? {};
 
   PedidoAdicionarUiState copyWith({
     Command1<PedidoResponse, AdicionarPedidoRequest>? criarRascunhoCommand,
+    Command1<PedidoResponse, AtualizarPedidoRascunhoArgs>?
+    atualizarRascunhoCommand,
     Command0<void>? listarClienteCommand,
     List<ClienteResponse>? clientes,
     ClienteResponse? selectedCliente,
@@ -37,9 +48,13 @@ class PedidoAdicionarUiState {
     Command0<void>? listarProdutoCommand,
     List<ProdutoResponse>? produtos,
     Map<int, double>? carrinhoQuantidades,
+    VendedorResponse? vendedor,
+    PedidoResponse? pedido,
   }) {
     return PedidoAdicionarUiState(
       criarRascunhoCommand: criarRascunhoCommand ?? this.criarRascunhoCommand,
+      atualizarRascunhoCommand:
+          atualizarRascunhoCommand ?? this.atualizarRascunhoCommand,
       listarClienteCommand: listarClienteCommand ?? this.listarClienteCommand,
       clientes: clientes ?? this.clientes,
       selectedCliente: clearSelectedCliente
@@ -48,6 +63,8 @@ class PedidoAdicionarUiState {
       listarProdutoCommand: listarProdutoCommand ?? this.listarProdutoCommand,
       produtos: produtos ?? this.produtos,
       carrinhoQuantidades: carrinhoQuantidades ?? this.carrinhoQuantidades,
+      vendedor: vendedor ?? this.vendedor,
+      pedido: pedido ?? this.pedido,
     );
   }
 }

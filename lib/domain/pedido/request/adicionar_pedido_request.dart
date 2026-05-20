@@ -1,6 +1,6 @@
 class AdicionarPedidoRequest {
   final int clienteId;
-  final int empresaId;
+  final int? empresaId;
   final int vendedorId;
   final int? pedidoStatusTipoId;
   final String dataPedido;
@@ -26,7 +26,7 @@ class AdicionarPedidoRequest {
 
   AdicionarPedidoRequest({
     required this.clienteId,
-    required this.empresaId,
+    this.empresaId,
     required this.vendedorId,
     this.pedidoStatusTipoId,
     required this.dataPedido,
@@ -110,7 +110,7 @@ class AdicionarPedidoRequest {
   factory AdicionarPedidoRequest.fromJson(Map<String, dynamic> json) {
     return AdicionarPedidoRequest(
       clienteId: (json['clienteId'] as int?) ?? 0,
-      empresaId: (json['empresaId'] as int?) ?? 0,
+      empresaId: json['empresaId'] as int?,
       vendedorId: (json['vendedorId'] as int?) ?? 0,
       pedidoStatusTipoId: json['pedidoStatusTipoId'] as int?,
       dataPedido: (json['dataPedido'] as String?) ?? '',
