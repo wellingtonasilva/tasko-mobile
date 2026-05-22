@@ -42,6 +42,12 @@ class FormaPagamentoRepositoryRemote implements FormaPagamentoRepository {
   Future<Result<FormaPagamentoResponse>> obterPorId(int id) async {
     return _formaPagamentoService.obterPorId(id);
   }
+
+  @override
+  Future<Result<List<FormaPagamentoResponse>>>
+  listarCondicoesPagamentoAssociadas() {
+    return _formaPagamentoService.listar();
+  }
 }
 
 final formaPagamentoRepositoryRemoteProvider =

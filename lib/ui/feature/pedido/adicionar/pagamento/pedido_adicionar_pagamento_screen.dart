@@ -61,30 +61,14 @@ class _PedidoAdicionarPagamentoScreenState
     };
   }
 
-  final List<FormaPagamento> paymentMethods = [
-    FormaPagamento(
-      id: '1',
-      nome: 'Dinheiro',
-      icone: 'assets/images/pos_icon_money.svg',
-    ),
-    FormaPagamento(
-      id: '2',
-      nome: 'Cartão',
-      icone: 'assets/images/pos_icon_credit_card.svg',
-    ),
-    FormaPagamento(
-      id: '3',
-      nome: 'Pix',
-      icone: 'assets/images/pos_icon_pix.svg',
-    ),
-  ];
-
+  /*
   final List<CondicaoPagamento> paymentConditions = [
     CondicaoPagamento(id: '1', nome: 'À vista'),
     CondicaoPagamento(id: '2', nome: '30 dias'),
     CondicaoPagamento(id: '3', nome: '60 dias'),
     CondicaoPagamento(id: '4', nome: '90 dias'),
   ];
+    */
 
   final List<Parcelas> parcelas = [
     Parcelas(id: '1', nome: '1x'),
@@ -102,14 +86,18 @@ class _PedidoAdicionarPagamentoScreenState
 
     final vmMetodoIndex = viewModel.formaPagamentoNome == null
         ? -1
-        : paymentMethods.indexWhere(
-            (m) => m.nome == viewModel.formaPagamentoNome,
-          );
+        : viewModel.formasPagamento?.indexWhere(
+                (m) => m.nome == viewModel.formaPagamentoNome,
+              ) ??
+              -1;
     final vmCondicaoIndex = viewModel.condicaoPagamentoNome == null
         ? -1
-        : paymentConditions.indexWhere(
-            (c) => c.nome == viewModel.condicaoPagamentoNome,
-          );
+        : viewModel.condicoesPagamento?.indexWhere(
+                (c) =>
+                    c.descricaoCondicaoPagamento ==
+                    viewModel.condicaoPagamentoNome,
+              ) ??
+              -1;
 
     final effectivePaymentMethodIndex = vmMetodoIndex >= 0
         ? vmMetodoIndex
@@ -204,9 +192,11 @@ class _PedidoAdicionarPagamentoScreenState
                                 height: 100,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: paymentMethods.length,
+                                  itemCount:
+                                      viewModel.formasPagamento?.length ?? 0,
                                   itemBuilder: (context, index) {
-                                    final paymentMethod = paymentMethods[index];
+                                    final paymentMethod =
+                                        viewModel.formasPagamento![index];
                                     return SizedBox(
                                       width: 115,
                                       child: CustomFormaPagamentoButton(
@@ -225,7 +215,9 @@ class _PedidoAdicionarPagamentoScreenState
                                                     .notifier,
                                               )
                                               .setFormaPagamento(
-                                                paymentMethods[index].nome,
+                                                viewModel
+                                                    .formasPagamento![index]
+                                                    .nome,
                                               );
                                         },
                                       ),
@@ -246,14 +238,18 @@ class _PedidoAdicionarPagamentoScreenState
                                 width: double.infinity,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: paymentConditions.length,
+                                  itemCount:
+                                      viewModel.condicoesPagamento?.length ?? 0,
                                   itemBuilder: (context, index) {
                                     final paymentCondition =
-                                        paymentConditions[index];
+                                        viewModel.condicoesPagamento![index];
                                     return SizedBox(
                                       width: 85,
                                       child: CustomCondicaoPagamentoButton(
-                                        title: paymentCondition.nome,
+                                        title:
+                                            paymentCondition
+                                                .descricaoCondicaoPagamento ??
+                                            '',
                                         selected:
                                             index ==
                                             effectivePaymentConditionIndex,
@@ -268,7 +264,10 @@ class _PedidoAdicionarPagamentoScreenState
                                                     .notifier,
                                               )
                                               .setCondicaoPagamento(
-                                                paymentConditions[index].nome,
+                                                viewModel
+                                                        .condicoesPagamento![index]
+                                                        .descricaoCondicaoPagamento ??
+                                                    '',
                                               );
                                         },
                                       ),
@@ -277,6 +276,8 @@ class _PedidoAdicionarPagamentoScreenState
                                 ),
                               ),
                               const SizedBox(height: 25),
+
+                              /*
                               Row(
                                 children: [
                                   Text(
@@ -320,81 +321,75 @@ class _PedidoAdicionarPagamentoScreenState
                                 ),
                               ),
                               const SizedBox(height: 25),
-                              Container(
-                                height: 150,
-                                width: double.infinity,
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    SizedBox(height: 10),
-                                    Text(
-                                      "Resumo do pedido",
-                                      style: kTestStyleMediumText14.copyWith(
-                                        color: kColorStyleSecondinaryDark400,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            "Subtotal (${state.totalItens} iten${state.totalItens == 1 ? '' : 's'})",
-                                            style: kTestStyleMediumText14.copyWith(
-                                              color:
-                                                  kColorStyleSecondinaryDark400,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          "R\$ ${state.valorTotal.toStringAsFixed(2)}",
-                                          style: kTestStyleMediumText14.copyWith(
-                                            color:
-                                                kColorStyleSecondinaryDark400,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-                                    Divider(
-                                      color: kColorStyleSecondinaryLight200,
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            "Total do pedido",
-                                            style: kTestStyleMediumText18.copyWith(
-                                              color:
-                                                  kColorStyleSecondinaryDarkDefault,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          "R\$ ${state.valorTotal.toStringAsFixed(2)}",
-                                          style: kTestStyleBoldText18.copyWith(
-                                            color:
-                                                kColorStylePrimaryNeutralPaletteDark500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              */
                             ],
                           ),
                         ),
                       ),
 
+                      Container(
+                        height: 150,
+                        width: double.infinity,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SizedBox(height: 10),
+                            Text(
+                              "Resumo do pedido",
+                              style: kTestStyleMediumText14.copyWith(
+                                color: kColorStyleSecondinaryDark400,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    "Subtotal (${state.totalItens} iten${state.totalItens == 1 ? '' : 's'})",
+                                    style: kTestStyleMediumText14.copyWith(
+                                      color: kColorStyleSecondinaryDark400,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "R\$ ${state.valorTotal.toStringAsFixed(2)}",
+                                  style: kTestStyleMediumText14.copyWith(
+                                    color: kColorStyleSecondinaryDark400,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Divider(color: kColorStyleSecondinaryLight200),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    "Total do pedido",
+                                    style: kTestStyleMediumText18.copyWith(
+                                      color: kColorStyleSecondinaryDarkDefault,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "R\$ ${state.valorTotal.toStringAsFixed(2)}",
+                                  style: kTestStyleBoldText18.copyWith(
+                                    color:
+                                        kColorStylePrimaryNeutralPaletteDark500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                       Divider(color: kColorStyleSecondinaryLight200),
                       const SizedBox(height: 5),
                       //buildSubmitButton(context),
@@ -439,14 +434,18 @@ class _PedidoAdicionarPagamentoScreenState
     final pagamentoState = ref.read(pedidoAdicionarViewModelProvider);
     final vmMetodoIndex = pagamentoState.formaPagamentoNome == null
         ? -1
-        : paymentMethods.indexWhere(
-            (m) => m.nome == pagamentoState.formaPagamentoNome,
-          );
+        : draftState.formasPagamento?.indexWhere(
+                (m) => m.nome == pagamentoState.formaPagamentoNome,
+              ) ??
+              -1;
     final vmCondicaoIndex = pagamentoState.condicaoPagamentoNome == null
         ? -1
-        : paymentConditions.indexWhere(
-            (c) => c.nome == pagamentoState.condicaoPagamentoNome,
-          );
+        : draftState.condicoesPagamento?.indexWhere(
+                (c) =>
+                    c.descricaoCondicaoPagamento ==
+                    pagamentoState.condicaoPagamentoNome,
+              ) ??
+              -1;
 
     final effectivePaymentMethodIndex = vmMetodoIndex >= 0
         ? vmMetodoIndex
@@ -455,8 +454,10 @@ class _PedidoAdicionarPagamentoScreenState
         ? vmCondicaoIndex
         : selectedPaymentConditionIndex;
 
-    final formaPagamento = paymentMethods[effectivePaymentMethodIndex];
-    final condicao = paymentConditions[effectivePaymentConditionIndex];
+    final formaPagamento =
+        draftState.formasPagamento?[effectivePaymentMethodIndex];
+    final condicao =
+        draftState.condicoesPagamento?[effectivePaymentConditionIndex];
     final pedido = draftState.pedido!;
     if (pedido.id == 0) {
       showSnackBar('Rascunho inválido. Reinicie o fluxo.', isError: true);
@@ -499,8 +500,8 @@ class _PedidoAdicionarPagamentoScreenState
       pedidoId: pedido.id,
       request: request,
       itens: itens,
-      formaPagamentoNome: formaPagamento.nome,
-      condicaoPagamentoNome: condicao.nome,
+      formaPagamentoNome: formaPagamento?.nome,
+      condicaoPagamentoNome: condicao?.descricaoCondicaoPagamento,
       pedidoStatusTipoNome: 'Aguardando Pagamento',
       substituirItens: true,
     );

@@ -88,6 +88,24 @@ class FormaPagamentoLocalDataSource {
     }
   }
 
+  Future<Result<List<FormaPagamentoResponse>>>
+  listarCondicoesPagamentoAssociadas() async {
+    try {
+      final db = await _databaseService.database;
+      final rows = await db.query(
+        DatabaseService.formaPagamentoTable,
+        where:
+            'id IN (SELECT DISTINCT formaPagamentoId FROM ${DatabaseService.condicaoPagamentoTable})',
+        orderBy: 'descricaoFormaPagamento ASC',
+      );
+
+      final formasPagamento = rows.map(_fromRow).toList();
+      return Result.success(formasPagamento);
+    } on Exception catch (error) {
+      return Result.failure([error.toString()]);
+    }
+  }
+
   FormaPagamentoResponse _fromRow(Map<String, Object?> row) {
     return FormaPagamentoResponse(
       id: row['id'] as int,

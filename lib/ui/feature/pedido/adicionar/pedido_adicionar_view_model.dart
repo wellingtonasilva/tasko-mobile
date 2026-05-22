@@ -1,14 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/common/core/auth_persistence.dart';
 import 'package:tasko_mobile/data/repositories/cliente/cliente_repository_hybrid.dart';
+import 'package:tasko_mobile/data/repositories/condicao_pagamento/condicao_pagamento_repository_hybrid.dart';
+import 'package:tasko_mobile/data/repositories/forma_pagamento/forma_pagamento_repository_hybrid.dart';
 import 'package:tasko_mobile/data/repositories/pedido/pedido_repository_hybrid.dart';
 import 'package:tasko_mobile/data/repositories/produto/produto_repository_hybrid.dart';
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
+import 'package:tasko_mobile/domain/condicao_pagamento/response/condicao_pagamento_response.dart';
+import 'package:tasko_mobile/domain/forma_pagamento/response/forma_pagamento_response.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/ui/feature/pedido/adicionar/pedido_adicionar_ui_state.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pagamento/pedido_criar_pagamento_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_rascunho_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
@@ -33,6 +38,8 @@ class PedidoAdicionarViewModel extends Notifier<PedidoAdicionarUiState> {
       listarClienteCommand: Command0<void>(_listarClientes),
       listarProdutoCommand: Command0<void>(_listarProdutos),
       confirmarCommand: Command0<void>(_confirmar),
+      listarFormaPagamentoCommand: Command0<void>(_listarFormasPagamento),
+      listarCondicaoPagamentoCommand: Command0<void>(_listarCondicoesPagamento),
     );
   }
 
@@ -99,6 +106,82 @@ class PedidoAdicionarViewModel extends Notifier<PedidoAdicionarUiState> {
     return Future.value(
       Failure<PedidoResponse>(['Função de confirmação ainda não implementada']),
     );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Formas de Pagamento
+  // ---------------------------------------------------------------------------
+  Future<Result<List<FormaPagamento>>> _listarFormasPagamento() async {
+    onStartEvent?.call();
+    final result = await ref
+        .read(formaPagamentoRepositoryHybridProvider)
+        .listarCondicoesPagamentoAssociadas();
+    if (result is Success<List<FormaPagamentoResponse>>) {
+      state = state.copyWith(
+        formasPagamento: convertToFormaPagamentoList(result.value),
+      );
+    } else if (result is Failure<List<FormaPagamentoResponse>>) {
+      showSnackBar?.call(
+        (result).errors?[0] ?? 'An unknown error occurred',
+        result,
+      );
+    }
+    onFinishEvent?.call();
+
+    return state.formasPagamento != null
+        ? Success<List<FormaPagamento>>(state.formasPagamento!)
+        : Failure<List<FormaPagamento>>(['No payment methods available']);
+  }
+
+  List<FormaPagamento> convertToFormaPagamentoList(
+    List<FormaPagamentoResponse> responses,
+  ) {
+    return responses
+        .map(
+          (f) => FormaPagamento(
+            id: f.id,
+            nome: f.descricaoFormaPagamento ?? '',
+            icone: getIconeForFormaPagamento(f.id),
+          ),
+        )
+        .toList();
+  }
+
+  String getIconeForFormaPagamento(int formaPagamentoId) {
+    switch (formaPagamentoId) {
+      case 1: // Dinheiro
+        return 'assets/images/pos_icon_money.svg';
+      case 2: // Pix
+        return 'assets/images/pos_icon_pix.svg';
+      case 3: // Cartão de crédito
+        return 'assets/images/pos_icon_credit_card.svg';
+      case 4: // Cartão de débito
+        return 'assets/images/pos_icon_credit_card.svg';
+      default:
+        return 'assets/images/pos_icon_money.svg'; // Ícone padrão
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Condição de Pagamento
+  // ---------------------------------------------------------------------------
+  Future<Result<List<CondicaoPagamentoResponse>>>
+  _listarCondicoesPagamento() async {
+    onStartEvent?.call();
+    final result = await ref
+        .read(condicaoPagamentoRepositoryHybridProvider)
+        .listar();
+    if (result is Success<List<CondicaoPagamentoResponse>>) {
+      state = state.copyWith(condicoesPagamento: result.value);
+    } else if (result is Failure<List<CondicaoPagamentoResponse>>) {
+      showSnackBar?.call(
+        (result).errors?[0] ?? 'An unknown error occurred',
+        result,
+      );
+    }
+    onFinishEvent?.call();
+
+    return result;
   }
 
   // ---------------------------------------------------------------------------
