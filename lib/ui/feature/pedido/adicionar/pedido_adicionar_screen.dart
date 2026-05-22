@@ -58,6 +58,14 @@ class _PedidoAdicionarScreenState
 
     ref.read(pedidoAdicionarViewModelProvider).listarClienteCommand.execute();
     ref.read(pedidoAdicionarViewModelProvider).listarProdutoCommand.execute();
+    ref
+        .read(pedidoAdicionarViewModelProvider)
+        .listarFormaPagamentoCommand
+        .execute();
+    ref
+        .read(pedidoAdicionarViewModelProvider)
+        .listarCondicaoPagamentoCommand
+        .execute();
   }
 
   @override

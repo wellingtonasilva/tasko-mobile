@@ -18,7 +18,7 @@ import 'package:tasko_mobile/ui/feature/pedido/criar_old/produto/pedido_criar_pr
 import 'package:tasko_mobile/util/result.dart';
 
 class FormaPagamento {
-  final String id;
+  final int id;
   final String nome;
   final String icone;
 
@@ -85,20 +85,16 @@ class _PedidoCriarPagamentoScreenState
 
   final List<FormaPagamento> paymentMethods = [
     FormaPagamento(
-      id: '1',
+      id: 1,
       nome: 'Dinheiro',
       icone: 'assets/images/pos_icon_money.svg',
     ),
     FormaPagamento(
-      id: '2',
+      id: 2,
       nome: 'Cartão',
       icone: 'assets/images/pos_icon_credit_card.svg',
     ),
-    FormaPagamento(
-      id: '3',
-      nome: 'Pix',
-      icone: 'assets/images/pos_icon_pix.svg',
-    ),
+    FormaPagamento(id: 3, nome: 'Pix', icone: 'assets/images/pos_icon_pix.svg'),
   ];
 
   final List<CondicaoPagamento> paymentConditions = [

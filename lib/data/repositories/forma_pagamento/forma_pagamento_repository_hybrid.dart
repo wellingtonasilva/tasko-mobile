@@ -70,6 +70,23 @@ class FormaPagamentoRepositoryHybrid implements FormaPagamentoRepository {
     }
     return remoteResult;
   }
+
+  @override
+  Future<Result<List<FormaPagamentoResponse>>>
+  listarCondicoesPagamentoAssociadas() async {
+    final localResult = await _local.listarCondicoesPagamentoAssociadas();
+    if (localResult is Success<List<FormaPagamentoResponse>> &&
+        localResult.value.isNotEmpty) {
+      return localResult;
+    }
+
+    final remoteResult = await _remote.listar();
+    if (remoteResult is Success<List<FormaPagamentoResponse>>) {
+      await _local.replaceAll(remoteResult.value);
+    }
+
+    return await _local.listarCondicoesPagamentoAssociadas();
+  }
 }
 
 final formaPagamentoRepositoryHybridProvider =

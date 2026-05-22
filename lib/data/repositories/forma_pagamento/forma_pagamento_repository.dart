@@ -5,6 +5,8 @@ import 'package:tasko_mobile/util/result.dart';
 
 abstract class FormaPagamentoRepository {
   Future<Result<List<FormaPagamentoResponse>>> listar();
+  Future<Result<List<FormaPagamentoResponse>>>
+  listarCondicoesPagamentoAssociadas();
   Future<Result<FormaPagamentoResponse>> obterPorId(int id);
   Future<Result<FormaPagamentoResponse>> adicionar(
     AdicionarFormaPagamentoRequest request,

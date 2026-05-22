@@ -1,8 +1,11 @@
 import 'package:tasko_mobile/domain/cliente/response/cliente_response.dart';
+import 'package:tasko_mobile/domain/condicao_pagamento/response/condicao_pagamento_response.dart';
+import 'package:tasko_mobile/domain/forma_pagamento/response/forma_pagamento_response.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/domain/vendedor/response/vendedor_response.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pagamento/pedido_criar_pagamento_screen.dart';
 import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_rascunho_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 
@@ -29,6 +32,16 @@ class PedidoAdicionarUiState {
   final String? formaPagamentoNome;
   final String? condicaoPagamentoNome;
 
+  // Lista de Forma de Pagamento
+  final Command0<void> listarFormaPagamentoCommand;
+  List<FormaPagamento>? formasPagamento;
+  FormaPagamentoResponse? selectedFormaPagamento;
+
+  // Condição de Pagamento
+  final Command0<void> listarCondicaoPagamentoCommand;
+  List<CondicaoPagamentoResponse>? condicoesPagamento;
+  CondicaoPagamentoResponse? selectedCondicaoPagamento;
+
   int get totalItens =>
       carrinhoQuantidades.values.fold(0, (sum, q) => sum + q.toInt());
 
@@ -52,6 +65,8 @@ class PedidoAdicionarUiState {
     required this.listarClienteCommand,
     required this.listarProdutoCommand,
     required this.confirmarCommand,
+    required this.listarFormaPagamentoCommand,
+    required this.listarCondicaoPagamentoCommand,
     this.clientes,
     this.selectedCliente,
     this.produtos,
@@ -60,6 +75,10 @@ class PedidoAdicionarUiState {
     this.pedido,
     this.formaPagamentoNome,
     this.condicaoPagamentoNome,
+    this.formasPagamento,
+    this.selectedFormaPagamento,
+    this.condicoesPagamento,
+    this.selectedCondicaoPagamento,
   }) : carrinhoQuantidades = carrinhoQuantidades ?? {};
 
   PedidoAdicionarUiState copyWith({
@@ -78,6 +97,12 @@ class PedidoAdicionarUiState {
     String? formaPagamentoNome,
     String? condicaoPagamentoNome,
     Command0<void>? confirmarCommand,
+    Command0<void>? listarFormaPagamentoCommand,
+    List<FormaPagamento>? formasPagamento,
+    FormaPagamentoResponse? selectedFormaPagamento,
+    Command0<void>? listarCondicaoPagamentoCommand,
+    List<CondicaoPagamentoResponse>? condicoesPagamento,
+    CondicaoPagamentoResponse? selectedCondicaoPagamento,
   }) {
     return PedidoAdicionarUiState(
       criarRascunhoCommand: criarRascunhoCommand ?? this.criarRascunhoCommand,
@@ -97,6 +122,16 @@ class PedidoAdicionarUiState {
       condicaoPagamentoNome:
           condicaoPagamentoNome ?? this.condicaoPagamentoNome,
       confirmarCommand: confirmarCommand ?? this.confirmarCommand,
+      listarFormaPagamentoCommand:
+          listarFormaPagamentoCommand ?? this.listarFormaPagamentoCommand,
+      formasPagamento: formasPagamento ?? this.formasPagamento,
+      selectedFormaPagamento:
+          selectedFormaPagamento ?? this.selectedFormaPagamento,
+      listarCondicaoPagamentoCommand:
+          listarCondicaoPagamentoCommand ?? this.listarCondicaoPagamentoCommand,
+      condicoesPagamento: condicoesPagamento ?? this.condicoesPagamento,
+      selectedCondicaoPagamento:
+          selectedCondicaoPagamento ?? this.selectedCondicaoPagamento,
     );
   }
 }
