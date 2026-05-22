@@ -9,12 +9,12 @@ import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/pedido_criar_pagamento_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_condicao_pagamento_button.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pagamento/widgets/custom_forma_pagamento_button.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/cliente/pedido_criar_cliente_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pagamento/pedido_criar_pagamento_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pagamento/widgets/custom_condicao_pagamento_button.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pagamento/widgets/custom_forma_pagamento_button.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_rascunho_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/produto/pedido_criar_produto_view_model.dart';
 import 'package:tasko_mobile/util/result.dart';
 
 class FormaPagamento {

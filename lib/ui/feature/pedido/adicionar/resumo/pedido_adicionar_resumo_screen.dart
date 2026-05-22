@@ -4,36 +4,37 @@ import 'package:tasko_mobile/common/colors/text_styles.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_action_edit_icon_button.dart';
-import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
+import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/cliente/pedido_criar_cliente_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/resumo/pedido_criar_resumo_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/adicionar/pedido_adicionar_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/adicionar/resumo/pedido_adicionar_resumo_controllers.dart';
 import 'package:tasko_mobile/util/result.dart';
 
-class PedidoCriarResumoScreen extends BaseScreen {
+class PedidoAdicionarResumoScreen extends BaseScreen {
   final Function(String cliente) onPrevious;
   final Function(String cliente) onNext;
 
-  const PedidoCriarResumoScreen({
+  const PedidoAdicionarResumoScreen({
     super.key,
     required this.onPrevious,
     required this.onNext,
   });
 
   @override
-  BaseScreenState<PedidoCriarResumoScreen> createState() =>
-      _PedidoCriarResumoScreenState();
+  BaseScreenState<PedidoAdicionarResumoScreen> createState() =>
+      _PedidoAdicionarResumoScreenState();
 }
 
-class _PedidoCriarResumoScreenState
-    extends BaseScreenState<PedidoCriarResumoScreen> {
+class _PedidoAdicionarResumoScreenState
+    extends BaseScreenState<PedidoAdicionarResumoScreen> {
+  late final PedidoAdicionarResumoControllers _controllers;
+
   @override
   void initState() {
     super.initState();
-    final viewModel = ref.read(pedidoCriarResumoViewModelProvider.notifier);
+    final viewModel = ref.read(pedidoAdicionarViewModelProvider.notifier);
     viewModel.showSnackBar = (String message, Result result) {
       if (mounted) {
         if (result is Success) {
@@ -56,10 +57,8 @@ class _PedidoCriarResumoScreenState
 
   @override
   Widget buildContent(BuildContext context) {
-    final viewProduto = ref.watch(pedidoCriarProdutoViewModelProvider);
-    final clienteViewModel = ref.watch(pedidoCriarClienteViewModelProvider);
-    final resumoViewModel = ref.watch(pedidoCriarResumoViewModelProvider);
-    final rascunho = resumoViewModel.rascunho;
+    final viewModel = ref.watch(pedidoAdicionarViewModelProvider);
+    final rascunho = viewModel.pedido;
 
     return GestureDetector(
       onTap: () {
@@ -93,7 +92,7 @@ class _PedidoCriarResumoScreenState
                         padding: const EdgeInsets.all(8.0),
                         child: CustomTituloBarDefault(
                           title:
-                              'Pedido - ${clienteViewModel.selectedCliente?.nomeFantasia ?? ''}',
+                              'Pedido - ${viewModel.selectedCliente?.nomeFantasia ?? ''}',
                           child: Text(
                             '(4/4)',
                             style: kTestStyleBoldText14.copyWith(
@@ -163,10 +162,8 @@ class _PedidoCriarResumoScreenState
                                   ),
                                   SizedBox(height: 5),
                                   Text(
-                                    clienteViewModel
-                                            .selectedCliente
-                                            ?.nomeFantasia ??
-                                        clienteViewModel
+                                    viewModel.selectedCliente?.nomeFantasia ??
+                                        viewModel
                                             .selectedCliente
                                             ?.razaoSocial ??
                                         '',
@@ -175,7 +172,7 @@ class _PedidoCriarResumoScreenState
                                     ),
                                   ),
                                   Text(
-                                    'Limite disponível: R\$ ${clienteViewModel.selectedCliente?.limiteCredito?.toStringAsFixed(2) ?? 'N/A'}',
+                                    'Limite disponível: R\$ ${viewModel.selectedCliente?.limiteCredito?.toStringAsFixed(2) ?? 'N/A'}',
                                     style: kTestStyleRegularText14.copyWith(
                                       color: kColorStyleSecondinaryLight400,
                                     ),
@@ -218,30 +215,29 @@ class _PedidoCriarResumoScreenState
                                         ],
                                       ),
                                       SizedBox(height: 5),
-                                      viewProduto.listarProdutoCommand.running
+                                      viewModel.listarProdutoCommand.running
                                           ? const Center(
                                               child:
                                                   CircularProgressIndicator(),
                                             )
                                           : Expanded(
                                               child: ListView.builder(
-                                                itemCount: viewProduto
+                                                itemCount: viewModel
                                                     .carrinhoQuantidades
                                                     .length,
                                                 itemBuilder: (context, index) {
-                                                  final entry = viewProduto
+                                                  final entry = viewModel
                                                       .carrinhoQuantidades
                                                       .entries
                                                       .elementAt(index);
-                                                  final produto = viewProduto
+                                                  final produto = viewModel
                                                       .produtos
                                                       ?.firstWhere(
                                                         (p) =>
                                                             p.id == entry.key,
-                                                        orElse: () =>
-                                                            viewProduto
-                                                                .produtos!
-                                                                .first,
+                                                        orElse: () => viewModel
+                                                            .produtos!
+                                                            .first,
                                                       );
                                                   if (produto == null) {
                                                     return const SizedBox();
@@ -299,7 +295,7 @@ class _PedidoCriarResumoScreenState
                                                         ],
                                                       ),
                                                       if (index <
-                                                          viewProduto
+                                                          viewModel
                                                                   .carrinhoQuantidades
                                                                   .length -
                                                               1)
@@ -385,7 +381,7 @@ class _PedidoCriarResumoScreenState
                               ),
                             ),
                             Text(
-                              "R\$ ${(rascunho?.valorTotal ?? viewProduto.valorTotal).toStringAsFixed(2)}",
+                              "R\$ ${(rascunho?.valorTotal ?? viewModel.valorTotal).toStringAsFixed(2)}",
                               style: kTestStyleBoldText24.copyWith(
                                 color: kColorStylePrimaryNeutralPaletteDark500,
                               ),
@@ -410,11 +406,11 @@ class _PedidoCriarResumoScreenState
                           const SizedBox(width: 20),
                           Expanded(
                             child: CustomButtonPrimary(
-                              label: resumoViewModel.isEdicao
+                              label: true == true
                                   ? 'Salvar Alterações'
                                   : 'Confirmar Pedido',
                               onPressed: () =>
-                                  resumoViewModel.confirmarCommand.execute(),
+                                  viewModel.confirmarCommand.execute(),
                             ),
                           ),
                         ],

@@ -41,6 +41,13 @@ class CondicaoPagamentoRepositoryRemote implements CondicaoPagamentoRepository {
   Future<Result<CondicaoPagamentoResponse>> obterPorId(int id) {
     return _service.obterPorId(id);
   }
+
+  @override
+  Future<Result<List<CondicaoPagamentoResponse>>> listarByFormaPagamento(
+    int formaPagamentoId,
+  ) {
+    return _service.listar();
+  }
 }
 
 final condicaoPagamentoRepositoryRemoteProvider =

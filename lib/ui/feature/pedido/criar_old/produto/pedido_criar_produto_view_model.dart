@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_item_response.dart';
 import 'package:tasko_mobile/data/repositories/produto/produto_repository_hybrid.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_ui_state.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/produto/pedido_criar_produto_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
 

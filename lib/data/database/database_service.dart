@@ -14,6 +14,8 @@ class DatabaseService {
   static const pedidoItensTable = 'pedido_itens';
   static const agendaVisitasTable = 'agenda_visitas';
   static const agendaVisitaCheckinsTable = 'agenda_visita_checkins';
+  static const formaPagamentoTable = 'forma_pagamento';
+  static const condicaoPagamentoTable = 'condicao_pagamento';
 
   static final DatabaseService instance = DatabaseService._internal();
   DatabaseService._internal();
@@ -51,6 +53,8 @@ class DatabaseService {
     await _createPedidoItensTable(db);
     await _createAgendaVisitasTable(db);
     await _createAgendaVisitaCheckinsTable(db);
+    await _createFormaPagamentoTable(db);
+    await _createCondicaoPagamentoTable(db);
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -86,10 +90,6 @@ class DatabaseService {
 
     if (oldVersion < 9) {
       await _upgradeToV9(db);
-    }
-
-    if (oldVersion < 10) {
-      await _upgradeToV10(db);
     }
 
     if (oldVersion < 10) {
@@ -142,7 +142,7 @@ class DatabaseService {
   }
 
   Future<void> _upgradeToV13(Database db) async {
-    await _addColumnIfNotExists(db, pedidosTable, 'sync_status', 'INTEGER');
+    await _addColumnIfNotExists(db, pedidosTable, 'sync_status', 'TEXT');
   }
 
   Future<void> _upgradeToV12(Database db) async {
@@ -279,6 +279,7 @@ class DatabaseService {
       CREATE TABLE IF NOT EXISTS $vendedoresTable (
         id INTEGER PRIMARY KEY,
         local_uuid TEXT,
+        empresa_id INTEGER,
         codigo_vendedor TEXT NOT NULL,
         nome_vendedor TEXT NOT NULL,
         numero_cpf TEXT NOT NULL,
@@ -311,6 +312,9 @@ class DatabaseService {
     );
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_vendedores_deleted ON $vendedoresTable (deleted)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_vendedores_empresa_id ON $vendedoresTable (empresa_id)',
     );
   }
 
@@ -350,6 +354,7 @@ class DatabaseService {
       CREATE TABLE IF NOT EXISTS $clientesTable (
         id INTEGER PRIMARY KEY,
         local_uuid TEXT,
+        empresa_id INTEGER,
         vendedor_id INTEGER,
         codigo_cliente TEXT,
         razao_social TEXT NOT NULL,
@@ -395,6 +400,9 @@ class DatabaseService {
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_clientes_deleted ON $clientesTable (deleted)',
     );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_clientes_empresa_id ON $clientesTable (empresa_id)',
+    );
   }
 
   Future<void> _createProdutosTable(Database db) async {
@@ -402,6 +410,7 @@ class DatabaseService {
       CREATE TABLE IF NOT EXISTS $produtosTable (
         id INTEGER PRIMARY KEY,
         local_uuid TEXT,
+        empresa_id INTEGER,
         codigo_produto TEXT,
         nome_produto TEXT NOT NULL,
         descricao_produto TEXT,
@@ -447,6 +456,9 @@ class DatabaseService {
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_produtos_deleted ON $produtosTable (deleted)',
     );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_produtos_empresa_id ON $produtosTable (empresa_id)',
+    );
   }
 
   Future<void> _createPedidosTable(Database db) async {
@@ -472,6 +484,11 @@ class DatabaseService {
         forma_pagamento_nome TEXT,
         condicao_pagamento_id INTEGER,
         condicao_pagamento_nome TEXT,
+        descricao_condicao_pagamento TEXT,
+        descricao_forma_pagamento TEXT,
+        nome_vendedor TEXT,
+        nome_fantasia_cliente TEXT,
+        descricao_status_tipo TEXT,
         latitude REAL,
         longitude REAL,
         sincronizado INTEGER NOT NULL DEFAULT 0,
@@ -486,6 +503,7 @@ class DatabaseService {
         synced_at TEXT,
         dirty INTEGER NOT NULL DEFAULT 0,
         deleted INTEGER NOT NULL DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
         sync_error TEXT,
         sync_attempt_count INTEGER NOT NULL DEFAULT 0
       )
@@ -505,6 +523,9 @@ class DatabaseService {
     );
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_pedidos_uuid_offline ON $pedidosTable (uuid_offline)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_pedidos_empresa_id ON $pedidosTable (empresa_id)',
     );
   }
 
@@ -551,6 +572,7 @@ class DatabaseService {
       CREATE TABLE IF NOT EXISTS $agendaVisitasTable (
         id INTEGER PRIMARY KEY,
         local_uuid TEXT,
+        empresa_id INTEGER,
         data_agendada TEXT NOT NULL,
         data_realizada TEXT,
         duracao_prevista INTEGER,
@@ -594,6 +616,9 @@ class DatabaseService {
     );
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_agenda_visitas_deleted ON $agendaVisitasTable (deleted)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_agenda_visitas_empresa_id ON $agendaVisitasTable (empresa_id)',
     );
   }
 
@@ -670,6 +695,32 @@ class DatabaseService {
     );
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_agenda_visitas_empresa_id ON $agendaVisitasTable (empresa_id)',
+    );
+  }
+
+  Future<void> _createFormaPagamentoTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $formaPagamentoTable (
+        id INTEGER PRIMARY KEY,
+        descricaoFormaPagamento TEXT NOT NULL,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createCondicaoPagamentoTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $condicaoPagamentoTable (
+        id INTEGER PRIMARY KEY,
+        formaPagamentoId INTEGER,
+        descricaoCondicaoPagamento TEXT,
+        condicaoPagamento TEXT,
+        updated_at TEXT
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_condicao_pagamento_forma_pagamento_id ON $condicaoPagamentoTable (formaPagamentoId)',
     );
   }
 }

@@ -6,14 +6,14 @@ part 'condicao_pagamento_response.g.dart';
 @JsonSerializable()
 class CondicaoPagamentoResponse extends Equatable {
   final int id;
-  final int empresaId;
+  final int? empresaId;
   final int? formaPagamentoId;
   final String? descricaoCondicaoPagamento;
   final String? condicaoPagamento;
 
   const CondicaoPagamentoResponse({
     required this.id,
-    required this.empresaId,
+    this.empresaId,
     this.formaPagamentoId,
     this.descricaoCondicaoPagamento,
     this.condicaoPagamento,

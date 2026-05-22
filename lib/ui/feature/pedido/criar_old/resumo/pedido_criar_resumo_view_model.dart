@@ -5,9 +5,9 @@ import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_item_request
 import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/request/atualizar_pedido_request.dart';
 import 'package:tasko_mobile/domain/pedido/response/pedido_response.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/pedido_criar_rascunho_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/produto/pedido_criar_produto_view_model.dart';
-import 'package:tasko_mobile/ui/feature/pedido/criar/resumo/pedido_criar_resumo_ui_state.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/pedido_criar_rascunho_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/produto/pedido_criar_produto_view_model.dart';
+import 'package:tasko_mobile/ui/feature/pedido/criar_old/resumo/pedido_criar_resumo_ui_state.dart';
 import 'package:tasko_mobile/util/command.dart';
 import 'package:tasko_mobile/util/result.dart';
 

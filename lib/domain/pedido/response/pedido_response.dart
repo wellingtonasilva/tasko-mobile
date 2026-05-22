@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 
 class PedidoResponse extends Equatable {
   final int id;
-  final int empresaId;
+  final int? empresaId;
   final String? numeroPedido;
   final int clienteId;
   final int vendedorId;
@@ -40,7 +40,7 @@ class PedidoResponse extends Equatable {
 
   PedidoResponse({
     required this.id,
-    required this.empresaId,
+    this.empresaId,
     this.numeroPedido,
     required this.clienteId,
     required this.vendedorId,
@@ -78,7 +78,7 @@ class PedidoResponse extends Equatable {
   factory PedidoResponse.fromJson(Map<String, dynamic> json) {
     return PedidoResponse(
       id: (json['id'] as int?) ?? 0,
-      empresaId: (json['empresaId'] as int?) ?? 0,
+      empresaId: json['empresaId'] as int?,
       numeroPedido: json['numeroPedido'] as String?,
       clienteId: (json['clienteId'] as int?) ?? 0,
       vendedorId: (json['vendedorId'] as int?) ?? 0,
