@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tasko_mobile/common/colors/colors_styles.dart';
 import 'package:tasko_mobile/common/colors/text_styles.dart';
+import 'package:tasko_mobile/common/core/auth_persistence.dart';
 import 'package:tasko_mobile/common/core/base_screen.dart';
 import 'package:tasko_mobile/common/widgets/appbar/custom_titulo_bar_default.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_primary.dart';
 import 'package:tasko_mobile/common/widgets/buttons/custom_button_secondary.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_item.dart';
 import 'package:tasko_mobile/common/widgets/stepper/custom_stepper_line.dart';
+import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_item_request.dart';
+import 'package:tasko_mobile/domain/pedido/request/adicionar_pedido_request.dart';
 import 'package:tasko_mobile/domain/produto/response/produto_response.dart';
 import 'package:tasko_mobile/ui/feature/pedido/adicionar/pedido_adicionar_view_model.dart';
 import 'package:tasko_mobile/ui/feature/pedido/adicionar/produto/pedido_adicionar_produto_controllers.dart';
@@ -281,5 +284,68 @@ class PedidoAdicionarProdutoScreenState
     }).toList();
   }
 
-  void _handleProximoPressed() {}
+  void _handleProximoPressed() async {
+    final viewModel = ref.read(pedidoAdicionarViewModelProvider);
+
+    if (viewModel.pedido == null) {
+      showSnackBar('Selecione um cliente primeiro', isError: true);
+      return;
+    }
+    if (viewModel.carrinhoQuantidades.isEmpty) {
+      showSnackBar('Adicione pelo menos um produto', isError: true);
+      return;
+    }
+
+    final pedido = viewModel.pedido!;
+    if (pedido.id == 0) {
+      showSnackBar('Rascunho inválido. Reinicie o fluxo.', isError: true);
+      return;
+    }
+
+    final itens = viewModel.carrinhoQuantidades.entries.map((e) {
+      final produto = viewModel.produtos!.firstWhere((p) => p.id == e.key);
+      final preco = produto.precoSugerido ?? 0;
+      final total = preco * e.value;
+      return AdicionarPedidoItemRequest(
+        pedidoId: pedido.id,
+        produtoId: produto.id ?? 0,
+        quantidade: e.value,
+        precoUnitario: preco,
+        valorTotal: total,
+      );
+    }).toList();
+
+    final subtotal = itens.fold(0.0, (sum, i) => sum + i.valorTotal);
+    final request = AdicionarPedidoRequest(
+      empresaId:
+          (await ref.read(authLocalStorageProvider).getUsuarioLoginResponse())
+              ?.empresas
+              ?.firstOrNull
+              ?.empresaId ??
+          0,
+      clienteId: pedido.clienteId,
+      vendedorId: pedido.vendedorId,
+      dataPedido: pedido.dataPedido.toIso8601String(),
+      subtotal: subtotal,
+      valorTotal: subtotal,
+      latitude: pedido.latitude,
+      longitude: pedido.longitude,
+    );
+
+    final args = (
+      pedidoId: pedido.id,
+      request: request,
+      itens: itens,
+      formaPagamentoNome: pedido.formaPagamentoNome,
+      condicaoPagamentoNome: pedido.condicaoPagamentoNome,
+      pedidoStatusTipoNome: pedido.pedidoStatusTipoNome,
+      substituirItens: true,
+    );
+
+    await viewModel.atualizarRascunhoCommand.execute(args);
+
+    if (viewModel.atualizarRascunhoCommand.completed && mounted) {
+      widget.onNext('Produto');
+    }
+  }
 }

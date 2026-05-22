@@ -14,6 +14,8 @@ class DatabaseService {
   static const pedidoItensTable = 'pedido_itens';
   static const agendaVisitasTable = 'agenda_visitas';
   static const agendaVisitaCheckinsTable = 'agenda_visita_checkins';
+  static const formaPagamentoTable = 'forma_pagamento';
+  static const condicaoPagamentoTable = 'condicao_pagamento';
 
   static final DatabaseService instance = DatabaseService._internal();
   DatabaseService._internal();
@@ -51,6 +53,8 @@ class DatabaseService {
     await _createPedidoItensTable(db);
     await _createAgendaVisitasTable(db);
     await _createAgendaVisitaCheckinsTable(db);
+    await _createFormaPagamentoTable(db);
+    await _createCondicaoPagamentoTable(db);
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -691,6 +695,32 @@ class DatabaseService {
     );
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_agenda_visitas_empresa_id ON $agendaVisitasTable (empresa_id)',
+    );
+  }
+
+  Future<void> _createFormaPagamentoTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $formaPagamentoTable (
+        id INTEGER PRIMARY KEY,
+        descricaoFormaPagamento TEXT NOT NULL,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createCondicaoPagamentoTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $condicaoPagamentoTable (
+        id INTEGER PRIMARY KEY,
+        formaPagamentoId INTEGER,
+        descricaoCondicaoPagamento TEXT,
+        condicaoPagamento TEXT,
+        updated_at TEXT
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_condicao_pagamento_forma_pagamento_id ON $condicaoPagamentoTable (formaPagamentoId)',
     );
   }
 }

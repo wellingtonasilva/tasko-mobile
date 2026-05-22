@@ -10,6 +10,7 @@ class PedidoAdicionarUiState {
   final Command1<PedidoResponse, AdicionarPedidoRequest> criarRascunhoCommand;
   final Command1<PedidoResponse, AtualizarPedidoRascunhoArgs>
   atualizarRascunhoCommand;
+  final Command0<void> confirmarCommand;
   final PedidoResponse? pedido;
   final VendedorResponse? vendedor;
 
@@ -23,6 +24,10 @@ class PedidoAdicionarUiState {
   List<ProdutoResponse>? produtos;
   // produtoId → quantidade
   final Map<int, double> carrinhoQuantidades;
+
+  // Pagamento
+  final String? formaPagamentoNome;
+  final String? condicaoPagamentoNome;
 
   int get totalItens =>
       carrinhoQuantidades.values.fold(0, (sum, q) => sum + q.toInt());
@@ -46,12 +51,15 @@ class PedidoAdicionarUiState {
     required this.atualizarRascunhoCommand,
     required this.listarClienteCommand,
     required this.listarProdutoCommand,
+    required this.confirmarCommand,
     this.clientes,
     this.selectedCliente,
     this.produtos,
     Map<int, double>? carrinhoQuantidades,
     this.vendedor,
     this.pedido,
+    this.formaPagamentoNome,
+    this.condicaoPagamentoNome,
   }) : carrinhoQuantidades = carrinhoQuantidades ?? {};
 
   PedidoAdicionarUiState copyWith({
@@ -67,6 +75,9 @@ class PedidoAdicionarUiState {
     Map<int, double>? carrinhoQuantidades,
     VendedorResponse? vendedor,
     PedidoResponse? pedido,
+    String? formaPagamentoNome,
+    String? condicaoPagamentoNome,
+    Command0<void>? confirmarCommand,
   }) {
     return PedidoAdicionarUiState(
       criarRascunhoCommand: criarRascunhoCommand ?? this.criarRascunhoCommand,
@@ -82,6 +93,10 @@ class PedidoAdicionarUiState {
       carrinhoQuantidades: carrinhoQuantidades ?? this.carrinhoQuantidades,
       vendedor: vendedor ?? this.vendedor,
       pedido: pedido ?? this.pedido,
+      formaPagamentoNome: formaPagamentoNome ?? this.formaPagamentoNome,
+      condicaoPagamentoNome:
+          condicaoPagamentoNome ?? this.condicaoPagamentoNome,
+      confirmarCommand: confirmarCommand ?? this.confirmarCommand,
     );
   }
 }

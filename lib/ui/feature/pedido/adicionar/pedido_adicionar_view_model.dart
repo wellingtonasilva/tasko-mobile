@@ -18,6 +18,7 @@ class PedidoAdicionarViewModel extends Notifier<PedidoAdicionarUiState> {
   void Function()? onStartEvent;
   void Function()? onFinishEvent;
   void Function()? onAdicionarSucesso;
+  void Function()? onConfirmado;
 
   @override
   PedidoAdicionarUiState build() {
@@ -31,6 +32,7 @@ class PedidoAdicionarViewModel extends Notifier<PedidoAdicionarUiState> {
           ),
       listarClienteCommand: Command0<void>(_listarClientes),
       listarProdutoCommand: Command0<void>(_listarProdutos),
+      confirmarCommand: Command0<void>(_confirmar),
     );
   }
 
@@ -91,6 +93,17 @@ class PedidoAdicionarViewModel extends Notifier<PedidoAdicionarUiState> {
     return result;
   }
 
+  Future<Result<PedidoResponse>> _confirmar() async {
+    onStartEvent?.call();
+
+    return Future.value(
+      Failure<PedidoResponse>(['Função de confirmação ainda não implementada']),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Cliente
+  // ---------------------------------------------------------------------------
   Future<Result<List<ClienteResponse>>> _listarClientes() async {
     onStartEvent?.call();
     final result = await ref.read(clienteRepositoryHybridProvider).listar();
@@ -114,7 +127,9 @@ class PedidoAdicionarViewModel extends Notifier<PedidoAdicionarUiState> {
     state = state.copyWith(selectedCliente: cliente);
   }
 
+  // ---------------------------------------------------------------------------
   // Produtos
+  // ---------------------------------------------------------------------------
   Future<Result<List<ProdutoResponse>>> _listarProdutos() async {
     onStartEvent?.call();
     final result = await ref.read(produtoRepositoryHybridProvider).listar();
@@ -149,6 +164,31 @@ class PedidoAdicionarViewModel extends Notifier<PedidoAdicionarUiState> {
 
   void limparCarrinho() {
     state = state.copyWith(carrinhoQuantidades: {});
+  }
+
+  // ---------------------------------------------------------------------------
+  // Pagamento
+  // ---------------------------------------------------------------------------
+  void setFormaPagamento(String nome) {
+    state = state.copyWith(formaPagamentoNome: nome);
+  }
+
+  void setCondicaoPagamento(String nome) {
+    state = state.copyWith(condicaoPagamentoNome: nome);
+  }
+
+  void preencherPagamento(String? formaNome, String? condicaoNome) {
+    state = state.copyWith(
+      formaPagamentoNome: formaNome,
+      condicaoPagamentoNome: condicaoNome,
+    );
+  }
+
+  void limparPagamento() {
+    state = state.copyWith(
+      formaPagamentoNome: null,
+      condicaoPagamentoNome: null,
+    );
   }
 }
 
